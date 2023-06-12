@@ -11,7 +11,6 @@ def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
 
 def copyFileTo(filename: Path, subFolder):
-    #TODO to move in a tool class
     if not os.path.exists(filename):
         eprint("file don't exist: " + str(filename.absolute()))
         return False
@@ -26,9 +25,11 @@ def copyFileTo(filename: Path, subFolder):
     return True
 
 def createFolder(path):
-    #TODO to move in a tool class
-    if not os.path.isdir(path):
-        os.mkdir(path)
+    try :
+        if not os.path.isdir(path):
+            os.mkdir(path)
+    except OSError as error: 
+        eprint("cannot create folder : " + path +", "+ error)
 
 
 def printDict(d:dict, title=""):
