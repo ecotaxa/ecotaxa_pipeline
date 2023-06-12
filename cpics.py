@@ -8,7 +8,7 @@ import subprocess
 from Project import Project
 from tsv import Tsv 
 #from cpicsModel import cpicsModel
-from tools import eprint
+from tools import createFolder
 from ParserToTsv import ParserToTsv
 
 
@@ -24,7 +24,7 @@ class CPICsProject(Project):
         return self.path+"/rois/ROICoord/"
 
     def generateProject(self,projectPath):
-        self.createFolder(projectPath)
+        createFolder(projectPath)
 
         roisPath = self.roisPath()
         for path in os.scandir(roisPath):
@@ -40,26 +40,7 @@ class CPICsProject(Project):
     def defineSubFolder(self,name):
         return name[0]+name[1]+"00"
 
-    def copyFileTo(self, filename: Path, subFolder):
-        #TODO to move in a tool class
-        if not os.path.exists(filename):
-            eprint("file don't exist: " + str(filename.absolute()))
-            return False
-        if os.stat(filename).st_size == 0:
-            eprint("file is empty: " + str(filename.absolute()))
-            return False
-        try:
-            subprocess.run(["cp", filename, subFolder], check=True, capture_output=True)
-            #subprocess.run([cmd], shell=True, check=True)
-        except:
-            eprint("cannot copy file: " + str(filename.absolute()))
-            return False
-        return True
 
-    def createFolder(self, path):
-        #TODO to move in a tool class
-        if not os.path.isdir(path):
-            os.mkdir(path)
 
 
     def defineFolders(self,name,destPath):

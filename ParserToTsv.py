@@ -3,6 +3,7 @@
 import csv
 from tools import eprint
 
+from tools import copyFileTo, createFolder
 
 class ParserToTsv:
 
@@ -38,11 +39,11 @@ class ParserToTsv:
                     imageName = data[2]
                     folder = self._model.defineFolders(imageName, destPath)
                     
-                    self._model.createFolder(folder['destFolder'])
+                    createFolder(folder['destFolder'])
 
                     additionaldata = self._model.additionnalProcess(folder['imageName']) #TODO change function name
 
-                    status = self._model.copyFileTo( folder['imageName'], folder['destFolder'])
+                    status = copyFileTo( folder['imageName'], folder['destFolder'])
                     #print("status:" + str(status) )
 
                     if status:
