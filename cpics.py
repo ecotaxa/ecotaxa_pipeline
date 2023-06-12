@@ -10,6 +10,7 @@ from tsv import Tsv
 #from cpicsModel import cpicsModel
 from tools import createFolder
 from ParserToTsv import ParserToTsv
+from enums import Instrument
 
 
 # ../../aux2/20191125.aux.dat  
@@ -18,7 +19,7 @@ from ParserToTsv import ParserToTsv
 
 class CPICsProject(Project):
     def __init__(self, path, roisModel):
-        super().__init__(path,roisModel)
+        super().__init__(path,roisModel, Instrument.CPICS)
 
     def roisPath(self):
         return self.path+"/rois/ROICoord/"
