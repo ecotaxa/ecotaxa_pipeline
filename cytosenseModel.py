@@ -37,6 +37,7 @@ class pulse(Template):
 
 # head -1 'ATSO_photos_flr16_2uls_10min 2022-06-15 16h31_Listmode.csv' | sed 's/;/\n/g' | sed 's/^/"object_date":{ "file" : "ROI" , "header" :"/g' | sed 's/$/","index":1, "fn": None, "type":"[t]", "comment":""},/g' | awk '{gsub("index\":1","index\":" NR-1,$0);print}' > listnode.txt
 class Listnode(Template):
+
     _mapping = {
         "object_date":{ "file" : "ROI" , "header" :"Particle ID","index":0, "fn": None, "type":"[t]", "comment":""},
         "object_date":{ "file" : "ROI" , "header" :"Sample Length","index":1, "fn": None, "type":"[t]", "comment":""},
@@ -121,16 +122,11 @@ class Listnode(Template):
         "object_date":{ "file" : "ROI" , "header" :"Curvature SWS covariance","index":80, "fn": None, "type":"[t]", "comment":""},
     }
 
-cat 'ATSO_photos_flr16_2uls_10min 2022-06-15 16h31_Info.txt'| sed 's/^([^:]*)/"object_date":{ "file" : "ROI" , "header" :"\1/g' | sed 's/$/","index":1, "fn": None, "type":"[t]", "comment":""},/g' | awk '{gsub("index\":1","index\":" NR-1,$0);print}' > info.txt
-# head -1 'ATSO_photos_flr16_2uls_10min 2022-06-15 16h31_info.txt' | sed 's/^/"object_date":{ "file" : "ROI" , "header" :"/g' | sed 's/$/","index":1, "fn": None, "type":"[t]", "comment":""},/g' | awk '{gsub("index\":1","index\":" NR-1,$0);print}' > info.txt
 
-
-sed 's/:.*//g' 'ATSO_photos_flr16_2uls_10min 2022-06-15 16h31_Info.txt' | sed 's/^/"object_date":{ "file" : "ROI" , "header" :"/g' | sed 's/$/","index":1, "fn": None, "type":"[t]", "comment":""},/g' | awk '{gsub("index\":1","index\":" NR-1,$0);print}' > info.txt
-
-
+# sed 's/:.*//g' 'ATSO_photos_flr16_2uls_10min 2022-06-15 16h31_Info.txt' | sed 's/^/"object_date":{ "file" : "ROI" , "header" :"/g' | sed 's/$/","index":1, "fn": None, "type":"[t]", "comment":""},/g' | awk '{gsub("index\":1","index\":" NR-1,$0);print}' > info.txt
 class Info(Template):
    
-   _mapping = {
+    _mapping = {
         "object_date":{ "file" : "ROI" , "header" :"﻿Trigger level (mV)","index":0, "fn": None, "type":"[t]", "comment":""},
         "object_date":{ "file" : "ROI" , "header" :"CytoUSB Block size","index":1, "fn": None, "type":"[t]", "comment":""},
         "object_date":{ "file" : "ROI" , "header" :"
