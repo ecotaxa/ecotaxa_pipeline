@@ -7,6 +7,7 @@ from Template import Template
 
 class CTD_sbe37(Template):
         
+    #ROI, Date Time,Name,Position upper leftx,Position upper lefty,Position lower rightx,Position lower rightY,Temperature,Conductivity,Pressure,Depth,Salinity,Sound Velocity,local density
     _mapping = {
         'object_temperature':{ 'file' : "ROI" , 'header' :'Temperature', 'index' : 7 , 'fn' : None , 'type' : '[f]', 'comment': 'Temperature'},
         'object_conductivity':{ 'file' : "ROI" , 'header' :'Conductivity', 'index' : 8 , 'fn' : None , 'type' : '[f]', 'comment': 'Conductivity'},
@@ -18,9 +19,10 @@ class CTD_sbe37(Template):
     }
 
 
-
 class cpicsModel(Template):
 
+
+    #ROI, Date Time,Name,Position upper leftx,Position upper lefty,Position lower rightx,Position lower rightY,Temperature,Conductivity,Pressure,Depth,Salinity,Sound Velocity,local density
     _mapping = {
         'object_date':{ 'file' : "ROI" , 'header' :'Date', 'index' : 1 , 'fn' : "date" , 'type' : '[t]', 'comment': 'Date'},
         'object_time':{ 'file' : "ROI" , 'header' :'Time', 'index' : 1 , 'fn' : "time" , 'type' : '[t]', 'comment': 'Time'},       
