@@ -23,4 +23,27 @@ class Template:
                 s = s + v + ":" + str(self.mapping[k][v]) + ","
             print( k + " -> " + s)
 
+    def additionnal_process(path):
+        pass
             
+    # def data_to_tsv_format(data: dict):
+    #     pass  
+
+    def data_to_tsv_format(self, data):
+        # insert data in an array following mapping
+        tsvrow = []
+        mapping = self.model.mapping
+        for tsvkey in mapping:
+            map = mapping[tsvkey]
+            index = map['index']
+            result = self.apply_fn(map['fn'], data[index])
+            tsvrow.append(result)
+        return tsvrow
+
+    def search_header(self,text):
+        for k in self.mapping:
+            if text == k['header']:
+                return k
+        
+        return None
+    

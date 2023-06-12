@@ -1,6 +1,7 @@
 # Sebastien Galvagno 06/2023
 import os
 from tools import create_folder
+from tsv import Tsv 
 
 
 class Project:
@@ -18,4 +19,48 @@ class Project:
         create_folder(os.path.join(self.project_path, "_raw"))
         create_folder(os.path.join(self.project_path, "_work"))
 
+    # def data_to_tsv_format(self, data):
+    #     # insert data in an array following mapping
+    #     tsvrow = []
+    #     mapping = self.model.mapping
+    #     for tsvkey in mapping:
+    #         map = mapping[tsvkey]
+    #         index = map['index']
+    #         result = self.apply_fn(map['fn'], data[index])
+    #         tsvrow.append(result)
+    #     return tsvrow
+
+
+    def additionnal_process(self, data):
+            #TODO add here image processing
+            pass
+
+    def import_in_ecotaxa(self):
+        #TODO
+        pass
+
+
+    def apply_fn(self, fn, data):
+        if fn is None: 
+                return data
+        cls = self
+        try:
+            method = getattr(cls, fn)
+            return method(data)
+        except AttributeError:
+            raise NotImplementedError("Class `{}` does not implement `{}`".format(cls.__class__.__name__, fn))
+
+    def init_tsv(self):
+        tsv = Tsv()
+        mapping = self.model.mapping
+        for k in mapping:
+            t = mapping[k]['type'] #todo add function in model to do that
+            tsv.add_feature("",k,t) # TODO: replace "" by None
+        return tsv
+
+    def define_folders(self, name):
+        pass
+
+    def define_id(self, data):
+        pass
 

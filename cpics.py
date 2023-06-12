@@ -4,9 +4,9 @@ import os
 from pathlib import Path
 
 from Project import Project
-from tsv import Tsv 
+# from tsv import Tsv 
 #from cpicsModel import cpicsModel
-from tools import create_folder
+# from tools import create_folder
 from ParserToTsv import ParserToTsv
 from enums import Instrument
 
@@ -25,6 +25,12 @@ class CPICsProject(Project):
     def copy_raw_data(self):
         #TODO
         pass
+
+
+    def filter_row(self,data):
+        if data[0][0] == "#" or data[0][0] == "^@":
+            return True
+        return False
 
     def process_project(self):
         rois_path = self.rois_path()
@@ -50,44 +56,43 @@ class CPICsProject(Project):
         return { 'destFolder':destFolder, 'imageName':imageName , 'tsvName':dateFolder }
 
 
-    def data_to_tsv_format(self, data):
-        # insert data in an array following mapping
-        tsvrow = []
-        mapping = self.model.mapping
-        for tsvkey in mapping:
-            rois = mapping[tsvkey]
-            index = rois['index']
-            result = self.apply_fn(rois['fn'], data[index])
-            tsvrow.append(result)
+    # def data_to_tsv_format(self, data):
+    #     # insert data in an array following mapping
+    #     tsvrow = []
+    #     mapping = self.model.mapping
+    #     for tsvkey in mapping:
+    #         rois = mapping[tsvkey]
+    #         index = rois['index']
+    #         result = self.apply_fn(rois['fn'], data[index])
+    #         tsvrow.append(result)
+    #         return tsvrow
 
-        return tsvrow
+    # def additionnal_process(self, data):
+    #     #TODO add here image processing
+    #     pass
 
-    def additionnal_process(self, data):
-        #TODO add here image processing
-        pass
-
-    def import_in_ecotaxa(self):
-        #TODO
-        pass
+    # def import_in_ecotaxa(self):
+    #     #TODO
+    #     pass
 
 
-    def apply_fn(self, fn, data):
-        if fn is None: 
-                return data
-        cls = self
-        try:
-            method = getattr(cls, fn)
-            return method(data)
-        except AttributeError:
-            raise NotImplementedError("Class `{}` does not implement `{}`".format(cls.__class__.__name__, fn))
+    # def apply_fn(self, fn, data):
+    #     if fn is None: 
+    #             return data
+    #     cls = self
+    #     try:
+    #         method = getattr(cls, fn)
+    #         return method(data)
+    #     except AttributeError:
+    #         raise NotImplementedError("Class `{}` does not implement `{}`".format(cls.__class__.__name__, fn))
 
-    def init_tsv(self):
-        tsv = Tsv()
-        mapping = self.model.mapping
-        for k in mapping:
-            t = mapping[k]['type'] #todo add function in model to do that
-            tsv.add_feature("",k,t) # TODO: replace "" by None
-        return tsv
+    # def init_tsv(self):
+    #     tsv = Tsv()
+    #     mapping = self.model.mapping
+    #     for k in mapping:
+    #         t = mapping[k]['type'] #todo add function in model to do that
+    #         tsv.add_feature("",k,t) # TODO: replace "" by None
+    #     return tsv
 
 
 
