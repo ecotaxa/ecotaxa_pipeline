@@ -9,5 +9,5 @@ from cpicsModel import cpicsModel, CTD_sbe37
 ctdModel=CTD_sbe37()
 roisModel = cpicsModel(ctdModel)
 
-c = CPICsProject("/home/share/cpics_test_data/cpics/data_test/CPICSM160/cpics",roisModel)
-c.generateProject("/home/sgalvagno/cpicsEcotaxa")
+# c = CPICsProject("/home/share/cpics_test_data/cpics/data_test/CPICSM160/cpics",roisModel)
+# c.generateProject("/home/sgalvagno/cpicsEcotaxa")

@@ -27,7 +27,7 @@ class CPICs.CTD.CTD {
 }
 
 class TSV {
-    tsvFormatName()
+    tsv_format_name()
 }
 
 json mapping {

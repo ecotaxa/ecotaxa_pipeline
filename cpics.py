@@ -6,7 +6,7 @@ from pathlib import Path
 from Project import Project
 from tsv import Tsv 
 #from cpicsModel import cpicsModel
-from tools import createFolder
+from tools import create_folder
 from ParserToTsv import ParserToTsv
 from enums import Instrument
 
@@ -16,59 +16,62 @@ from enums import Instrument
 # ../../logs/20191125.syslog.txt
 
 class CPICsProject(Project):
-    def __init__(self, path, roisModel):
-        super().__init__(path,roisModel, Instrument.CPICS)
+    def __init__(self, raw_data_path, data_to_export_base_path, roisModel, title):
+        super().__init__(raw_data_path, data_to_export_base_path, roisModel, title, Instrument.CPICS)
 
-    def roisPath(self):
-        return self.path+"/rois/ROICoord/"
+    def rois_path(self):
+        return  os.path.join(self.raw_data_path, "cpics/rois/ROICoord/")
+    
+    def copy_raw_data(self):
+        #TODO
+        pass
 
-    def generateProject(self,projectPath):
-        createFolder(projectPath)
-
-        roisPath = self.roisPath()
-        for path in os.scandir(roisPath):
+    def process_project(self):
+        rois_path = self.rois_path()
+        for path in os.scandir(rois_path):
             if path.is_file():
                 filename = path.name
                 parser = ParserToTsv(self)
-                parser.readCVSFile( self.roisPath()+filename, projectPath)
+                parser.read_csv_file( self.rois_path()+filename, self.project_path)
 
-    def extractSubNumber(self,name):
+    def extract_sub_number(self, name):
         suf = name.split('_',1)[1]
         return suf.split(".",1)[0]
     
-    def defineSubFolder(self,name):
+    def define_sub_folder(self,name):
         return name[0]+name[1]+"00"
 
-
-
-
-    def defineFolders(self,name,destPath):
+    def define_folders(self, name):
         dateFolder = name.split('_',1)[0]
-        subNumber = self.extractSubNumber(name)
-        subFolder = dateFolder + "_" + self.defineSubFolder(subNumber)
-
-        imageName = Path(self.path) / "rois" / dateFolder / subFolder / name
-        destFolder = Path(destPath) / dateFolder
+        subNumber = self.extract_sub_number(name)
+        subFolder = dateFolder + "_" + self.define_sub_folder(subNumber)
+        imageName = Path(self.raw_data_path) / "cpics" / "rois" / dateFolder / subFolder / name
+        destFolder = Path(self.project_path)/ "_work" / dateFolder
         return { 'destFolder':destFolder, 'imageName':imageName , 'tsvName':dateFolder }
 
 
-    def dataToTsvFormat(self,data):
+    def data_to_tsv_format(self, data):
         # insert data in an array following mapping
         tsvrow = []
         mapping = self.model.mapping
         for tsvkey in mapping:
             rois = mapping[tsvkey]
             index = rois['index']
-            result = self.applyFn(rois['fn'], data[index])
+            result = self.apply_fn(rois['fn'], data[index])
             tsvrow.append(result)
 
         return tsvrow
 
-    def additionnalProcess(self, data):
+    def additionnal_process(self, data):
         #TODO add here image processing
         pass
 
-    def applyFn(self,fn,data):
+    def import_in_ecotaxa(self):
+        #TODO
+        pass
+
+
+    def apply_fn(self, fn, data):
         if fn is None: 
                 return data
         cls = self
@@ -78,7 +81,7 @@ class CPICsProject(Project):
         except AttributeError:
             raise NotImplementedError("Class `{}` does not implement `{}`".format(cls.__class__.__name__, fn))
 
-    def initTsv(self):
+    def init_tsv(self):
         tsv = Tsv()
         mapping = self.model.mapping
         for k in mapping:
@@ -89,25 +92,25 @@ class CPICsProject(Project):
 
 
     #2019/11/25 21:50:15.277
-    def date(self,data):
+    def date(self, data):
         return data[:4]+data[5:7]+data[8:10]
 
     def time(self,data):
         return str(int(data[11:13])*60+int(data[14:16]))
 
 
-    def dateFromName(self,name):
+    def date_from_name(self, name):
         dict = self.deconstructCpicsFileName(name)
         return dict['year']+dict['month']+dict['day']
 
-    def timeFromName(self,name):
+    def time_from_name(self, name):
         dict = self.deconstructCpicsFileName(name)
         return str(int(dict['hour'])*60)+dict['min']
 
-    def id(self,name):
+    def id(self, name):
         return name[:-4]
 
-    def deconstructCpicsFileName(self,filename):
+    def deconstruct_cpics_file_name(self, filename):
         #returns a dictonaring with the deconstructed filename
         #20190726_121131.773.1.png
         year = filename[:4]
