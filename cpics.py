@@ -2,8 +2,6 @@
 
 import os
 from pathlib import Path
-import subprocess
-
 
 from Project import Project
 from tsv import Tsv 
