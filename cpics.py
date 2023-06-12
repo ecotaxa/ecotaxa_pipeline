@@ -56,7 +56,7 @@ class CPICsProject(Project):
     def dataToTsvFormat(self,data):
         # insert data in an array following mapping
         tsvrow = []
-        mapping = self.model.getMapping()
+        mapping = self.model.mapping
         for tsvkey in mapping:
             rois = mapping[tsvkey]
             index = rois['index']
@@ -81,7 +81,7 @@ class CPICsProject(Project):
 
     def initTsv(self):
         tsv = Tsv()
-        mapping = self.model.getMapping()
+        mapping = self.model.mapping
         for k in mapping:
             t = mapping[k]['type'] #todo add function in model to do that
             tsv.add_feature("",k,t) # TODO: replace "" by None

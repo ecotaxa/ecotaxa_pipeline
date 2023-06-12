@@ -3,13 +3,15 @@
 
 
 from cpics import CPICsProject 
-from cpicsModel import cpicsModel
+from cpicsModel import cpicsModel, CTD_sbe37
 
-#def __main__():
-roisModel = cpicsModel()
-roisModel.addCtd()
-#roisModel.printmodel()
-#roisModel.printmapping()
+#def __init__():
 
-c = CPICsProject("/home/sgalvagno/Test/cpics",roisModel)
+ctdModel=CTD_sbe37()
+# ctdModel.printmapping()
+roisModel = cpicsModel(ctdModel)
+
+# roisModel.printmapping()
+
+c = CPICsProject("/home/sgalvagno/Test/cpics", roisModel)
 c.generateProject("/home/sgalvagno/Test/cpicsEcotaxa")

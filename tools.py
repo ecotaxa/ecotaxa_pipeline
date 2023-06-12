@@ -30,3 +30,12 @@ def createFolder(path):
     if not os.path.isdir(path):
         os.mkdir(path)
 
+
+def printDict(d:dict, title=""):
+    if title != "":
+        print(title)
+    for k in d:
+        s = ""
+        for v in d[k]:
+            s = s + v + ":" + str(d[k][v]) + ","
+        print( k + " -> " + s)
