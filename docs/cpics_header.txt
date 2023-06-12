@@ -1,0 +1,11 @@
+
+cpics/rois/ROICoord
+
+20191218.roicoords.txt
+ROI file format
+
+#Date,Time,Name,Position upper leftx,Position upper lefty,Position lower rightx,Position lower rightY,Temperature,Conductivity,Pressure,Depth,Salinity,Sound Velocity,local density
+ROI,2019/12/02 02:00:04.648,20191202_020004.648.0.png,188,1388,252,1440,  20.4393, -0.00001,   -0.147,  -0.146,   0.0000, 1483.696, -1.8871,
+
+
+

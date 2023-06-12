@@ -1,0 +1,56 @@
+@startuml
+
+/' set separator :: '/
+
+class Project{
+    name
+    sourcePath
+    detinationPath
+
+    template
+}
+
+class ReadFormatedFile{
+    template
+}
+
+class Template{
+    mapping
+}
+
+class CPICs.cpicsModel {
+    mapping
+}
+
+class CPICs.CTD.CTD {
+    mapping
+}
+
+class TSV {
+    tsvFormatName()
+}
+
+json mapping {
+    "ecotaxa tsv header":{
+        "file":"permit to use different source file during the process",
+        "header":"header use in the source file",
+        "index":"number",
+        "type": "[t] or [f]",
+        "function":{"class":"class to use","method":"function to call"}
+        }
+    }
+
+/' Project *.. ReadFormatedFile '/
+Project *.. TSV
+CPICsProject -|> Project
+CPICsProject *.. CPICs.cpicsModel
+ReadFormatedFile ... Template
+Template .. mapping
+CPICs.cpicsModel ---|> Template
+CPICs.cpicsModel o.. .CPICs.CTD.CTD
+CPICs.CTD.CTD -left-|> Template
+CPICs.CTD.CTD_sbe37 -up-|> .CPICs.CTD.CTD
+CPICs.CTD.CTD_rbr -up-|> .CPICs.CTD.CTD
+/' CPICs.cpicsModel -up-|> TSV '/
+/' CPICs.cpicsModel .. ReadFormatedFile '/
+@enduml

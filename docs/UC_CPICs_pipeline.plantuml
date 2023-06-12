@@ -1,0 +1,33 @@
+/'Sebastien Galvagno '/
+@startuml
+
+floating note
+Processing CPICs
+end note
+
+start
+
+:ask for **cpics** folder;
+:list files into cpics/rois/ROICoord folder;
+
+while (file available?) is (has data)
+:extract name from filename -> **subProject**;
+:create folder **Project/subProject**;
+:create tsv file at **Project/subProject/tsv**;
+:add header lines in tsv file;
+:open file;
+while (line avalaible?) is (has data)
+    :get filename from row feature (filename);
+    :extract **prefix** from filename;
+    :copy "filename" from **subProject/subProject_prefix** folder to **Project/subProject**; 
+    :transform cpics feature in tsv format;
+    :add row to tsv;
+endwhile (empty)
+
+endwhile (no file)
+
+:zip project;
+
+stop
+
+@enduml

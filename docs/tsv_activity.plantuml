@@ -1,0 +1,48 @@
+/'Sebastien Galvagno '/
+
+@startuml
+
+start
+:Create TSV;
+:Add feature;
+stop
+
+start
+floating note
+  formated data
+end note
+
+:Use a TSV model;
+:Add data with id;
+if (id exist?) then (yes)
+    :raise an error;
+else (no)
+    :update state;
+endif
+stop
+
+start
+note right
+  unformated data
+  ----
+  need to find data in the flow
+end note
+:Use a TSV model;
+repeat
+    :Add feature data with id;
+    if (id exist?) then (yes)
+        :raise an error;
+        end
+    elseif (feature not empty?) then (yes)
+        :raise an error;
+        end
+    endif
+
+    :fill the feature with data;
+    repeat while (more data?) is (yes)
+
+stop
+
+
+
+@enduml

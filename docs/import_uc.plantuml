@@ -1,0 +1,66 @@
+/' Sebastien Galvagno '/
+
+@startuml
+
+left to right direction
+
+
+:Engineer: --> (TSV)
+:Engineer: ---> (Features)
+
+
+:Scientific: --> (Ecotaxa)
+:Scientific: --> (Import)
+:Scientific: --> (GenerateTSV)
+
+:Scientific: -up-|> :Engineer:
+
+:Device: --> (Data)
+
+
+"Use Ecotaxa" as (Ecotaxa)
+"Describe TSV" as (TSV) 
+"Add features to tsv file \n to follow the data generate by the device" as (Features)
+"Generate data" as (Data)
+"Import data with tsv file" as (Import)
+
+"import data from device to tsv file" as (GenerateTSV)
+
+(TSV) --> (Features) : contains
+
+
+usecase import as "import data in tsv line by line. 
+--
+data generate by the device are formated
+
+==
+if id exist
+--
+update values 
+**OR** 
+raise an error
+"
+
+usecase import2 as "import data based on id and feature
+when data flow are not a stream
+
+==
+try to add a non existing feature 
+--
+ add it
+ update all data rows
+**OR**
+ raise an error
+
+==
+
+if id exist & feature not empty
+--
+update value 
+**OR** 
+raise an error
+"
+
+@enduml
+
+

@@ -1,0 +1,36 @@
+/' Sebastien Galvagno '/
+
+@startuml
+
+package ecotaxa_tsv {
+
+enum unit {
+    text
+    float
+}
+
+class feature {
+    name: String
+    unit: unit
+}
+
+ abstract ecotaxa_tsv {
+    "minimal tsv contains img_file_name & object_id features"
+    features
+    data
+
+    addFeature()
+    addData()
+
+    generateTsv()
+}
+
+class tsv {
+
+}
+
+ecotaxa_tsv *-- feature : have
+tsv -|> ecotaxa_tsv
+}
+
+@enduml

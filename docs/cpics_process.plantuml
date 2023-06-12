@@ -1,0 +1,25 @@
+/'Sebastien Galvagno '/
+
+@startuml
+
+class cpics{
+    cpicsPath: string
+    projectPath: string
+
+    listFile()
+    getDataFromFile()
+}
+
+class fs {
+    listFile()
+    createFolder()
+    copyFile()
+}
+
+class tsv 
+
+cpics *.. tsv
+cpics *.. fs
+
+
+@enduml

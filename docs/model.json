@@ -1,0 +1,9 @@
+{
+    "mapping":{
+        "file":"if use different type of file during the process",
+        "header":"header use in the source file",
+        "index":1,
+        "type": ["[t]","[f]"],
+        "function":{"class":"class to use","method":"function to call"}
+    }
+}
