@@ -111,6 +111,27 @@ def read_txt_file(self, file_name):
             s = line.split(":")
             data[s[0]]= s[1]
         
+
+        
     tsvrow = self._model.data_to_tsv_format(data)
     return tsvrow
         
+
+def info_file(self, path):
+
+    data = {}
+
+    with open(path,'r') as fp:
+        for l_no, line in enumerate(fp):
+            pass
+
+
+def apply_fn(self, fn, data):
+    if fn is None: 
+        return data
+    cls = self
+    try:
+        method = getattr(cls, fn)
+        return method(data)
+    except AttributeError:
+        raise NotImplementedError("Class `{}` does not implement `{}`".format(cls.__class__.__name__, fn))

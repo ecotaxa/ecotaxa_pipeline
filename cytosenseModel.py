@@ -5,18 +5,16 @@
 from Template import Template
 
 
-class cpicsModel(Template):
+class cytosenseModel(Template):
 
     _mapping = {
         #'object_date':{ 'file' : "ROI" , 'header' :'Date', 'index' : 1 , 'fn' : "date" , 'type' : '[t]', 'comment': 'Date'},
     }
     
-    def __init__(self, pulse: Template="", listMode: Template="", info: Template=""):
-        self.append(pulse.mapping)
-        self.append(listMode.mapping)
-        self.append(info.mapping)
+    def __init__(self, models = []): # Array<Template>
+        for model in models:
+            self.append(model.mapping)
         super().__init__()
-
 
 
 
@@ -121,6 +119,84 @@ class Listnode(Template):
         "object_date":{ "file" : "ListMode" , "header" :"Curvature SWS covariance","index":80, "fn": None, "type":"[t]", "comment":""},
     }
 
+
+class CefasListNode(Template):
+
+    _mapping = {
+        "object_date":{ "file" : "ListMode" , "header" :"﻿Particle ID","index":0, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Sample Length","index":1, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Arrival Time","index":2, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"FWS Length","index":3, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"FWS Total","index":4, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"FWS Maximum","index":5, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"FWS Average","index":6, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"FWS Inertia","index":7, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"FWS Center of gravity","index":8, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"FWS Fill factor","index":9, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"FWS Asymmetry","index":10, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"FWS Number of cells","index":11, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"FWS First","index":12, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"FWS Last","index":13, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"FWS Minimum","index":14, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"FWS SWS covariance","index":15, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"FWS Length(50%)","index":16, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Sidewards Scatter Length","index":17, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Sidewards Scatter Total","index":18, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Sidewards Scatter Maximum","index":19, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Sidewards Scatter Average","index":20, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Sidewards Scatter Inertia","index":21, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Sidewards Scatter Center of gravity","index":22, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Sidewards Scatter Fill factor","index":23, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Sidewards Scatter Asymmetry","index":24, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Sidewards Scatter Number of cells","index":25, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Sidewards Scatter First","index":26, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Sidewards Scatter Last","index":27, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Sidewards Scatter Minimum","index":28, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Sidewards Scatter SWS covariance","index":29, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Sidewards Scatter Length(50%)","index":30, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Fl Yellow Length","index":31, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Fl Yellow Total","index":32, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Fl Yellow Maximum","index":33, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Fl Yellow Average","index":34, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Fl Yellow Inertia","index":35, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Fl Yellow Center of gravity","index":36, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Fl Yellow Fill factor","index":37, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Fl Yellow Asymmetry","index":38, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Fl Yellow Number of cells","index":39, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Fl Yellow First","index":40, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Fl Yellow Last","index":41, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Fl Yellow Minimum","index":42, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Fl Yellow SWS covariance","index":43, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Fl Yellow Length(50%)","index":44, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Fl Orange Length","index":45, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Fl Orange Total","index":46, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Fl Orange Maximum","index":47, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Fl Orange Average","index":48, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Fl Orange Inertia","index":49, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Fl Orange Center of gravity","index":50, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Fl Orange Fill factor","index":51, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Fl Orange Asymmetry","index":52, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Fl Orange Number of cells","index":53, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Fl Orange First","index":54, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Fl Orange Last","index":55, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Fl Orange Minimum","index":56, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Fl Orange SWS covariance","index":57, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Fl Orange Length(50%)","index":58, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Fl Red Length","index":59, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Fl Red Total","index":60, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Fl Red Maximum","index":61, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Fl Red Average","index":62, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Fl Red Inertia","index":63, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Fl Red Center of gravity","index":64, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Fl Red Fill factor","index":65, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Fl Red Asymmetry","index":66, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Fl Red Number of cells","index":67, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Fl Red First","index":68, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Fl Red Last","index":69, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Fl Red Minimum","index":70, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Fl Red SWS covariance","index":71, "fn": None, "type":"[t]", "comment":""},
+"object_date":{ "file" : "ListMode" , "header" :"Fl Red Length(50%)","index":72, "fn": None, "type":"[t]", "comment":""},
+}
 
 
 # sed 's/:.*//g' 'ATSO_photos_flr16_2uls_10min 2022-06-15 16h31_Info.txt' | sed 's/^/"object_date":{ "file" : "Info" , "header" :"/g' | sed 's/$/","index":1, "fn": None, "type":"[t]", "comment":""},/g' | awk '{gsub("index\":1","index\":" NR-1,$0);print}' > info.txt
