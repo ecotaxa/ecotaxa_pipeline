@@ -24,12 +24,14 @@ def copy_to_file(filename: Path, subFolder):
         return False
     return True
 
-def create_folder(path):
+def create_folder(path: Path):
+    p = Path(path)
     try :
         if not os.path.isdir(path):
             os.mkdir(path)
     except OSError as error: 
-        eprint("cannot create folder : " + path +", "+ error)
+        path_str = str(p.absolute)
+        eprint("cannot create folder : " + path_str +", "+ str(error))
 
 
 def print_dict(d:dict, title=""):
