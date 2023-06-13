@@ -41,6 +41,7 @@ class Tsv:
         return len(data) == len(self.header)
 
     def generate_tsv(self,filename):
+        print("write " + filename)
         with open(filename, 'wt') as out_file:
             tsv_writer = csv.writer(out_file, delimiter='\t')
             tsv_writer.writerow(self.header)

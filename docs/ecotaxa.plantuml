@@ -1,0 +1,8 @@
+@startuml
+
+sample *.. acquisition 
+acquisition *.. process
+
+
+
+@enduml
