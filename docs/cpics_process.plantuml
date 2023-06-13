@@ -12,7 +12,7 @@ class cpics{
 
 class fs {
     listFile()
-    createFolder()
+    create_folder()
     copyFile()
 }
 

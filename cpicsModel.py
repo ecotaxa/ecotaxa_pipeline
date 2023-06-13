@@ -1,7 +1,7 @@
 # Sebastien Galvagno  06/2023
 
 
-# from tools import printDict
+# from tools import print_dict
 from Template import Template
 
 
@@ -36,7 +36,7 @@ class cpicsModel(Template):
     
     def __init__(self, ctd: Template=""):
         map = ctd.mapping
-        # printDict(map,"MAP")
+        # print_dict(map,"MAP")
         self.append(map)
         super().__init__()
 

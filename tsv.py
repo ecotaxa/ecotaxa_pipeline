@@ -51,5 +51,5 @@ class Tsv:
     def showHeader(self):
         print(', '.join(map(str, self.header))) 
 
-    def tsvFormatName(self,name):
+    def tsv_format_name(self,name):
         return "ecotaxa_" + name + ".tsv"

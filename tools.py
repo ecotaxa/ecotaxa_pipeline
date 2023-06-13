@@ -10,7 +10,7 @@ from pathlib import Path
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
 
-def copyFileTo(filename: Path, subFolder):
+def copy_to_file(filename: Path, subFolder):
     if not os.path.exists(filename):
         eprint("file don't exist: " + str(filename.absolute()))
         return False
@@ -24,7 +24,7 @@ def copyFileTo(filename: Path, subFolder):
         return False
     return True
 
-def createFolder(path):
+def create_folder(path):
     try :
         if not os.path.isdir(path):
             os.mkdir(path)
@@ -32,7 +32,7 @@ def createFolder(path):
         eprint("cannot create folder : " + path +", "+ error)
 
 
-def printDict(d:dict, title=""):
+def print_dict(d:dict, title=""):
     if title != "":
         print(title)
     for k in d:
