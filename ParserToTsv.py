@@ -56,14 +56,20 @@ class ParserToTsv:
             tsvName = self._tsv.tsv_format_name( folder['tsvName'] )
             self._tsv.generate_tsv(folder['destFolder'] / tsvName)
 
-    def read_csv_filecyto(self, file_name, dest_path):
+    def read_csv_filecyto(self, file_name, dest_path, argv):
+
+        delimiter=','
+        if argv['delimiter']:
+            delimiter=argv['delimiter']
+            
+
         print ("processing: " + file_name)
         
         folder = self._model.define_folders(dest_path)
         create_folder(folder['destFolder'])
 
         with open(file_name, "r") as fp:
-            reader = csv.reader( fp )
+            reader = csv.reader( fp , delimiter=delimiter)
 
             #for data in reader:
             line = -1
@@ -83,6 +89,11 @@ class ParserToTsv:
                     # in the sample data we have a file named 20191202.roicoordswithheader.txt 
                     # that contain the header
                     if data[0][0] == "#" or data[0][0] == "^@":
+                        continue
+        
+                    print(file_name[-10:-4])
+                    # print(data[0][:len("Particul ID")])
+                    if file_name[-10:-4] == "Pulses" and data[0] == "Particle ID":
                         continue
             
                     # folder = self._model.define_folders(dest_path)
@@ -107,14 +118,23 @@ class ParserToTsv:
                     if status:
                         tsvrow = self._model.data_to_tsv_format(data)
                         #tsvrow.update(additionaldata)
-                        self._tsv.addData(tsvrow)
+                        # self._tsv.addData(tsvrow)
+                        self.addData(tsvrow)
 
-            #tsvName = self.id(name) + ".tsv"
-            # tsvName = self._tsv.tsv_format_name( folder['tsvName'] )
-#            tsvName = self._tsv.tsv_format_name( folder['tsvName'] )
-            tsvName = self._tsv.tsv_format_name( self._model.filename )
-            self._tsv.generate_tsv(folder['destFolder'] / tsvName)
 
+
+    temporary_data = {}
+
+    def addData(self, data = {}):
+        if data == {}: return
+        id = data['object_id']
+
+        if id in self.temporary_data:
+            v = self.temporary_data[id]
+            v.update(data)
+            self.temporary_data[id] = v
+        else:
+            self.temporary_data[id] = data
 
 
     def read_csv_file__(self, file_name, dest_path, fn):

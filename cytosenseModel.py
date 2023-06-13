@@ -7,7 +7,7 @@ from Template import Template
 class cytosenseModel(Template):
     _mapping = {
         #'object_date':{ 'file' : "ROI" , 'header' :'Date', 'index' : 1 , 'fn' : "date" , 'type' : '[t]', 'comment': 'Date'},
-        'img_file_name':{ 'file' : None , 'header' :None, 'index' : 1 , 'fn' : None , 'type' : '[t]', 'comment': 'image'},
+        'img_file_name':{ 'file' : None , 'header' :None, 'index' : 0 , 'fn' : "image" , 'type' : '[t]', 'comment': 'image'},
     }
 
     def __init__(self, models=[]):  # Array<Template>
@@ -30,7 +30,7 @@ class pulse(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fws": {
             "file": "Pulses",
             "header": "FWS",
             "index": 1,
@@ -38,7 +38,7 @@ class pulse(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_sws": {
             "file": "Pulses",
             "header": "SWS",
             "index": 2,
@@ -46,7 +46,7 @@ class pulse(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fl_erllow": {
             "file": "Pulses",
             "header": "FL Yellow",
             "index": 3,
@@ -54,7 +54,7 @@ class pulse(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fl_orange": {
             "file": "Pulses",
             "header": "FL Orange",
             "index": 4,
@@ -62,7 +62,7 @@ class pulse(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fl_red": {
             "file": "Pulses",
             "header": "FL Red",
             "index": 5,
@@ -70,7 +70,7 @@ class pulse(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_curvature": {
             "file": "Pulses",
             "header": "Curvature",
             "index": 6,
@@ -87,7 +87,7 @@ class UlcoListnode(Template):
             "file": "ListMode",
             "header": "Particle ID",
             "index": 0,
-            "fn": None,
+            "fn": "define_id",
             "type": "[t]",
             "comment": "",
         },
@@ -740,7 +740,7 @@ class CefasListNode(Template):
             "file": "ListMode",
             "header": "﻿Particle ID",
             "index": 0,
-            "fn": None,
+            "fn": "define_id",
             "type": "[f]",
             "comment": "",
         },
@@ -1344,7 +1344,7 @@ class Info(Template):
             "type": "[f]",
             "comment": "",
         },
-        -"acq_instrument": {
+        "acq_instrument": {
             "file": "Info",
             "header": "Instrument",
             "index": 3,
@@ -1376,7 +1376,7 @@ class Info(Template):
             "type": "[t]",
             "comment": "",
         },
-        -"sample_measurement_date": {
+        "sample_measurement_date": {
             "file": "Info",
             "header": "Measurement date",
             "index": 8,

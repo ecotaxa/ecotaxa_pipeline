@@ -6,17 +6,29 @@ class Template:
     _mapping = {}
     _keyorder = []
     
+    # def __init__(self, mapping):
+    def __init__(self):
+        # self._mapping = mapping
+        self._keyorder = self._mapping.keys()
+
     @property
     def mapping(self) -> dict:
         return self._mapping
-    
-    def append(self,template):
+
+    # @property 
+    def keyorder(self):
+        return self._keyorder
+
+    def append(self, template):
         #dict = template.mapping()
         #self.mapping = { **self._mapping , **template }
         self.mapping.update(template)
+        self._keyorder = self._mapping.keys()
+
+
 
     def _order(self):
-        self._keyorder = self._mapping.keys
+        self._keyorder = self._mapping.keys()
 
     def key(self,key):
         return self._mapping[key]

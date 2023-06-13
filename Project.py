@@ -1,11 +1,12 @@
 # Sebastien Galvagno 06/2023
 import os
+from Template import Template
 from tools import create_folder
 from tsv import Tsv 
 
 
 class Project:
-    def __init__(self, raw_data_path, data_to_export_base_path, model, title, instrument):
+    def __init__(self, raw_data_path, data_to_export_base_path, model : Template, title, instrument):
         self.raw_data_path = raw_data_path
         self.project_path = os.path.join(data_to_export_base_path, title)
         self.model = model
@@ -18,6 +19,10 @@ class Project:
         create_folder(self.project_path) 
         create_folder(os.path.join(self.project_path, "_raw"))
         create_folder(os.path.join(self.project_path, "_work"))
+
+    @property 
+    def keyorder(self):
+        return self.model.keyorder
 
     # def data_to_tsv_format(self, data):
     #     # insert data in an array following mapping

@@ -36,12 +36,29 @@ class Tsv:
             self.showHeader(self)
             raise Exception("missing data in the array", data)
 
+
+    # def addData(self, data = []):
+    #     if data == []: return
+    #     id = data['object_id']
+
+    #     if id in self.data:
+    #         self.data.append(data)
+    #     else:
+    #         self.data = data
+            
+    #     if self.check(data):
+    #         self.data.append(data)
+    #     else:
+    #         self.showHeader(self)
+    #         raise Exception("missing data in the array", data)
+        
+
     def check(self, data):
         #return len(data)+2 == len(self.header)
         return len(data) == len(self.header)
 
     def generate_tsv(self,filename):
-        print("write " + filename)
+        print("write " + str(filename))
         with open(filename, 'wt') as out_file:
             tsv_writer = csv.writer(out_file, delimiter='\t')
             tsv_writer.writerow(self.header)

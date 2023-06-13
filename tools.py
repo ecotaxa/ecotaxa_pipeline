@@ -48,3 +48,9 @@ def print_dict(d:dict, title=""):
             s = s + v + ":" + str(d[k][v]) + ","
         print( k + " -> " + s)
 
+def order_dict(dictionnary, keys = []):
+    result = []
+    for k in keys:
+        if k in dictionnary:
+            result.append(dictionnary[k])
+    return result
