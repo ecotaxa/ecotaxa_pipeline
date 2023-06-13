@@ -23,6 +23,13 @@ roisModel = cpicsModel(ctdModel)
 # POST /project/
 message_project_creation = {
   "title" : "WORKSHOP_SMALL_CPICS_PROJECT",
+  "cpics_raw_path" : "/home/sgalvagno/Test",
+  "CpicsProcess_path" : "/home/sgalvagno/cpicsEcotaxa",
+  "model" : roisModel
+}
+
+_message_project_creation = {
+  "title" : "WORKSHOP_SMALL_CPICS_PROJECT",
   "cpics_raw_path" : "/Users/jcoustenoble/Desktop/CPICS_RAW/WORKSHOP_SMALL_CPICS_PROJECT",
   "CpicsProcess_path" : "/Users/jcoustenoble/Desktop/CPICS_EXPORT",
   "model" : roisModel
