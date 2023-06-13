@@ -2,11 +2,11 @@
 
 
 from cytosense import CytoSense
-from cytosenseModel import cytosenseModel ,  pulse,Listnode, Info, CefasListNode
+from cytosenseModel import cytosenseModel ,  pulse, UlcoListnode, Info, CefasListNode
 from tools import print_dict
 
 
-model = cytosenseModel([pulse(), Listnode(), Info()])
+ulcoModel = cytosenseModel([pulse(), UlcoListnode()]) #, Info()])
 
 modelCefas = cytosenseModel([pulse(), CefasListNode()]) #, Info()])
 
@@ -22,6 +22,12 @@ message_project_creation = {
   "model" : modelCefas
 }
 
+message_project_creation = {
+  "title" : "WORKSHOP_SMALL_CYTOSENSE (data from) ULCO device_PROJECT",
+  "cpics_raw_path" : "tests/cytosense/ULCO/mock_small_data",
+  "CpicsProcess_path" : "tests/cytosense/result",
+  "model" : ulcoModel
+}
 
 c = CytoSense(message_project_creation["cpics_raw_path"], message_project_creation["CpicsProcess_path"], message_project_creation["model"] , message_project_creation["title"])
 
