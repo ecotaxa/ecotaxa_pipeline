@@ -81,9 +81,9 @@ class pulse(Template):
     }
 
 # head -1 'ATSO_photos_flr16_2uls_10min 2022-06-15 16h31_Listmode.csv' | sed 's/;/\n/g' | sed 's/^/"object_date":{ "file" : "ListMode" , "header" :"/g' | sed 's/$/","index":1, "fn": None, "type":"[t]", "comment":""},/g' | awk '{gsub("index\":1","index\":" NR-1,$0);print}' > listnode.txt
-class Listnode(Template):
+class UlcoListnode(Template):
     _mapping = {
-        "object_date": {
+        "object_id": {
             "file": "ListMode",
             "header": "Particle ID",
             "index": 0,
@@ -91,7 +91,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "sample_length": {
             "file": "ListMode",
             "header": "Sample Length",
             "index": 1,
@@ -99,7 +99,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "sample_arrival_time": {
             "file": "ListMode",
             "header": "Arrival Time",
             "index": 2,
@@ -107,7 +107,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fws_length": {
             "file": "ListMode",
             "header": "FWS Length",
             "index": 3,
@@ -115,7 +115,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fws_total": {
             "file": "ListMode",
             "header": "FWS Total",
             "index": 4,
@@ -123,7 +123,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fws_maximum": {
             "file": "ListMode",
             "header": "FWS Maximum",
             "index": 5,
@@ -131,7 +131,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fws_average": {
             "file": "ListMode",
             "header": "FWS Average",
             "index": 6,
@@ -139,7 +139,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fws_inertia": {
             "file": "ListMode",
             "header": "FWS Inertia",
             "index": 7,
@@ -147,7 +147,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fws_center_of_gravity": {
             "file": "ListMode",
             "header": "FWS Center of gravity",
             "index": 8,
@@ -155,7 +155,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fws_fill_factor": {
             "file": "ListMode",
             "header": "FWS Fill factor",
             "index": 9,
@@ -163,7 +163,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fws_asymmetry": {
             "file": "ListMode",
             "header": "FWS Asymmetry",
             "index": 10,
@@ -171,7 +171,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fws_number_of_cells": {
             "file": "ListMode",
             "header": "FWS Number of cells",
             "index": 11,
@@ -179,7 +179,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fws_first": {
             "file": "ListMode",
             "header": "FWS First",
             "index": 12,
@@ -187,7 +187,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fws_last": {
             "file": "ListMode",
             "header": "FWS Last",
             "index": 13,
@@ -195,7 +195,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fws_minimum": {
             "file": "ListMode",
             "header": "FWS Minimum",
             "index": 14,
@@ -203,7 +203,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fws_sws_covariance": {
             "file": "ListMode",
             "header": "FWS SWS covariance",
             "index": 15,
@@ -211,7 +211,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_sidewards_scatter_length": {
             "file": "ListMode",
             "header": "SWS Length",
             "index": 16,
@@ -219,7 +219,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_sidewards_scatter_total": {
             "file": "ListMode",
             "header": "SWS Total",
             "index": 17,
@@ -227,7 +227,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_sidewards_scatter_maximum": {
             "file": "ListMode",
             "header": "SWS Maximum",
             "index": 18,
@@ -235,7 +235,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_sidewards_scatter_average": {
             "file": "ListMode",
             "header": "SWS Average",
             "index": 19,
@@ -243,7 +243,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_sidewards_scatter_inertia": {
             "file": "ListMode",
             "header": "SWS Inertia",
             "index": 20,
@@ -251,7 +251,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_sidewards_scatter_center_of_gravity": {
             "file": "ListMode",
             "header": "SWS Center of gravity",
             "index": 21,
@@ -259,7 +259,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_sidewards_scatter_fill_factor": {
             "file": "ListMode",
             "header": "SWS Fill factor",
             "index": 22,
@@ -267,7 +267,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_sidewards_scatter_asymmetry": {
             "file": "ListMode",
             "header": "SWS Asymmetry",
             "index": 23,
@@ -275,7 +275,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_sidewards_scatter_number_of_cells": {
             "file": "ListMode",
             "header": "SWS Number of cells",
             "index": 24,
@@ -283,7 +283,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_sidewards_scatter_first": {
             "file": "ListMode",
             "header": "SWS First",
             "index": 25,
@@ -291,7 +291,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_sidewards_scatter_last": {
             "file": "ListMode",
             "header": "SWS Last",
             "index": 26,
@@ -299,7 +299,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_sidewards_scatter_minimum": {
             "file": "ListMode",
             "header": "SWS Minimum",
             "index": 27,
@@ -307,7 +307,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_sidewards_scatter_sws_covariance": {
             "file": "ListMode",
             "header": "SWS SWS covariance",
             "index": 28,
@@ -315,7 +315,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fl_yellow_length": {
             "file": "ListMode",
             "header": "FL Yellow Length",
             "index": 29,
@@ -323,7 +323,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fl_yellow_total": {
             "file": "ListMode",
             "header": "FL Yellow Total",
             "index": 30,
@@ -331,7 +331,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fl_yellow_maximum": {
             "file": "ListMode",
             "header": "FL Yellow Maximum",
             "index": 31,
@@ -339,7 +339,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fl_yellow_average": {
             "file": "ListMode",
             "header": "FL Yellow Average",
             "index": 32,
@@ -347,7 +347,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fl_yellow_inertia": {
             "file": "ListMode",
             "header": "FL Yellow Inertia",
             "index": 33,
@@ -355,7 +355,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fl_yellow_center_of_gravity": {
             "file": "ListMode",
             "header": "FL Yellow Center of gravity",
             "index": 34,
@@ -363,7 +363,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fl_yellow_fill_factor": {
             "file": "ListMode",
             "header": "FL Yellow Fill factor",
             "index": 35,
@@ -371,7 +371,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fl_yellow_asymmetry": {
             "file": "ListMode",
             "header": "FL Yellow Asymmetry",
             "index": 36,
@@ -379,7 +379,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fl_yellow_number_of_cells": {
             "file": "ListMode",
             "header": "FL Yellow Number of cells",
             "index": 37,
@@ -387,7 +387,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fl_yellow_first": {
             "file": "ListMode",
             "header": "FL Yellow First",
             "index": 38,
@@ -395,7 +395,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fl_yellow_last": {
             "file": "ListMode",
             "header": "FL Yellow Last",
             "index": 39,
@@ -403,7 +403,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fl_yellow_minimum": {
             "file": "ListMode",
             "header": "FL Yellow Minimum",
             "index": 40,
@@ -411,7 +411,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fl_yellow_sws_covariance": {
             "file": "ListMode",
             "header": "FL Yellow SWS covariance",
             "index": 41,
@@ -419,7 +419,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fl_orange_length": {
             "file": "ListMode",
             "header": "FL Orange Length",
             "index": 42,
@@ -427,7 +427,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fl_orange_total": {
             "file": "ListMode",
             "header": "FL Orange Total",
             "index": 43,
@@ -435,7 +435,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fl_orange_maximum": {
             "file": "ListMode",
             "header": "FL Orange Maximum",
             "index": 44,
@@ -443,7 +443,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fl_orange_average": {
             "file": "ListMode",
             "header": "FL Orange Average",
             "index": 45,
@@ -451,7 +451,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fl_orange_inertia": {
             "file": "ListMode",
             "header": "FL Orange Inertia",
             "index": 46,
@@ -459,7 +459,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fl_orange_center_of_gravity": {
             "file": "ListMode",
             "header": "FL Orange Center of gravity",
             "index": 47,
@@ -467,7 +467,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fl_orange_fill_factor": {
             "file": "ListMode",
             "header": "FL Orange Fill factor",
             "index": 48,
@@ -475,7 +475,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fl_orange_asymmetry": {
             "file": "ListMode",
             "header": "FL Orange Asymmetry",
             "index": 49,
@@ -483,7 +483,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fl_orange_number_of_cells": {
             "file": "ListMode",
             "header": "FL Orange Number of cells",
             "index": 50,
@@ -491,7 +491,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fl_orange_first": {
             "file": "ListMode",
             "header": "FL Orange First",
             "index": 51,
@@ -499,7 +499,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fl_orange_last": {
             "file": "ListMode",
             "header": "FL Orange Last",
             "index": 52,
@@ -507,7 +507,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fl_orange_minimum": {
             "file": "ListMode",
             "header": "FL Orange Minimum",
             "index": 53,
@@ -515,7 +515,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fl_orange_sws_covariance": {
             "file": "ListMode",
             "header": "FL Orange SWS covariance",
             "index": 54,
@@ -523,7 +523,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fl_red_length": {
             "file": "ListMode",
             "header": "FL Red Length",
             "index": 55,
@@ -531,7 +531,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fl_red_total": {
             "file": "ListMode",
             "header": "FL Red Total",
             "index": 56,
@@ -539,7 +539,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fl_red_maximum": {
             "file": "ListMode",
             "header": "FL Red Maximum",
             "index": 57,
@@ -547,7 +547,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fl_red_average": {
             "file": "ListMode",
             "header": "FL Red Average",
             "index": 58,
@@ -555,7 +555,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fl_red_inertia": {
             "file": "ListMode",
             "header": "FL Red Inertia",
             "index": 59,
@@ -563,7 +563,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fl_red_center_of_gravity": {
             "file": "ListMode",
             "header": "FL Red Center of gravity",
             "index": 60,
@@ -571,7 +571,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fl_red_fill_factor": {
             "file": "ListMode",
             "header": "FL Red Fill factor",
             "index": 61,
@@ -579,7 +579,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fl_red_asymmetry": {
             "file": "ListMode",
             "header": "FL Red Asymmetry",
             "index": 62,
@@ -587,7 +587,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fl_red_number_of_cells": {
             "file": "ListMode",
             "header": "FL Red Number of cells",
             "index": 63,
@@ -595,7 +595,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fl_red_first": {
             "file": "ListMode",
             "header": "FL Red First",
             "index": 64,
@@ -603,7 +603,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fl_red_last": {
             "file": "ListMode",
             "header": "FL Red Last",
             "index": 65,
@@ -611,7 +611,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fl_red_minimum": {
             "file": "ListMode",
             "header": "FL Red Minimum",
             "index": 66,
@@ -619,7 +619,7 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
+        "object_fl_red_sws_covariance": {
             "file": "ListMode",
             "header": "FL Red SWS covariance",
             "index": 67,
@@ -627,110 +627,110 @@ class Listnode(Template):
             "type": "[t]",
             "comment": "",
         },
-        "object_date": {
-            "file": "ListMode",
-            "header": "Curvature Length",
-            "index": 68,
-            "fn": None,
-            "type": "[t]",
-            "comment": "",
-        },
-        "object_date": {
-            "file": "ListMode",
-            "header": "Curvature Total",
-            "index": 69,
-            "fn": None,
-            "type": "[t]",
-            "comment": "",
-        },
-        "object_date": {
-            "file": "ListMode",
-            "header": "Curvature Maximum",
-            "index": 70,
-            "fn": None,
-            "type": "[t]",
-            "comment": "",
-        },
-        "object_date": {
-            "file": "ListMode",
-            "header": "Curvature Average",
-            "index": 71,
-            "fn": None,
-            "type": "[t]",
-            "comment": "",
-        },
-        "object_date": {
-            "file": "ListMode",
-            "header": "Curvature Inertia",
-            "index": 72,
-            "fn": None,
-            "type": "[t]",
-            "comment": "",
-        },
-        "object_date": {
-            "file": "ListMode",
-            "header": "Curvature Center of gravity",
-            "index": 73,
-            "fn": None,
-            "type": "[t]",
-            "comment": "",
-        },
-        "object_date": {
-            "file": "ListMode",
-            "header": "Curvature Fill factor",
-            "index": 74,
-            "fn": None,
-            "type": "[t]",
-            "comment": "",
-        },
-        "object_date": {
-            "file": "ListMode",
-            "header": "Curvature Asymmetry",
-            "index": 75,
-            "fn": None,
-            "type": "[t]",
-            "comment": "",
-        },
-        "object_date": {
-            "file": "ListMode",
-            "header": "Curvature Number of cells",
-            "index": 76,
-            "fn": None,
-            "type": "[t]",
-            "comment": "",
-        },
-        "object_date": {
-            "file": "ListMode",
-            "header": "Curvature First",
-            "index": 77,
-            "fn": None,
-            "type": "[t]",
-            "comment": "",
-        },
-        "object_date": {
-            "file": "ListMode",
-            "header": "Curvature Last",
-            "index": 78,
-            "fn": None,
-            "type": "[t]",
-            "comment": "",
-        },
-        "object_date": {
-            "file": "ListMode",
-            "header": "Curvature Minimum",
-            "index": 79,
-            "fn": None,
-            "type": "[t]",
-            "comment": "",
-        },
-        "object_date": {
-            "file": "ListMode",
-            "header": "Curvature SWS covariance",
-            "index": 80,
-            "fn": None,
-            "type": "[t]",
-            "comment": "",
-        },
+        # "object_date": {
+        #     "file": "ListMode",
+        #     "header": "Curvature Length",
+        #     "index": 68,
+        #     "fn": None,
+        #     "type": "[t]",
+        #     "comment": "",
+        # },
+        # "object_date": {
+        #     "file": "ListMode",
+        #     "header": "Curvature Total",
+        #     "index": 69,
+        #     "fn": None,
+        #     "type": "[t]",
+        #     "comment": "",
+        # },
+        # "object_date": {
+        #     "file": "ListMode",
+        #     "header": "Curvature Maximum",
+        #     "index": 70,
+        #     "fn": None,
+        #     "type": "[t]",
+        #     "comment": "",
+        # },
+        # "object_date": {
+        #     "file": "ListMode",
+        #     "header": "Curvature Average",
+        #     "index": 71,
+        #     "fn": None,
+        #     "type": "[t]",
+        #     "comment": "",
+        # },
+        # "object_date": {
+        #     "file": "ListMode",
+        #     "header": "Curvature Inertia",
+        #     "index": 72,
+        #     "fn": None,
+        #     "type": "[t]",
+        #     "comment": "",
+        # },
+        # "object_date": {
+        #     "file": "ListMode",
+        #     "header": "Curvature Center of gravity",
+        #     "index": 73,
+        #     "fn": None,
+        #     "type": "[t]",
+        #     "comment": "",
+        # },
+        # "object_date": {
+        #     "file": "ListMode",
+        #     "header": "Curvature Fill factor",
+        #     "index": 74,
+        #     "fn": None,
+        #     "type": "[t]",
+        #     "comment": "",
+        # },
+        # "object_date": {
+        #     "file": "ListMode",
+        #     "header": "Curvature Asymmetry",
+        #     "index": 75,
+        #     "fn": None,
+        #     "type": "[t]",
+        #     "comment": "",
+        # },
+        # "object_date": {
+        #     "file": "ListMode",
+        #     "header": "Curvature Number of cells",
+        #     "index": 76,
+        #     "fn": None,
+        #     "type": "[t]",
+        #     "comment": "",
+        # },
+        # "object_date": {
+        #     "file": "ListMode",
+        #     "header": "Curvature First",
+        #     "index": 77,
+        #     "fn": None,
+        #     "type": "[t]",
+        #     "comment": "",
+        # },
+        # "object_date": {
+        #     "file": "ListMode",
+        #     "header": "Curvature Last",
+        #     "index": 78,
+        #     "fn": None,
+        #     "type": "[t]",
+        #     "comment": "",
+        # },
+        # "object_date": {
+        #     "file": "ListMode",
+        #     "header": "Curvature Minimum",
+        #     "index": 79,
+        #     "fn": None,
+        #     "type": "[t]",
+        #     "comment": "",
+        # },
+        # "object_date": {
+        #     "file": "ListMode",
+        #     "header": "Curvature SWS covariance",
+        #     "index": 80,
+        #     "fn": None,
+        #     "type": "[t]",
+        #     "comment": "",
+        # },
     }
 
 
