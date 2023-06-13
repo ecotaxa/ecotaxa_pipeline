@@ -30,6 +30,16 @@ class Project:
     #         tsvrow.append(result)
     #     return tsvrow
 
+    @property
+    def mapping(self):
+        return self.model
+
+    def id(self, data):
+        k = self.model.key('object_id')
+        # pri#nt(k)
+        v = k['index']
+        return data[v]
+
 
     def additionnal_process(self, data):
             #TODO add here image processing
@@ -45,6 +55,7 @@ class Project:
                 return data
         cls = self
         try:
+            #print("call: " + fn)
             method = getattr(cls, fn)
             return method(data)
         except AttributeError:

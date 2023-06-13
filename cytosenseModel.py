@@ -7,6 +7,7 @@ from Template import Template
 class cytosenseModel(Template):
     _mapping = {
         #'object_date':{ 'file' : "ROI" , 'header' :'Date', 'index' : 1 , 'fn' : "date" , 'type' : '[t]', 'comment': 'Date'},
+        'img_file_name':{ 'file' : None , 'header' :None, 'index' : 1 , 'fn' : None , 'type' : '[t]', 'comment': 'image'},
     }
 
     def __init__(self, models=[]):  # Array<Template>
@@ -14,6 +15,8 @@ class cytosenseModel(Template):
             self.append(model.mapping)
         super().__init__()
 
+    # def key(self,key):
+    #     super().key(key)
 
 # head -1 'ATSO_photos_flr16_2uls_10min 2022-06-15 16h31_Pulses.csv' | sed 's/;/\n/g' | sed 's/^/"object_date":{ "file" : "Pulses" , "header" :"/g' | sed 's/$/","index":1, "fn": None, "type":"[t]", "comment":""},/g' | awk '{gsub("index\":1","index\":" NR-1,$0);print}'
 class pulse(Template):
@@ -76,7 +79,6 @@ class pulse(Template):
             "comment": "",
         },
     }
-
 
 # head -1 'ATSO_photos_flr16_2uls_10min 2022-06-15 16h31_Listmode.csv' | sed 's/;/\n/g' | sed 's/^/"object_date":{ "file" : "ListMode" , "header" :"/g' | sed 's/$/","index":1, "fn": None, "type":"[t]", "comment":""},/g' | awk '{gsub("index\":1","index\":" NR-1,$0);print}' > listnode.txt
 class Listnode(Template):
@@ -1322,6 +1324,7 @@ class CefasListNode(Template):
 
 
 # sed 's/:.*//g' 'ATSO_photos_flr16_2uls_10min 2022-06-15 16h31_Info.txt' | sed 's/^/"object_date":{ "file" : "Info" , "header" :"/g' | sed 's/$/","index":1, "fn": None, "type":"[t]", "comment":""},/g' | awk '{gsub("index\":1","index\":" NR-1,$0);print}' > info.txt
+
 class Info(Template):
     # Question : is channel order can change?
     _mapping = {
@@ -1518,3 +1521,4 @@ class Info(Template):
             "comment": "",
         },
     }
+

@@ -4,6 +4,7 @@
 class Template:
     
     _mapping = {}
+    _keyorder = []
     
     @property
     def mapping(self) -> dict:
@@ -14,6 +15,11 @@ class Template:
         #self.mapping = { **self._mapping , **template }
         self.mapping.update(template)
 
+    def _order(self):
+        self._keyorder = self._mapping.keys
+
+    def key(self,key):
+        return self._mapping[key]
 
     def printmapping(self):
         print("-= Mapping =-")

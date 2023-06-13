@@ -25,14 +25,18 @@ def copy_to_file(filename: Path, subFolder):
     return True
 
 def create_folder(path: Path):
+    #print("create folder" + path)
     p = Path(path)
     try :
         if not os.path.isdir(path):
-            os.mkdir(path)
+            #os.mkdir(path)
+            #os.makedirs(path, exist_ok=True)
+            p.mkdir(parents=True, exist_ok=True)
     except OSError as error: 
         path_str = str(p.absolute)
 
         eprint("cannot create folder : " + path_str +", "+ str(error))
+
 
 
 def print_dict(d:dict, title=""):
@@ -43,3 +47,4 @@ def print_dict(d:dict, title=""):
         for v in d[k]:
             s = s + v + ":" + str(d[k][v]) + ","
         print( k + " -> " + s)
+
