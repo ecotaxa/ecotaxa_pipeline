@@ -1,0 +1,28 @@
+﻿Trigger level (mV): 15,94
+CytoUSB Block size: Auto (maxTimeOut: 45s )
+
+Instrument: ULCO
+Beam width: 5
+Core speed: 2
+User Comments: 
+
+Measurement date: 2022-09-14 12:28:42
+Measurement duration: 602
+Flow rate (μL/sec): 2,1
+
+Channel 1: Trigger1
+Channel 2: FWS L
+Channel 3: FWS R
+Channel 4: SWS
+  - sensitivity level: 50
+Channel 5: FL Yellow
+  - sensitivity level: 80
+Channel 6: FL Orange
+  - sensitivity level: 80
+Channel 7: FL Red  - TRIGGER
+  - sensitivity level: 80
+
+Total number of particles: 11003
+Smart triggered number of particles: 11003
+Concentration (part/μL): 9,4915805316013
+Volume (μL): 1159,23791231256
