@@ -22,8 +22,15 @@ class CytoSense(Project):
     _listModeData = {}
     tsv = None
 
+    delimiter = ","
+    float_format="."
 
-    def __init__(self, raw_data_path, data_to_export_base_path, cytoSense_model, title):
+    def __init__(self, raw_data_path, data_to_export_base_path, cytoSense_model, title, type = "Cefas"):
+    
+        if type == "ULCO":
+            self.delimiter = ";"
+            self.float_format=","
+    
         super().__init__(raw_data_path, data_to_export_base_path, cytoSense_model, title, Instrument.CYTOSENSE)
         
     def copy_raw_data(self):
@@ -96,7 +103,7 @@ class CytoSense(Project):
 
         self.data_filename = "Listmode"
         listmode_filename = self.raw_data_path +"/"+filename + "_" + self.data_filename + ".csv"
-        parser.read_csv_filecyto( listmode_filename, self.project_path,{"delimiter":";" , "fn":"listModeRowFn"})
+        parser.read_csv_filecyto( listmode_filename, self.project_path,{"delimiter":self.delimiter , "fn":"listModeRowFn"})
 
         # move in analyse (do it after scan the 3 files)
         # self._tsv = self.init_tsv()
@@ -223,7 +230,14 @@ class CytoSense(Project):
                     if map['file'] != self.data_filename: continue
 
             index = map['index']
+
             result = self.apply_fn(map['fn'], data[index])
+
+            if self.float_format == ',':
+                if map['type']=='[f]':
+                    # result = self.change_to_point(result)
+                    result = str(result).replace(",", "." )
+            
             #tsvrow.append(result)
 
             # print("data_to_tsv_format - add row: " + str(data[0]))
@@ -234,6 +248,9 @@ class CytoSense(Project):
 
         return tsvrow
         # return rowResult
+
+    # def change_to_point(data):
+
 
     def data_to_tsv_format2(self, tsv: Tsv, data):
     # def data_to_tsv_format2(self, tsv: Tsv, dataKey):
