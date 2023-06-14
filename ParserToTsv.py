@@ -101,7 +101,7 @@ class ParserToTsv:
                     if data[0]==0 and data[1]==0: continue
     
         
-                    print(file_name[-10:-4])
+                    # print(file_name[-10:-4])
                     # print(data[0][:len("Particul ID")])
                     # if file_name[-10:-4] == "Pulses" and data[0] == "Particle ID":
                     if data[0] == "Particle ID":

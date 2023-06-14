@@ -13,10 +13,19 @@ from tsv import Tsv
 
 class CytoSense(Project):
 
+    _read = []
+    filename = ""
+    data_filename = ""
+
+    _tempTsv = {}
+    _pulsesData = {}
+    _listModeData = {}
+    tsv = None
+
+
     def __init__(self, raw_data_path, data_to_export_base_path, cytoSense_model, title):
         super().__init__(raw_data_path, data_to_export_base_path, cytoSense_model, title, Instrument.CYTOSENSE)
         
-
     def copy_raw_data(self):
         #TODO
         pass
@@ -32,22 +41,19 @@ class CytoSense(Project):
         #print("extract :" + filename)
         return str(filename)
         
-    _read = []
-
     def filter(self, path):
         if not path.is_file():
             return False
-        print("hidden file: "+str(path.name)[0]+ " <== " + str(path.name))
+        # print("hidden file: "+str(path.name)[0]+ " <== " + str(path.name))
         if str(path.name)[0]==".": return False
-        print("filter:"+str(path.name)[-4:])
+        # print("filter:"+str(path.name)[-4:])
         extension = str(path.name)[-4:]
-        if extension == ".cyz" or extension == ".txt":
-            print("eject")
+        if extension == ".cyz" or extension == ".txt" or extension == ".zip":
+            # print("eject")
             return False
         return True
 
-    def process_project(self):
-            
+    def process_project(self):  
             os.DirEntry
             i = 0
             for path in os.scandir(self.raw_data_path):
@@ -55,21 +61,21 @@ class CytoSense(Project):
                 strpath = path.name
                 print("found file:" + strpath)
                 if self.filter(path):
-                    print("analysing")
+                    # print("analysing")
                     filename = self.extract_name(strpath)
                     print("filename = " + filename)
                     if not filename in self._read:
+                        self._read.append(filename )
                         self.analyse(filename)
+                    else:
+                        print("over: " + filename)
                 else:
-                    print("next")
-                if i > 5:
-                    break
+                    print("next "+ path.name)
+                # if i > 5:
+                #     break
 
     def rois_path(self):
         return  os.path.join(self.raw_data_path, "/")
-
-    filename = ""
-    data_filename = ""
 
     def analyse(self, filename):
 
@@ -77,8 +83,6 @@ class CytoSense(Project):
 
         self.filename = filename
         folder = self.define_folders(filename)
-
-        
 
         self.data_filename = "Pulses"
 
@@ -105,8 +109,7 @@ class CytoSense(Project):
 
         self.store_data_in_tsv(folder)
     
-    _tempTsv = {}
-    
+
     def copy_images(self, folder):
         for object_id in self._tempTsv.keys():
             cytosense_id=object_id.split("_")[-1:][0]
@@ -135,10 +138,6 @@ class CytoSense(Project):
             #tsv.addData(row)
         tsv.generate_tsv(folder['destFolder'] / tsvName , self._tempTsv) 
 
-
-    _pulsesData = {}
-    _listModeData = {}
-
     def listModeRowFn(self, data: dict):
         id = data['object_id']
         self._listModeData[id] = data
@@ -165,8 +164,6 @@ class CytoSense(Project):
         # update the pulse
         self._pulsesData[id] = pulse
     
-    tsv = None
-
     def store(self, name):
         if name == "Pulse":
             # if self._pulsesData['object_id'] in self._tempTsv:
@@ -190,7 +187,6 @@ class CytoSense(Project):
                     self._tempTsv[k].update(self._listModeData)
                 else:
                     self._tempTsv[k] = self._listModeData
-
 
     def images(self, index):
         i = [
