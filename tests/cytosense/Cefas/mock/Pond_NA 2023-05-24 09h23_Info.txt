@@ -1,0 +1,29 @@
+﻿Trigger level (mV): 30
+Smart Triggered!
+	Fl Red Maximum > 10
+CytoUSB Block size: - (maxTimeOut: NaNs )
+
+Instrument: Cefas III
+Beam width: 5.5
+Core speed: 2.2
+User Comments: 
+
+Measurement date: 24/05/2023 09:26:01
+Measurement duration: 180
+Flow rate (μL/sec): 5.06
+
+Channel 1: Forward Scatter Left
+Channel 2: Forward Scatter Right
+Channel 3: Sidewards Scatter  - TRIGGER
+  - sensitivity level: 60
+Channel 4: Fl Yellow
+  - sensitivity level: 95
+Channel 5: Fl Orange
+  - sensitivity level: 85
+Channel 6: Fl Red
+  - sensitivity level: 85
+
+Total number of particles: 20818
+Smart triggered number of particles: 20818
+Concentration (part/μL): 225.813570487484
+Volume (μL): 902.452406027101
