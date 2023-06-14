@@ -10,7 +10,7 @@ from pathlib import Path
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
 
-def copy_to_file(filename: Path, subFolder):
+def copy_to_file(filename: Path, subFolder : Path, rename = False , newName = ""):
     if not os.path.exists(filename):
         eprint("file don't exist: " + str(filename.absolute()))
         return False
@@ -18,7 +18,11 @@ def copy_to_file(filename: Path, subFolder):
         eprint("file is empty: " + str(filename.absolute()))
         return False
     try:
-        subprocess.run(["cp", filename, subFolder], check=True, capture_output=True)
+        dest = subFolder
+        if rename:
+            dest = subFolder / newName
+     
+        subprocess.run(["cp", filename, dest], check=True, capture_output=True)
     except:
         eprint("cannot copy file: " + str(filename.absolute()))
         return False

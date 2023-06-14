@@ -6,13 +6,13 @@ from cytosenseModel import cytosenseModel ,  pulse, UlcoListnode, Info, CefasLis
 from tools import print_dict
 
 
-#ulcoModel = cytosenseModel([pulse(), UlcoListnode()]) #, Info()])
-ulcoModel = cytosenseModel([ UlcoListnode()]) #, Info()])
+ulcoModel = cytosenseModel([pulse(), UlcoListnode()]) #, Info()])
+#ulcoModel = cytosenseModel([ UlcoListnode()]) #, Info()])
 print_dict(ulcoModel.mapping)
 
 modelCefas = cytosenseModel([pulse(), CefasListNode()]) #, Info()])
 print_dict(modelCefas.mapping)
-print_dict(modelCefas.key['object_id'])
+#print_dict(modelCefas.key['object_id'])
 
 message_project_creation = {
   "title" : "WORKSHOP_SMALL_CYTOSENSE (data from) Cefas III device_PROJECT",

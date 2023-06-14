@@ -8,7 +8,7 @@ from enums import Instrument
 from pathlib import Path
 # from summarise_pulses import summarise_pulses
 
-from tools import order_dict
+from tools import copy_to_file, order_dict
 from tsv import Tsv
 
 class CytoSense(Project):
@@ -78,11 +78,15 @@ class CytoSense(Project):
         self.filename = filename
         folder = self.define_folders(filename)
 
+        
+
         self.data_filename = "Pulses"
 
         parser = ParserToTsv(self)
-        pulses_filename = self.raw_data_path +"/"+filename + "_" + self.data_filename + ".csv"
-        #parser.read_csv_filecyto( pulses_filename, self.project_path,{"delimiter":";" , "fn":"pulseRowFn"})
+        # pulses_filename = self.raw_data_path +"/"+filename + "_" + self.data_filename + ".csv"
+        # parser.read_csv_filecyto( pulses_filename, self.project_path,{"delimiter":"," , "fn":"pulseRowFn"})
+        pulses_filename = self.raw_data_path +"/../../"+ "pulse_fits" + ".csv"
+        parser.read_csv_filecyto( pulses_filename, self.project_path,{"delimiter":"," , "fn":"pulseRowFn2"})
 
         # poly = summarise_pulses(pulses_filename)
 
@@ -90,15 +94,38 @@ class CytoSense(Project):
         listmode_filename = self.raw_data_path +"/"+filename + "_" + self.data_filename + ".csv"
         parser.read_csv_filecyto( listmode_filename, self.project_path,{"delimiter":";" , "fn":"listModeRowFn"})
 
+        
 
         # move in analyse (do it after scan the 3 files)
         # self._tsv = self.init_tsv()
         # tsvName = self._tsv.tsv_format_name( folder['tsvName'] )
         # self._tsv.generate_tsv(folder['destFolder'] / tsvName)
+
+        self.copy_images(folder)
+
         self.store_data_in_tsv(folder)
     
     _tempTsv = {}
     
+    def copy_images(self, folder):
+        for object_id in self._tempTsv.keys():
+            cytosense_id=object_id.split("_")[-1:][0]
+            images = self.images(cytosense_id)
+            nbImages = 0  # must be < 10
+            for i in images:
+                nbImages += 1
+                r = copy_to_file(Path(self.raw_data_path +"/"+folder['tsvName']+"_Images"+"/"+i), folder['destFolder'])
+                if not r:
+                    copy_to_file(Path("img/empty.jpg"), folder['destFolder'], True, i)
+                if nbImages > 1:
+                    self.add_rank(object_id, nbImages,images[i])
+
+    def add_rank(self, id, rank, image):
+        row = self._tempTsv[id]
+        row['id_rank']=rank
+        row['img_file_name']=image
+        self._tempTsv[id+"_"+str(rank)]
+
     def store_data_in_tsv(self, folder):
         tsv = self.init_tsv()
         tsvName = tsv.tsv_format_name( folder['tsvName'] )
@@ -116,6 +143,9 @@ class CytoSense(Project):
         id = data['object_id']
         self._listModeData[id] = data
 
+    def pulseRowFn2(self, data: dict):
+        id = data['object_id']
+        self._pulsesData[id] = data
 
     def pulseRowFn(self, data: dict):
         id = data['object_id']
@@ -139,22 +169,43 @@ class CytoSense(Project):
 
     def store(self, name):
         if name == "Pulse":
-            if self._pulsesData['object_id'] in self._tempTsv:
-                self._tempTsv[self._pulsesData['object_id']].update(self._pulsesData)
-            else:
-                self._tempTsv[self._pulsesData['object_id']] = self._pulsesData
-                
+            # if self._pulsesData['object_id'] in self._tempTsv:
+            #     self._tempTsv[self._pulsesData['object_id']].update(self._pulsesData)
+            # else:
+            #     self._tempTsv[self._pulsesData['object_id']] = self._pulsesData
+            for k in self._pulsesData:
+                # self._tempTsv[self._listModeData['object_id']] = self._listModeData
+                if k in self._tempTsv:
+                    self._tempTsv[k].update(self._pulsesData)
+                else:    
+                    self._tempTsv[k] = self._pulsesData
+
         if name == "Mode":
             # if self._listModeData['object_id'] in self._tempTsv:
             #     self._tempTsv[self._listModeData['object_id']].update(self._listModeData)
             # else:
             for k in self._listModeData:
                 # self._tempTsv[self._listModeData['object_id']] = self._listModeData
-                self._tempTsv[k] = self._listModeData
+                if k in self._tempTsv:
+                    self._tempTsv[k].update(self._listModeData)
+                else:
+                    self._tempTsv[k] = self._listModeData
 
+
+    def images(self, index):
+        i = [
+            self.filename + "_" + "Cropped" + "_" + index + ".jpg",
+            # self.filename + "_" + "Uncropped" + "_" + index + ".jpg",
+        ]
+        return i
+
+    def rank(self, r):
+        return 1
 
     def image(self, index):
+        # return self.images(index)[0]
         return self.filename + "_" + "Cropped" + "_" + index + ".jpg"
+
 
     def define_folders(self, name):
         imageName = Path(self.raw_data_path) / (name + "_Images") / (name + "_Cropped") # missing "_" + id + ".jpg"

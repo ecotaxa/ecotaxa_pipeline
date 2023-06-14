@@ -8,6 +8,7 @@ class cytosenseModel(Template):
     _mapping = {
         #'object_date':{ 'file' : "ROI" , 'header' :'Date', 'index' : 1 , 'fn' : "date" , 'type' : '[t]', 'comment': 'Date'},
         'img_file_name':{ 'file' : None , 'header' :None, 'index' : 0 , 'fn' : "image" , 'type' : '[t]', 'comment': 'image'},
+        'img_rank':{ 'file':None, 'header':None, 'index':0, 'fn':"rank", 'type':'[f]', 'comment': 'rank'},
     }
 
     def __init__(self, models=[]):  # Array<Template>
@@ -19,7 +20,7 @@ class cytosenseModel(Template):
     #     super().key(key)
 
 # head -1 'ATSO_photos_flr16_2uls_10min 2022-06-15 16h31_Pulses.csv' | sed 's/;/\n/g' | sed 's/^/"object_date":{ "file" : "Pulses" , "header" :"/g' | sed 's/$/","index":1, "fn": None, "type":"[t]", "comment":""},/g' | awk '{gsub("index\":1","index\":" NR-1,$0);print}'
-class pulse(Template):
+class pulseOld(Template):
     #'object_date':{ 'file' : "Pulses" , 'header' :'Date', 'index' : 1 , 'fn' : "date" , 'type' : '[t]', 'comment': 'Date'},
     _mapping = {
         "object_id": {
@@ -78,6 +79,74 @@ class pulse(Template):
             "type": "[t]",
             "comment": "",
         },
+    }
+
+# head -1 tests/cytosense/pulse_fits.csv | sed 's/,/\n/g' | sed 's/^/"object_":{ "file" : "Listmode" , "header" :"/g' | sed 's/$/","index":1, "fn": None, "type":"[f]", "comment":""},/g' | awk '{gsub("index\":1","index\":" NR-1,$0);print}' -> pulse.txt 
+class pulse(Template):
+    '''pulse in polynomial form'''
+    
+    _mapping = {
+        "object_id":{ "file" : "Listmode" , "header" :"particle_ID","index":0, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_0_curvature":{ "file" : "Listmode" , "header" :"coef_0_Curvature","index":1, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_0_FL Orange":{ "file" : "Listmode" , "header" :"coef_0_FL Orange","index":2, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_0_FL Red":{ "file" : "Listmode" , "header" :"coef_0_FL Red","index":3, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_0_FL":{ "file" : "Listmode" , "header" :"coef_0_FL Yellow","index":4, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_0_FWS":{ "file" : "Listmode" , "header" :"coef_0_FWS","index":5, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_0_SWS":{ "file" : "Listmode" , "header" :"coef_0_SWS","index":6, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_1_Curvature":{ "file" : "Listmode" , "header" :"coef_1_Curvature","index":7, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_1_FL":{ "file" : "Listmode" , "header" :"coef_1_FL Orange","index":8, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_1_FL":{ "file" : "Listmode" , "header" :"coef_1_FL Red","index":9, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_1_FL":{ "file" : "Listmode" , "header" :"coef_1_FL Yellow","index":10, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_1_FWS":{ "file" : "Listmode" , "header" :"coef_1_FWS","index":11, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_1_SWS":{ "file" : "Listmode" , "header" :"coef_1_SWS","index":12, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_2_Curvature":{ "file" : "Listmode" , "header" :"coef_2_Curvature","index":13, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_2_FL":{ "file" : "Listmode" , "header" :"coef_2_FL Orange","index":14, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_2_FL":{ "file" : "Listmode" , "header" :"coef_2_FL Red","index":15, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_2_FL":{ "file" : "Listmode" , "header" :"coef_2_FL Yellow","index":16, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_2_FWS":{ "file" : "Listmode" , "header" :"coef_2_FWS","index":17, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_2_SWS":{ "file" : "Listmode" , "header" :"coef_2_SWS","index":18, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_3_Curvature":{ "file" : "Listmode" , "header" :"coef_3_Curvature","index":19, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_3_FL":{ "file" : "Listmode" , "header" :"coef_3_FL Orange","index":20, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_3_FL":{ "file" : "Listmode" , "header" :"coef_3_FL Red","index":21, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_3_FL":{ "file" : "Listmode" , "header" :"coef_3_FL Yellow","index":22, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_3_FWS":{ "file" : "Listmode" , "header" :"coef_3_FWS","index":23, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_3_SWS":{ "file" : "Listmode" , "header" :"coef_3_SWS","index":24, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_4_Curvature":{ "file" : "Listmode" , "header" :"coef_4_Curvature","index":25, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_4_FL":{ "file" : "Listmode" , "header" :"coef_4_FL Orange","index":26, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_4_FL":{ "file" : "Listmode" , "header" :"coef_4_FL Red","index":27, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_4_FL":{ "file" : "Listmode" , "header" :"coef_4_FL Yellow","index":28, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_4_FWS":{ "file" : "Listmode" , "header" :"coef_4_FWS","index":29, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_4_SWS":{ "file" : "Listmode" , "header" :"coef_4_SWS","index":30, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_5_Curvature":{ "file" : "Listmode" , "header" :"coef_5_Curvature","index":31, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_5_FL":{ "file" : "Listmode" , "header" :"coef_5_FL Orange","index":32, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_5_FL":{ "file" : "Listmode" , "header" :"coef_5_FL Red","index":33, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_5_FL":{ "file" : "Listmode" , "header" :"coef_5_FL Yellow","index":34, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_5_FWS":{ "file" : "Listmode" , "header" :"coef_5_FWS","index":35, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_5_SWS":{ "file" : "Listmode" , "header" :"coef_5_SWS","index":36, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_6_Curvature":{ "file" : "Listmode" , "header" :"coef_6_Curvature","index":37, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_6_FL":{ "file" : "Listmode" , "header" :"coef_6_FL Orange","index":38, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_6_FL":{ "file" : "Listmode" , "header" :"coef_6_FL Red","index":39, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_6_FL":{ "file" : "Listmode" , "header" :"coef_6_FL Yellow","index":40, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_6_FWS":{ "file" : "Listmode" , "header" :"coef_6_FWS","index":41, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_6_SWS":{ "file" : "Listmode" , "header" :"coef_6_SWS","index":42, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_7_Curvature":{ "file" : "Listmode" , "header" :"coef_7_Curvature","index":43, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_7_FL":{ "file" : "Listmode" , "header" :"coef_7_FL Orange","index":44, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_7_FL":{ "file" : "Listmode" , "header" :"coef_7_FL Red","index":45, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_7_FL":{ "file" : "Listmode" , "header" :"coef_7_FL Yellow","index":46, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_7_FWS":{ "file" : "Listmode" , "header" :"coef_7_FWS","index":47, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_7_SWS":{ "file" : "Listmode" , "header" :"coef_7_SWS","index":48, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_8_Curvature":{ "file" : "Listmode" , "header" :"coef_8_Curvature","index":49, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_8_FL":{ "file" : "Listmode" , "header" :"coef_8_FL Orange","index":50, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_8_FL":{ "file" : "Listmode" , "header" :"coef_8_FL Red","index":51, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_8_FL":{ "file" : "Listmode" , "header" :"coef_8_FL Yellow","index":52, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_8_FWS":{ "file" : "Listmode" , "header" :"coef_8_FWS","index":53, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_8_SWS":{ "file" : "Listmode" , "header" :"coef_8_SWS","index":54, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_9_Curvature":{ "file" : "Listmode" , "header" :"coef_9_Curvature","index":55, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_9_FL":{ "file" : "Listmode" , "header" :"coef_9_FL Orange","index":56, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_9_FL":{ "file" : "Listmode" , "header" :"coef_9_FL Red","index":57, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_9_FL":{ "file" : "Listmode" , "header" :"coef_9_FL Yellow","index":58, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_9_FWS":{ "file" : "Listmode" , "header" :"coef_9_FWS","index":59, "fn": None, "type":"[f]", "comment":""},
+        "object_coef_9_SWS":{ "file" : "Listmode" , "header" :"coef_9_SWS","index":60, "fn": None, "type":"[f]", "comment":""},
     }
 
 # head -1 'ATSO_photos_flr16_2uls_10min 2022-06-15 16h31_Listmode.csv' | sed 's/;/\n/g' | sed 's/^/"object_date":{ "file" : "Listmode" , "header" :"/g' | sed 's/$/","index":1, "fn": None, "type":"[t]", "comment":""},/g' | awk '{gsub("index\":1","index\":" NR-1,$0);print}' > listnode.txt
