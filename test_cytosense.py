@@ -32,15 +32,15 @@ c = CytoSense(message_project_creation["cpics_raw_path"], message_project_creati
               message_project_creation["title"] )
 
 
-# message_project_creation = {
-#   "title" : "WORKSHOP_SMALL_CYTOSENSE (data from) ULCO device_PROJECT",
-#   "cpics_raw_path" : "tests/cytosense/ULCO/mock_small_data",
-#   "CpicsProcess_path" : "tests/cytosense/result",
-#   "model" : ulcoModel
-# }
+message_project_creation = {
+  "title" : "WORKSHOP_SMALL_CYTOSENSE (data from) ULCO device_PROJECT",
+  "cpics_raw_path" : "tests/cytosense/ULCO/mock_small_data",
+  "CpicsProcess_path" : "tests/cytosense/result",
+  "model" : ulcoModel
+}
 
-# c = CytoSense(message_project_creation["cpics_raw_path"], message_project_creation["CpicsProcess_path"], message_project_creation["model"] , 
-#               message_project_creation["title"] , "ULCO" )
+c = CytoSense(message_project_creation["cpics_raw_path"], message_project_creation["CpicsProcess_path"], message_project_creation["model"] , 
+              message_project_creation["title"] , "ULCO" )
 
 
 

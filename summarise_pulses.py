@@ -1,9 +1,10 @@
+from pathlib import Path
 import pandas as pd
 import numpy as np
 # from tqdm import tqdm
 
 
-def summarise_pulses(name):
+def summarise_pulses(name, show_pulse=False):
   # 1/ Read one pulse file
   # read
   df = pd.read_csv(name, sep=';', decimal=",")
@@ -19,11 +20,14 @@ def summarise_pulses(name):
   # get coefficients
   coefficients = poly.convert().coef
   # and plot the polynomial fit
-  from matplotlib import pyplot as plt
-  x,pulse_fitted = poly.linspace(n=n, domain=[1,n])
-  plt.figure()
-  plt.plot(x, pulse, '.', x, pulse_fitted)
-  plt.show()
+
+  if show_pulse:
+    from matplotlib import pyplot as plt
+    x,pulse_fitted = poly.linspace(n=n, domain=[1,n])
+    plt.figure()
+    plt.plot(x, pulse, '.', x, pulse_fitted)
+    plt.show()
+  
 
   # 3a/ Fit all polynomials
   n_poly = 10
@@ -77,3 +81,8 @@ def summarise_pulses(name):
       axis=1)
     
   return final
+
+def saveCSV(df, name):
+  filepath = Path(name)  
+  filepath.parent.mkdir(parents=True, exist_ok=True)  
+  df.to_csv(filepath, index=False)

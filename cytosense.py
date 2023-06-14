@@ -6,12 +6,14 @@ from ParserToTsv import ParserToTsv
 from Project import Project
 from enums import Instrument
 from pathlib import Path
-# from summarise_pulses import summarise_pulses
+from summarise_pulses import saveCSV, summarise_pulses
 
 from tools import copy_to_file, order_dict
 from tsv import Tsv
 
 class CytoSense(Project):
+
+    use_pandas = True   # to remove when pandas install fixed
 
     _read = []
     filename = ""
@@ -96,10 +98,18 @@ class CytoSense(Project):
         parser = ParserToTsv(self)
         # pulses_filename = self.raw_data_path +"/"+filename + "_" + self.data_filename + ".csv"
         # parser.read_csv_filecyto( pulses_filename, self.project_path,{"delimiter":"," , "fn":"pulseRowFn"})
-        pulses_filename = self.raw_data_path +"/../../"+ "pulse_fits" + ".csv"
-        parser.read_csv_filecyto( pulses_filename, self.project_path,{"delimiter":"," , "fn":"pulseRowFn2"})
 
-        # poly = summarise_pulses(pulses_filename)
+        if not self.use_pandas:
+
+            pulses_filename = self.raw_data_path +"/../../"+ "pulse_fits" + ".csv"
+            parser.read_csv_filecyto( pulses_filename, self.project_path,{"delimiter":"," , "fn":"pulseRowFn2"})
+        else:
+            pulses_filename = self.raw_data_path +"/"+filename + "_" + self.data_filename + ".csv"
+            poly = summarise_pulses(pulses_filename)
+            poly_filename = self.raw_data_path +"/poly/"+filename + "_" + self.data_filename + ".csv"
+            saveCSV(poly, poly_filename)
+            parser.read_csv_filecyto( poly_filename, self.project_path,{"delimiter":"," , "fn":"pulseRowFn2"})
+
 
         self.data_filename = "Listmode"
         listmode_filename = self.raw_data_path +"/"+filename + "_" + self.data_filename + ".csv"
