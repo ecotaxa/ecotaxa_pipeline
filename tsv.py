@@ -33,7 +33,8 @@ class Tsv:
         if self.check(data):
             self.data.append(data)
         else:
-            self.showHeader(self)
+            self.showHeader()
+            print("#Header: " + str(len(self.header)) + "\t\t#rowdata:" + str(len(data)))
             raise Exception("missing data in the array", data)
 
 
@@ -57,14 +58,18 @@ class Tsv:
         #return len(data)+2 == len(self.header)
         return len(data) == len(self.header)
 
-    def generate_tsv(self,filename):
+    def generate_tsv(self,filename, data = None):
+
+        if data == None:
+            data = self.data
+        
         print("write " + str(filename))
         with open(filename, 'wt') as out_file:
             tsv_writer = csv.writer(out_file, delimiter='\t')
             tsv_writer.writerow(self.header)
             tsv_writer.writerow(self.unit)
-            for data in self.data:
-                tsv_writer.writerow(data)
+            for d in self.data:
+                tsv_writer.writerow(d)
 
     def showHeader(self):
         print(', '.join(map(str, self.header))) 

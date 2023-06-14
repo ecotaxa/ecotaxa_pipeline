@@ -1,6 +1,7 @@
 # Sebastien Galvagno 06/2023
 
 import csv
+from pathlib import Path
 from tools import eprint, print_dict
 
 from tools import copy_to_file, create_folder
@@ -58,20 +59,28 @@ class ParserToTsv:
 
     def read_csv_filecyto(self, file_name, dest_path, argv):
 
+        if not Path(file_name).exists: 
+            print("Cannot open " + file_name)
+            return
+        
         delimiter=','
         if argv['delimiter']:
             delimiter=argv['delimiter']
-            
+        if argv['fn']:
+            fn=argv['fn']
+    
 
         print ("processing: " + file_name)
         
         folder = self._model.define_folders(dest_path)
         create_folder(folder['destFolder'])
 
+
         with open(file_name, "r") as fp:
             reader = csv.reader( fp , delimiter=delimiter)
 
             #for data in reader:
+            current_id = None
             line = -1
             while True:
                 line +=1
@@ -88,12 +97,14 @@ class ParserToTsv:
                     # to filtering the commented line, 
                     # in the sample data we have a file named 20191202.roicoordswithheader.txt 
                     # that contain the header
-                    if data[0][0] == "#" or data[0][0] == "^@":
-                        continue
+                    if data[0][0] == "#" or data[0][0] == "^@": continue
+                    if data[0]==0 and data[1]==0: continue
+    
         
                     print(file_name[-10:-4])
                     # print(data[0][:len("Particul ID")])
-                    if file_name[-10:-4] == "Pulses" and data[0] == "Particle ID":
+                    # if file_name[-10:-4] == "Pulses" and data[0] == "Particle ID":
+                    if data[0] == "Particle ID":
                         continue
             
                     # folder = self._model.define_folders(dest_path)
@@ -113,14 +124,20 @@ class ParserToTsv:
                     # id2 = data[v]
 
                     id = self._model.id(data)
-
+                    #if current_id and id != current_id:
+                        # self._model.store("Pulse")
+                    # self._model.store("Mode")
+                    
                     status = True
                     if status:
                         tsvrow = self._model.data_to_tsv_format(data)
                         #tsvrow.update(additionaldata)
                         # self._tsv.addData(tsvrow)
-                        self.addData(tsvrow)
+                        #self.addData(tsvrow)
+                        r = apply_fn(self._model, fn, tsvrow)
+                        self._model.store("Mode")
 
+                        
 
 
     temporary_data = {}
@@ -215,3 +232,5 @@ def apply_fn(self, fn, data):
         return method(data)
     except AttributeError:
         raise NotImplementedError("Class `{}` does not implement `{}`".format(cls.__class__.__name__, fn))
+    
+
