@@ -98,8 +98,6 @@ class CytoSense(Project):
         listmode_filename = self.raw_data_path +"/"+filename + "_" + self.data_filename + ".csv"
         parser.read_csv_filecyto( listmode_filename, self.project_path,{"delimiter":";" , "fn":"listModeRowFn"})
 
-        
-
         # move in analyse (do it after scan the 3 files)
         # self._tsv = self.init_tsv()
         # tsvName = self._tsv.tsv_format_name( folder['tsvName'] )
@@ -133,8 +131,8 @@ class CytoSense(Project):
         tsv = self.init_tsv()
         tsvName = tsv.tsv_format_name( folder['tsvName'] )
         for object_id in self._tempTsv.keys():
-            #row = 
-            self.data_to_tsv_format2(tsv, self._tempTsv[object_id])
+            row = self._tempTsv[object_id]
+            self.data_to_tsv_format2(tsv, row)
             #tsv.addData(row)
         tsv.generate_tsv(folder['destFolder'] / tsvName , self._tempTsv) 
 
@@ -187,6 +185,7 @@ class CytoSense(Project):
                     self._tempTsv[k].update(self._listModeData)
                 else:
                     self._tempTsv[k] = self._listModeData
+            self._listModeData={}
 
     def images(self, index):
         i = [
@@ -215,6 +214,8 @@ class CytoSense(Project):
         # insert data in an array following mapping
         tsvrow = {}
         mapping = self.model.mapping
+        
+        # build the row
         for tsvkey in mapping:
             map = mapping[tsvkey]
             if tsvkey != 'object_id':
@@ -224,6 +225,8 @@ class CytoSense(Project):
             index = map['index']
             result = self.apply_fn(map['fn'], data[index])
             #tsvrow.append(result)
+
+            # print("data_to_tsv_format - add row: " + str(data[0]))
             tsvrow[tsvkey]=result
 
         # keyorder = self.model.keyorder()
@@ -233,11 +236,14 @@ class CytoSense(Project):
         # return rowResult
 
     def data_to_tsv_format2(self, tsv: Tsv, data):
+    # def data_to_tsv_format2(self, tsv: Tsv, dataKey):
         # insert data in an array following mapping
         # tsvrow = {}
         # result = []
         mapping = self.model.mapping
+        print("data_to_tsv_format2 - data len ", len(data))
         for dataKey in data:
+        # if not dataKey in data:
             result = []
             for tsvkey in mapping:
                 d = data[dataKey]
@@ -247,6 +253,7 @@ class CytoSense(Project):
                     print('missing key:' + tsvkey)
             
             #result.append(data[])
+            print("data_to_tsv_format - add row: " +result[0])
             tsv.addData(result)
             
             #tsvrow.append(result)
@@ -257,6 +264,8 @@ class CytoSense(Project):
 
         #return tsvrow
         #return rowResult
+
+
 
     def define_id(self, data):
         return self.filename + "_" + data
