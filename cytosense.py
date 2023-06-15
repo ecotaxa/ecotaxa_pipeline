@@ -6,14 +6,20 @@ from ParserToTsv import ParserToTsv
 from Project import Project
 from enums import Instrument
 from pathlib import Path
-from summarise_pulses import saveCSV, summarise_pulses
+# from summarise_pulses import saveCSV, summarise_pulses
 
 from tools import copy_to_file, order_dict
 from tsv import Tsv
 
+import zipfile
+
+
 class CytoSense(Project):
 
-    use_pandas = True   # to remove when pandas install fixed
+    # if use_pandas = True polynomial coeficient will be calculated 
+    # else a mock file (pulse_fits.cvs) will be use
+    # use_pandas = True   # to remove when pandas install fixed
+    use_pandas = False   # to remove when pandas install fixed
 
     _read = []
     filename = ""
@@ -50,14 +56,23 @@ class CytoSense(Project):
         #print("extract :" + filename)
         return str(filename)
         
-    def filter(self, path):
+    def filter(self, path: Path):
         if not path.is_file():
             return False
         # print("hidden file: "+str(path.name)[0]+ " <== " + str(path.name))
         if str(path.name)[0]==".": return False
         # print("filter:"+str(path.name)[-4:])
         extension = str(path.name)[-4:]
-        if extension == ".cyz" or extension == ".txt" or extension == ".zip":
+
+        if extension == ".zip":
+            with zipfile.ZipFile(path, 'r') as zip_ref:
+                
+                name = self.extract_name(path.name)
+                folder = self.raw_data_path + "/" + name + "_Images"
+                print("zip folder: " , folder)
+                zip_ref.extractall(folder)
+
+        if extension == ".cyz" or extension == ".txt"  or extension == ".jpg":
             # print("eject")
             return False
         return True
@@ -74,7 +89,7 @@ class CytoSense(Project):
                     filename = self.extract_name(strpath)
                     print("filename = " + filename)
                     if not filename in self._read:
-                        self._read.append(filename )
+                        self._read.append(filename)
                         self.analyse(filename)
                     else:
                         print("over: " + filename)
@@ -85,6 +100,10 @@ class CytoSense(Project):
 
     def rois_path(self):
         return  os.path.join(self.raw_data_path, "/")
+
+    def pulse_fits_path(self):
+        # return self.raw_data_path + "/../../"/+ "pulse_fits" + ".csv"
+        return "/home/sgalvagno/pulse_fits.csv"
 
     def analyse(self, filename):
 
@@ -101,9 +120,10 @@ class CytoSense(Project):
 
         if not self.use_pandas:
 
-            pulses_filename = self.raw_data_path +"/../../"+ "pulse_fits" + ".csv"
+            pulses_filename = self.pulse_fits_path() 
             parser.read_csv_filecyto( pulses_filename, self.project_path,{"delimiter":"," , "fn":"pulseRowFn2"})
         else:
+            from summarise_pulses import saveCSV, summarise_pulses
             pulses_filename = self.raw_data_path +"/"+filename + "_" + self.data_filename + ".csv"
             poly = summarise_pulses(pulses_filename)
             poly_filename = self.raw_data_path +"/poly/"+filename + "_" + self.data_filename + ".csv"
@@ -126,6 +146,7 @@ class CytoSense(Project):
     
 
     def copy_images(self, folder):
+        list_to_remove = []
         for object_id in self._tempTsv.keys():
             cytosense_id=object_id.split("_")[-1:][0]
             images = self.images(cytosense_id)
@@ -134,9 +155,12 @@ class CytoSense(Project):
                 nbImages += 1
                 r = copy_to_file(Path(self.raw_data_path +"/"+folder['tsvName']+"_Images"+"/"+i), folder['destFolder'])
                 if not r:
-                    copy_to_file(Path("img/empty.jpg"), folder['destFolder'], True, i)
+                #     copy_to_file(Path("img/empty.jpg"), folder['destFolder'], True, i)
+                    list_to_remove.append(object_id)
                 if nbImages > 1:
                     self.add_rank(object_id, nbImages,images[i])
+        for k in list_to_remove:
+            del self._tempTsv[k]
 
     def add_rank(self, id, rank, image):
         row = self._tempTsv[id]
