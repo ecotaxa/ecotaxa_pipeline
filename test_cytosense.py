@@ -10,36 +10,47 @@ ulcoModel = cytosenseModel([pulse(), UlcoListnode()]) #, Info()])
 #ulcoModel = cytosenseModel([ UlcoListnode()]) #, Info()])
 # print_dict(ulcoModel.mapping)
 
-modelCefas = cytosenseModel([pulse(), CefasListNode()]) #, Info()])
-# print_dict(modelCefas.mapping)
-#print_dict(modelCefas.key['object_id'])
+
+
+
+
+# message_project_creation = {
+#   "title" : "WORKSHOP_SMALL_CYTOSENSE (data from) ULCO device_PROJECT",
+#   "cpics_raw_path" : "tests/cytosense/ULCO/mock_small_data",
+#   "CpicsProcess_path" : "tests/cytosense/result",
+#   "model" : ulcoModel
+# }
+
+
+# message_project_creation = {
+#   "title" : "WORKSHOP_SMALL_CYTOSENSE (data from) mock ULCO device_PROJECT",
+#   "cpics_raw_path" : "tests/cytosense/ULCO/mock",
+#   "CpicsProcess_path" : "tests/cytosense/result",
+#   "model" : ulcoModel
+# }
+# c = CytoSense(message_project_creation["cpics_raw_path"], message_project_creation["CpicsProcess_path"], message_project_creation["model"] , 
+#               message_project_creation["title"] , "ULCO" )
+
+# message_project_creation = {
+#   "title" : "WORKSHOP_SMALL_CYTOSENSE (data from) mock ULCO device_PROJECT",
+#   "cpics_raw_path" : "/home/sgalvagno/Test/CytoSense/fichiers_cytometres",
+#   "CpicsProcess_path" : "/home/sgalvagno/Test/CytoSense/result",
+#   "model" : ulcoModel
+# }
+
 
 message_project_creation = {
-  "title" : "WORKSHOP_SMALL_CYTOSENSE (data from) Cefas III device_PROJECT",
-  "cpics_raw_path" : "/home/sgalvagno/Test/CytoSense/Pond_NA",
-  "CpicsProcess_path" : "/home/sgalvagno/Test/cytosense_cefas_result",
-  "model" : modelCefas
-}
-
-
-message_project_creation = {
-  "title" : "WORKSHOP_SMALL_CYTOSENSE (data from) Cefas III device_PROJECT",
-  "cpics_raw_path" : "tests/cytosense/Cefas/mock",
-  "CpicsProcess_path" : "tests/cytosense/result",
-  "model" : modelCefas
-}
-c = CytoSense(message_project_creation["cpics_raw_path"], message_project_creation["CpicsProcess_path"], message_project_creation["model"] , 
-              message_project_creation["title"] )
-
-
-message_project_creation = {
-  "title" : "WORKSHOP_SMALL_CYTOSENSE (data from) ULCO device_PROJECT",
-  "cpics_raw_path" : "tests/cytosense/ULCO/mock_small_data",
-  "CpicsProcess_path" : "tests/cytosense/result",
+  "title" : "WORKSHOP_SMALL_CYTOSENSE  ULCO device_PROJECT",
+  "cpics_raw_path" : "/home/sgalvagno/Test/CytoSense/ulco",
+  "CpicsProcess_path" : "/home/sgalvagno/Test/CytoSense/result",
   "model" : ulcoModel
 }
 
-c = CytoSense(message_project_creation["cpics_raw_path"], message_project_creation["CpicsProcess_path"], message_project_creation["model"] , 
+
+
+c = CytoSense(message_project_creation["cpics_raw_path"], 
+              message_project_creation["CpicsProcess_path"], 
+              message_project_creation["model"] , 
               message_project_creation["title"] , "ULCO" )
 
 
