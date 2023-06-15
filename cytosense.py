@@ -296,3 +296,6 @@ class CytoSense(Project):
 
     def define_id(self, data):
         return self.filename + "_" + data
+
+    def sample_id(self, data):
+        return self.filename

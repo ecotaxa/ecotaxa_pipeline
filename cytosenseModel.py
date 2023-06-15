@@ -160,6 +160,14 @@ class UlcoListnode(Template):
             "type": "[t]",
             "comment": "",
         },
+        "sample_id": {
+            "file": "Listmode",
+            "header": "Particle ID",
+            "index": 0,
+            "fn": "sample_id",
+            "type": "[t]",
+            "comment": "",
+        },
         "sample_length": {
             "file": "Listmode",
             "header": "Sample Length",
@@ -813,6 +821,14 @@ class CefasListNode(Template):
             "type": "[f]",
             "comment": "",
         },
+        "sample_id": {
+            "file": "Listmode",
+            "header": "Particle ID",
+            "index": 0,
+            "fn": "sample_id",
+            "type": "[t]",
+            "comment": "",
+        },
         "sample_length": {
             "file": "Listmode",
             "header": "Sample Length",
@@ -1122,7 +1138,7 @@ class CefasListNode(Template):
             "header": "Fl Yellow Number of cells",
             "index": 39,
             "fn": None,
-            "type": "[]",
+            "type": "[f]",
             "comment": "",
         },
         "object_fl_yellow_first": {
