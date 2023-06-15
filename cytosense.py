@@ -38,7 +38,19 @@ class CytoSense(Project):
         if type == "ULCO":
             self.delimiter = ";"
             self.float_format=","
-    
+            self.device = "ULCO"
+        if type == "ULCO v1":
+            self.delimiter = ";"
+            self.float_format=","
+            self.device = "ULCO v1"
+
+        if type == "Cefas":
+            self.delimiter = ","
+            self.float_format=";"
+            self.device = "Cefas"
+
+
+        data_to_export_base_working_path = data_to_export_base_path
         super().__init__(raw_data_path, data_to_export_base_path, cytoSense_model, title, Instrument.CYTOSENSE)
         
     def copy_raw_data(self):
@@ -87,6 +99,7 @@ class CytoSense(Project):
                 if self.filter(path):
                     # print("analysing")
                     filename = self.extract_name(strpath)
+
                     print("filename = " + filename)
                     if not filename in self._read:
                         self._read.append(filename)
@@ -141,12 +154,12 @@ class CytoSense(Project):
         # self._tsv.generate_tsv(folder['destFolder'] / tsvName)
 
         self.copy_images(folder)
-
         self.store_data_in_tsv(folder)
     
 
     def copy_images(self, folder):
         list_to_remove = []
+        row_to_add = {}
         for object_id in self._tempTsv.keys():
             cytosense_id=object_id.split("_")[-1:][0]
             images = self.images(cytosense_id)
@@ -156,17 +169,32 @@ class CytoSense(Project):
                 r = copy_to_file(Path(self.raw_data_path +"/"+folder['tsvName']+"_Images"+"/"+i), folder['destFolder'])
                 if not r:
                 #     copy_to_file(Path("img/empty.jpg"), folder['destFolder'], True, i)
+                    # if nbImages < 1:
                     list_to_remove.append(object_id)
                 if nbImages > 1:
-                    self.add_rank(object_id, nbImages,images[i])
+                    row = self.add_rank(object_id, nbImages,images[nbImages-1])
+                    row_to_add.update(row)
         for k in list_to_remove:
-            del self._tempTsv[k]
+            try:
+                del self._tempTsv[k]
+            #del row_to_add[k]
+            except:
+                pass
+        for key in row_to_add:
+            # //self._tempTsv.update(row_to_add[k])
+            self._tempTsv[key]=row_to_add[key]
+            # for k in row_to_add[key]:
+            #     self._tempTsv[k]=row_to_add[key][k]
 
     def add_rank(self, id, rank, image):
+        dic = {}
         row = self._tempTsv[id]
         row['id_rank']=rank
         row['img_file_name']=image
-        self._tempTsv[id+"_"+str(rank)]
+        # self._tempTsv[id+"_"+ str(rank)] = row
+        #return { id+"_"+ str(rank) : row }
+        dic[id+"_"+ str(rank)] = row
+        return dic
 
     def store_data_in_tsv(self, folder):
         tsv = self.init_tsv()
@@ -175,7 +203,7 @@ class CytoSense(Project):
             row = self._tempTsv[object_id]
             self.data_to_tsv_format2(tsv, row)
             #tsv.addData(row)
-        tsv.generate_tsv(folder['destFolder'] / tsvName , self._tempTsv) 
+        tsv.generate_tsv(folder['destFolder'] / tsvName , self._tempTsv)
 
     def listModeRowFn(self, data: dict):
         id = data['object_id']
@@ -221,6 +249,7 @@ class CytoSense(Project):
             #     self._tempTsv[self._listModeData['object_id']].update(self._listModeData)
             # else:
             for k in self._listModeData:
+                print("store: "+k)
                 # self._tempTsv[self._listModeData['object_id']] = self._listModeData
                 if k in self._tempTsv:
                     self._tempTsv[k].update(self._listModeData)
@@ -229,18 +258,27 @@ class CytoSense(Project):
             self._listModeData={}
 
     def images(self, index):
-        i = [
-            self.filename + "_" + "Cropped" + "_" + index + ".jpg",
-            # self.filename + "_" + "Uncropped" + "_" + index + ".jpg",
-        ]
-        return i
+        if self.device == "ULCO":
+            return [
+                self.filename +  "_" + index + "_" + "cropped" +".jpg",
+                self.filename +  "_" + index + "_" + "pulse" +".jpg",
+            ]
+        else:
+            if self.device == "Cefas" or self.device == "ULCO v1" :
+                return [
+                    self.filename + "_" + "Cropped" + "_" + index + ".jpg",
+                    # self.filename + "_" + "Uncropped" + "_" + index + ".jpg",
+                    self.filename +  "_" + index + "_" + "Pulse" +".jpg",
+                ]
+            else:
+                raise("Your device is unknown")
 
     def rank(self, r):
         return 1
 
     def image(self, index):
-        # return self.images(index)[0]
-        return self.filename + "_" + "Cropped" + "_" + index + ".jpg"
+        return self.images(index)[0]
+        #return self.filename + "_" + "Cropped" + "_" + index + ".jpg"
 
 
     def define_folders(self, name):

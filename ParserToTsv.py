@@ -86,6 +86,7 @@ class ParserToTsv:
                 line +=1
                 try:
                     data = next(reader)
+                    print(data[0])
                 except StopIteration:
                     break
                 except csv.Error:

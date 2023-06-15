@@ -39,7 +39,7 @@ c = CytoSense(message_project_creation["cpics_raw_path"],
 
 
 
-# TODO allow to copy all or sync or juste add if new 
+# TODO allow to copy all or sync or just add if new 
 # Copy raw data in export folder
 #c.copy_raw_data()
 
@@ -48,3 +48,5 @@ c.process_project()
 
 # Import in ecotaxa
 # c.import_in_ecotaxa()
+
+
