@@ -1,0 +1,22 @@
+IMAGE
+    x   img_file_name [t]: name of the image file in the folder (including extension)
+    x   img_rank [f] : rank of image to be displayed, in case of existence of multiple (<10) images for one object. Starts at 1.
+OBJECT: one object to be classified, usually one organism. One object can be represented by several images. In this tsv file, there is one line per image which means the object data gets repeated on several lines.
+        object_id [t] : identifier of the object, must be unique in the project. It will be displayed in the object page
+    x   object_link [f] : URL of an associated website
+        object_lat [f] : latitude, decimal degrees
+        object_lon [f] : longitude, decimal degrees
+    x   object_date [f] : ISO8601 YYYYMMJJ UTC
+    x   object_time [f] : ISO8601 HHMMSS UTC
+    x   object_depth_min [f] : minimum depth of object, meters
+    x   object_depth_max [f] : maximum depth of object, meters
+        object_*** [f] or [t] : other fields relative to the object. Up to 500 [f] fields and 20 [t] ones.
+PROCESS: metadata relative to the processing of the raw images
+        process_id [t] : identifier. The processing information is associated with the acquisition on the same line. If missing, a dummy processing identifier will be created.
+        process_*** [t] : other fields relative to the process. Up to 30 of them.
+ACQUISITION / SUBSAMPLE : metadata relative to the image acquisition
+        acq_id [t] : identifier of the image acquisition, must be unique in the project. If missing, a dummy acquisition identifier will be created.
+        acq_*** [t] : other fields relative to the acquisition. Up to 30 of them.
+SAMPLE: a collection event
+        sample_id [t] : identifier of the sample, must be unique in the project. If missing, a dummy sample identifier will be created.
+        sample_*** [t] : other fields relative to the sample. Up to 30 of them.

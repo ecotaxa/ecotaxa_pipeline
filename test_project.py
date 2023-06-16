@@ -23,13 +23,30 @@ roisModel = cpicsModel(ctdModel)
 # POST /project/
 message_project_creation = {
   "title" : "WORKSHOP_SMALL_CPICS_PROJECT",
-  "cpics_raw_path" : "/Users/jcoustenoble/Desktop/CPICS_RAW/WORKSHOP_SMALL_CPICS_PROJECT",
-  "CpicsProcess_path" : "/Users/jcoustenoble/Desktop/CPICS_EXPORT",
-  "model" : roisModel
+  "raw_data_path" : "/Users/jcoustenoble/Desktop/CPICS_RAW/WORKSHOP_SMALL_CPICS_PROJECT",
+  "dest_data_path" : "/Users/jcoustenoble/Desktop/CPICS_EXPORT",
+  "model" : roisModel,
+  "sample_level" : {    
+                        "Type" : "CAST", #cast or time
+                        "bin" : ""
+                   },
+  "subsample_level" : {   
+                        "Type" : "DEPTH", #depth or time
+                        "bin_m" : 5
+                      },
+  "GPS_coord" : {   
+                    "method" : "", #Path to file, CTD, Const
+                    "value" : ""
+                }
 }
+# Fix latitude longitude / or path to file
+# sample
+# subsample
+
+
 
 # Create project instance and folder
-c = CPICsProject(message_project_creation["cpics_raw_path"], message_project_creation["CpicsProcess_path"], message_project_creation["model"] , message_project_creation["title"])
+c = CPICsProject(message_project_creation)
 
 # TODO allow to copy all or sync or juste add if new 
 # Copy raw data in export folder

@@ -11,12 +11,10 @@ class ParserToTsv:
         self._model = project
         self._tsv = self._model.init_tsv()
 
-
     def read_csv_file(self, file_name, dest_path):
         print ("processing: " + file_name)
         with open(file_name,"r") as roiFile:
             reader = csv.reader( roiFile )
-
             #for data in reader:
             line = -1
             while True:
@@ -53,5 +51,3 @@ class ParserToTsv:
             #tsvName = self.id(name) + ".tsv"
             tsvName = self._tsv.tsv_format_name( folder['tsvName'] )
             self._tsv.generate_tsv(folder['destFolder'] / tsvName)
-
-

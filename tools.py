@@ -24,6 +24,14 @@ def copy_to_file(filename: Path, subFolder):
         return False
     return True
 
+def add_folder(path) :
+  try: 
+    if not os.path.exists(path): 
+        os.makedirs(path) 
+    return path
+  except OSError as error: 
+    print(error)
+    
 def create_folder(path):
     try :
         if not os.path.isdir(path):
