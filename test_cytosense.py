@@ -2,7 +2,7 @@
 
 
 from cytosense import CytoSense
-from cytosenseModel import cytosenseModel ,  pulse, UlcoListnode, Info, CefasListNode
+from cytosenseModel import cytosenseModel,  pulse, UlcoListnode, Info, CefasListNode
 from tools import print_dict
 
 
@@ -13,13 +13,16 @@ ulcoModel = cytosenseModel([pulse(), UlcoListnode()]) #, Info()])
 
 
 
-
-message_project_creation = {
-  "title" : "WORKSHOP_SMALL_CYTOSENSE (data from) ULCO device_PROJECT",
-  "cpics_raw_path" : "tests/cytosense/ULCO/mock_small_data",
-  "CpicsProcess_path" : "tests/cytosense/result",
-  "model" : ulcoModel
-}
+# message_project_creation = {
+#   "title" : "mock_small_data",
+#   "cpics_raw_path" : "tests/cytosense/ULCO/mock_small_data",
+#   "CpicsProcess_path" : "tests/cytosense/result",
+#   "model" : ulcoModel
+# }
+# c = CytoSense(message_project_creation["cpics_raw_path"], 
+#               message_project_creation["CpicsProcess_path"], 
+#               message_project_creation["model"] , 
+#               message_project_creation["title"] , "ULCO v1" )
 
 
 # message_project_creation = {
@@ -61,6 +64,14 @@ message_project_creation = {
 #   "model" : ulcoModel
 # }
 
+
+message_project_creation = {
+  "title" : "R0_010421_photos_flr26_5ul_10min_LOWER_PMT 2021-04-01 15h43_PROJECT",
+  "cpics_raw_path" : "tests/cytosense/ULCO/R0_010421_photos_flr26_5ul_10min_LOWER_PMT 2021-04-01 15h43",
+  "CpicsProcess_path" : "tests/cytosense/result",
+  "model" : ulcoModel
+}
+
 # message_project_creation = {
 #   "title" : "R1_010421_photos_flr26_5ul_10min_LOWER_PMT 2021-04-01 14h17_PROJECT",
 #   "cpics_raw_path" : "/home/sgalvagno/Test/CytoSense/R1_010421_photos_flr26_5ul_10min_LOWER_PMT 2021-04-01 14h17",
@@ -79,7 +90,7 @@ message_project_creation = {
 c = CytoSense(message_project_creation["cpics_raw_path"], 
               message_project_creation["CpicsProcess_path"], 
               message_project_creation["model"] , 
-              message_project_creation["title"] , "ULCO v1" )
+              message_project_creation["title"] , "ULCO" )
 
 
 

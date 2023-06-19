@@ -18,8 +18,13 @@ class CytoSense(Project):
 
     # if use_pandas = True polynomial coeficient will be calculated 
     # else a mock file (pulse_fits.cvs) will be use
-    # use_pandas = True   # to remove when pandas install fixed
-    use_pandas = False   # to remove when pandas install fixed
+    use_pandas = True   # to remove when pandas install fixed
+    # use_pandas = False   # to remove when pandas install fixed
+
+    def pulse_fits_path(self):
+        # return self.raw_data_path + "/../../"/+ "pulse_fits" + ".csv"
+        return "/usr/src/app/tests/cytosense/pulse_fits.csv"
+
 
     _read = []
     filename = ""
@@ -114,9 +119,6 @@ class CytoSense(Project):
     def rois_path(self):
         return  os.path.join(self.raw_data_path, "/")
 
-    def pulse_fits_path(self):
-        # return self.raw_data_path + "/../../"/+ "pulse_fits" + ".csv"
-        return "/home/sgalvagno/pulse_fits.csv"
 
     def analyse(self, filename):
 
@@ -164,16 +166,24 @@ class CytoSense(Project):
             cytosense_id=object_id.split("_")[-1:][0]
             images = self.images(cytosense_id)
             nbImages = 0  # must be < 10
+            nbImagesAdded = 0
             for i in images:
-                nbImages += 1
                 r = copy_to_file(Path(self.raw_data_path +"/"+folder['tsvName']+"_Images"+"/"+i), folder['destFolder'])
                 if not r:
-                #     copy_to_file(Path("img/empty.jpg"), folder['destFolder'], True, i)
+                    # copy_to_file(Path("img/empty.jpg"), folder['destFolder'], True, i)
                     # if nbImages < 1:
+                    # list_to_remove.append(object_id)
+                    pass
+                else:
+                    if nbImages > 0:
+                        row = self.add_rank(object_id, nbImages,images[nbImages])
+                        row_to_add.update(row)
+                    nbImages += 1
+                    nbImagesAdded+=1
+            else:
+                if nbImagesAdded == 0:
                     list_to_remove.append(object_id)
-                if nbImages > 1:
-                    row = self.add_rank(object_id, nbImages,images[nbImages-1])
-                    row_to_add.update(row)
+
         for k in list_to_remove:
             try:
                 del self._tempTsv[k]
@@ -186,21 +196,44 @@ class CytoSense(Project):
             # for k in row_to_add[key]:
             #     self._tempTsv[k]=row_to_add[key][k]
 
-    def add_rank(self, id, rank, image):
+    def add_rank(self, index, rank, image):
+        # add the id_rank in the feature
         dic = {}
-        row = self._tempTsv[id]
-        row['id_rank']=rank
-        row['img_file_name']=image
+        import copy
+        row = self._tempTsv[index]
+        rowcopy = copy.deepcopy(row)
+
+        # print(hex(id({1:1,2:2})))
+
+        # print(type(row))
+        # rowid = id(row)
+        # rowcopyid = id(rowcopy)
+
+        # print("pointers "+hex(id(row))+' '+hex(id(rowcopy)))
+
+        # print("    row[index]['img_rank'] :"   + str(row    [index]['img_rank']))
+        # print("rowcopy[index]['img_rank'] :" + str(rowcopy[index]['img_rank']))
+
+
+        rowcopy[index]['img_rank']=rank
+        rowcopy[index]['img_file_name']=image
+
+        # print("    row[index]['img_rank'] :"   + str(row    [index]['img_rank']))
+        # print("rowcopy[index]['img_rank'] :" + str(rowcopy[index]['img_rank']))
+
+
         # self._tempTsv[id+"_"+ str(rank)] = row
         #return { id+"_"+ str(rank) : row }
-        dic[id+"_"+ str(rank)] = row
+        dic[index+"_"+ str(rank)] = rowcopy
         return dic
 
     def store_data_in_tsv(self, folder):
         tsv = self.init_tsv()
         tsvName = tsv.tsv_format_name( folder['tsvName'] )
-        for object_id in self._tempTsv.keys():
-            row = self._tempTsv[object_id]
+        # work_object_id is just a stupid id to store the different rank use in the temporary TempTsv
+        # it will be better to use true_id : [  { id_rank:0}, { id_rank:1} ]
+        for work_object_id in self._tempTsv.keys():
+            row = self._tempTsv[work_object_id]
             self.data_to_tsv_format2(tsv, row)
             #tsv.addData(row)
         tsv.generate_tsv(folder['destFolder'] / tsvName , self._tempTsv)
@@ -268,13 +301,13 @@ class CytoSense(Project):
                 return [
                     self.filename + "_" + "Cropped" + "_" + index + ".jpg",
                     # self.filename + "_" + "Uncropped" + "_" + index + ".jpg",
-                    self.filename +  "_" + index + "_" + "Pulse" +".jpg",
+                    self.filename +  "_" + "Pulse" + "_" + index + ".jpg",
                 ]
             else:
                 raise("Your device is unknown")
 
     def rank(self, r):
-        return 1
+        return 0
 
     def image(self, index):
         return self.images(index)[0]
@@ -331,22 +364,23 @@ class CytoSense(Project):
         # result = []
         mapping = self.model.mapping
         print("data_to_tsv_format2 - data len ", len(data))
-        for dataKey in data:
+        #for dataKey in data:
+        dataKey = list(data.keys())[0]    
         # if not dataKey in data:
-            result = []
-            for tsvkey in mapping:
-                d = data[dataKey]
-                if tsvkey in d:
-                    result.append(d[tsvkey])
-                else:
-                    print('missing key:' + tsvkey)
-            
-            #result.append(data[])
-            print("data_to_tsv_format - add row: " +result[0])
-            tsv.addData(result)
-            
-            #tsvrow.append(result)
-            #tsvrow[tsvkey]=result
+        result = []
+        for tsvkey in mapping:
+            d = data[dataKey]
+            if tsvkey in d:
+                result.append(d[tsvkey])
+            else:
+                print('missing key:' + tsvkey)
+        
+        #result.append(data[])
+        print("data_to_tsv_format - add row: " +result[0])
+        tsv.addData(result)
+        
+        #tsvrow.append(result)
+        #tsvrow[tsvkey]=result
 
         # keyorder = self.model.keyorder()
         # rowResult = order_dict(tsvrow, keyorder )
