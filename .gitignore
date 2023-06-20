@@ -4,6 +4,8 @@
 .DS_Store
 __MACOSX
 result
+#!result/*_reference
+!result/mock_small_data_reference
 mock/R4_photos_flr16_2uls_10min\ 2022-09-14\ 12h28_Images
 tests/cytosense/ULCO/mock/R4_photos_flr16_2uls_10min\ 2022-09-14\ 12h28_Images
 
