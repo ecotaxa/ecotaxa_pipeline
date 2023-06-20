@@ -6,12 +6,12 @@ from ParserToTsv import ParserToTsv
 from Project import Project
 from enums import Instrument
 from pathlib import Path
+from filter import dynamic_filter, file_filter_composition, filter_extension, filter_folder, filter_hiddenFile
 # from summarise_pulses import saveCSV, summarise_pulses
 
-from tools import copy_to_file, order_dict
+from tools import copy_to_file, expand_zip_in_folder
 from tsv import Tsv
 
-import zipfile
 
 
 class CytoSense(Project):
@@ -26,7 +26,7 @@ class CytoSense(Project):
         return "/usr/src/app/tests/cytosense/pulse_fits.csv"
 
 
-    _read = []
+    # _read = []
     filename = ""
     data_filename = ""
 
@@ -73,51 +73,91 @@ class CytoSense(Project):
         #print("extract :" + filename)
         return str(filename)
         
-    def filter(self, path: Path):
-        if not path.is_file():
-            return False
-        # print("hidden file: "+str(path.name)[0]+ " <== " + str(path.name))
-        if str(path.name)[0]==".": return False
-        # print("filter:"+str(path.name)[-4:])
-        extension = str(path.name)[-4:]
+    # def filter(self, path: Path):
+    #     if not path.is_file():
+    #         return False
+    #     # print("hidden file: "+str(path.name)[0]+ " <== " + str(path.name))
+    #     if str(path.name)[0]==".": return False
+    #     # print("filter:"+str(path.name)[-4:])
 
-        if extension == ".zip":
-            with zipfile.ZipFile(path, 'r') as zip_ref:
-                
-                name = self.extract_name(path.name)
-                folder = self.raw_data_path + "/" + name + "_Images"
-                print("zip folder: " , folder)
-                zip_ref.extractall(folder)
+    #     if extension == ".zip":
+    #         name = self.extract_name(path.name)
+    #         folder = self.raw_data_path + "/" + name + "_Images"
+    #         expand_zip_in_folder(path,folder)
 
-        if extension == ".cyz" or extension == ".txt"  or extension == ".jpg":
-            # print("eject")
-            return False
-        return True
+    #     # if extension == ".cyz" or extension == ".txt"  or extension == ".jpg":
+    #     #     # print("eject")
+    #     #     return False
+    #     # return True
+
+    #     extension = str(path.name)[-4:]
+    #     return not self.filter_extension(extension, [".cyz", ".txt", ".jpg"])
+
+
+    # def filter_extension(self, extension, extensions: list):
+    #     if extension in extensions:
+    #         return True
+    #     return False
+
+    # import filter
+
+    filters = file_filter_composition([
+                filter_hiddenFile(),
+                filter_folder(),
+                filter_extension([".cyz",".txt", ".jpg"])
+        ])
+    
+    zipFilter = filter_extension([".zip"])
+
+    file_analyzed_filter = dynamic_filter()
 
     def process_project(self):  
-            os.DirEntry
-            i = 0
-            for path in os.scandir(self.raw_data_path):
-                i+=1
-                strpath = path.name
-                print("found file:" + strpath)
-                if self.filter(path):
-                    # print("analysing")
-                    filename = self.extract_name(strpath)
+        for path in os.scandir(self.raw_data_path):
+            print("found file:" + path.name)
+            if self.filters.filter(path):
+                print("next "+ path.name)
+                continue
 
-                    print("filename = " + filename)
-                    if not filename in self._read:
-                        self._read.append(filename)
-                        self.analyse(filename)
-                    else:
-                        print("over: " + filename)
-                else:
-                    print("next "+ path.name)
-                # if i > 5:
-                #     break
+            if self.zipFilter.filter(path):
+                name = self.extract_name(path.name)
+                folder = self.raw_data_path + "/" + name + "_Images"
+                expand_zip_in_folder(path, folder)
 
+            filename = self.extract_name(path.name)
+            print("analysing filename = " + filename)
+
+            if not self.file_analyzed_filter.filter(filename):
+                self.file_analyzed_filter.add_new_filter_items(filename)
+                self.analyse(filename)
+            else:
+                print("over: " + filename)
+            
     def rois_path(self):
         return  os.path.join(self.raw_data_path, "/")
+
+
+    def analyse_Pulse(self,filename,parser:ParserToTsv):
+        self.filename = filename
+
+        self.data_filename = "Pulses"
+
+        if not self.use_pandas:
+
+            pulses_filename = self.pulse_fits_path() 
+            parser.read_csv_filecyto( pulses_filename, self.project_path,{"delimiter":"," , "fn":"pulseRowFn2"})
+        else:
+            from summarise_pulses import saveCSV, summarise_pulses
+            pulses_filename = self.raw_data_path +"/"+filename + "_" + self.data_filename + ".csv"
+            poly = summarise_pulses(pulses_filename)
+            poly_filename = self.raw_data_path +"/poly/"+filename + "_" + self.data_filename + ".csv"
+            saveCSV(poly, poly_filename)
+            parser.read_csv_filecyto( poly_filename, self.project_path,{"delimiter":"," , "fn":"pulseRowFn2"})
+
+
+    def analyse_Listmode(self, filename, parser:ParserToTsv):
+        self.data_filename = "Listmode"
+        listmode_filename = self.raw_data_path +"/"+filename + "_" + self.data_filename + ".csv"
+        parser.read_csv_filecyto( listmode_filename, self.project_path,{"delimiter":self.delimiter , "fn":"listModeRowFn"})
 
 
     def analyse(self, filename):
@@ -133,22 +173,25 @@ class CytoSense(Project):
         # pulses_filename = self.raw_data_path +"/"+filename + "_" + self.data_filename + ".csv"
         # parser.read_csv_filecyto( pulses_filename, self.project_path,{"delimiter":"," , "fn":"pulseRowFn"})
 
-        if not self.use_pandas:
+        # if not self.use_pandas:
 
-            pulses_filename = self.pulse_fits_path() 
-            parser.read_csv_filecyto( pulses_filename, self.project_path,{"delimiter":"," , "fn":"pulseRowFn2"})
-        else:
-            from summarise_pulses import saveCSV, summarise_pulses
-            pulses_filename = self.raw_data_path +"/"+filename + "_" + self.data_filename + ".csv"
-            poly = summarise_pulses(pulses_filename)
-            poly_filename = self.raw_data_path +"/poly/"+filename + "_" + self.data_filename + ".csv"
-            saveCSV(poly, poly_filename)
-            parser.read_csv_filecyto( poly_filename, self.project_path,{"delimiter":"," , "fn":"pulseRowFn2"})
+        #     pulses_filename = self.pulse_fits_path() 
+        #     parser.read_csv_filecyto( pulses_filename, self.project_path,{"delimiter":"," , "fn":"pulseRowFn2"})
+        # else:
+        #     from summarise_pulses import saveCSV, summarise_pulses
+        #     pulses_filename = self.raw_data_path +"/"+filename + "_" + self.data_filename + ".csv"
+        #     poly = summarise_pulses(pulses_filename)
+        #     poly_filename = self.raw_data_path +"/poly/"+filename + "_" + self.data_filename + ".csv"
+        #     saveCSV(poly, poly_filename)
+        #     parser.read_csv_filecyto( poly_filename, self.project_path,{"delimiter":"," , "fn":"pulseRowFn2"})
 
+        self.analyse_Pulse(filename, parser)
 
-        self.data_filename = "Listmode"
-        listmode_filename = self.raw_data_path +"/"+filename + "_" + self.data_filename + ".csv"
-        parser.read_csv_filecyto( listmode_filename, self.project_path,{"delimiter":self.delimiter , "fn":"listModeRowFn"})
+        # self.data_filename = "Listmode"
+        # listmode_filename = self.raw_data_path +"/"+filename + "_" + self.data_filename + ".csv"
+        # parser.read_csv_filecyto( listmode_filename, self.project_path,{"delimiter":self.delimiter , "fn":"listModeRowFn"})
+
+        self.analyse_Listmode(filename, parser)
 
         # move in analyse (do it after scan the 3 files)
         # self._tsv = self.init_tsv()

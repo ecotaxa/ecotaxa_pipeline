@@ -58,3 +58,9 @@ def order_dict(dictionnary, keys = []):
         if k in dictionnary:
             result.append(dictionnary[k])
     return result
+
+import zipfile
+def expand_zip_in_folder(file, destPath):
+    print("expand {1} in folder {2}" , file, destPath)
+    with zipfile.ZipFile(file, 'r') as zip_ref:
+        zip_ref.extractall(destPath)
