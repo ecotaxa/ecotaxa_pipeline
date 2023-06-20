@@ -104,7 +104,7 @@ class CytoSense(Project):
     filters = file_filter_composition([
                 filter_hiddenFile(),
                 filter_folder(),
-                filter_extension([".cyz",".txt", ".jpg"])
+                filter_extension([".cyz", ".txt", ".jpg"])
         ])
     
     zipFilter = filter_extension([".zip"])
