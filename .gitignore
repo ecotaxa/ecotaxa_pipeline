@@ -8,6 +8,9 @@ __MACOSX
 WORKSHOP_SMALL_CYTOSENSE (data from) ULCO device_PROJECT
 poly
 R4_photos_flr16_2uls_10min 2022-09-14 12h28_Images
+#result
+#mock/R4_photos_flr16_2uls_10min\ 2022-09-14\ 12h28_Images
+#tests/cytosense/ULCO/mock/R4_photos_flr16_2uls_10min\ 2022-09-14\ 12h28_Images
 
 
 ### Python ###
@@ -183,3 +186,5 @@ poetry.toml
 pyrightconfig.json
 
 # End of https://www.toptal.com/developers/gitignore/api/python
+
+
