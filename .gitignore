@@ -2,6 +2,13 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=python
 
 .DS_Store
+__MACOSX
+
+# some result folders from test runs 
+WORKSHOP_SMALL_CYTOSENSE (data from) ULCO device_PROJECT
+poly
+R4_photos_flr16_2uls_10min 2022-09-14 12h28_Images
+
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
