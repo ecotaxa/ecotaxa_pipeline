@@ -3,7 +3,7 @@
 
 import os
 from ParserToTsv import ParserToTsv
-from Project import Project
+from project import Project2
 from enums import Instrument
 from pathlib import Path
 from filter import dynamic_filter, file_filter_composition, filter_extension, filter_folder, filter_hiddenFile
@@ -14,7 +14,7 @@ from tsv import Tsv
 
 
 
-class CytoSense(Project):
+class CytoSense(Project2):
 
     # if use_pandas = True polynomial coeficient will be calculated 
     # else a mock file (pulse_fits.cvs) will be use

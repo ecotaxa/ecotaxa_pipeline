@@ -1,10 +1,12 @@
 
 
 from enum import Enum
+from pathlib import Path
+
+from pipeline import Task
+from tools import create_folder
 
 
-class Task():
-    pass
 
 class ulco_samples_sort(Task):
     '''
@@ -59,6 +61,9 @@ class generate_ecotaxa_import(Task):
 class analyse_cvs(Task):
     pass
 
+class move_file_to_raw_folder(Task):
+    pass
+
 french_csv_configuration = { 'delimiter' : ';' , 'decimal' : ',' }
 english_csv_configuration = { 'delimiter' : ',' , 'decimal' : '.' }
 
@@ -66,16 +71,36 @@ ulco_cytosense_pipeline = [
     analyse_cvs(french_csv_configuration)
 ]
 
-NamePatternComponent = Enum('NamePatternComponent', ['eSampleName' , 'eIndex'])
 
-FileExtension - Enum ( 'FileExtension', [] )
+NamePatternComponent = Enum('NamePatternComponent', ['eSampleName' , 'eIndex', 'eImageType'])
 
-pulse_file_pattern = [ NamePatternComponent.eSampleName , "_" , NamePatternComponent.eIndex , "_Pulse" , ".cvs" ]
+
+# FileExtension = Enum ( 'FileExtension', [] )
+
+cefas_pulse_file_pattern = [ NamePatternComponent.eSampleName , "_Pulse" , ".cvs" ]
+cefas_pulse_file_pattern_extra_info = [ NamePatternComponent.eSampleName , "_All_images\ Particles" , "_Pulse" , ".cvs" ]
+cefas_listmode_file_pattern = [ NamePatternComponent.eSampleName , "_Listmode" , ".cvs" ]
+cefas_listmode_file_pattern_extra_info = [ NamePatternComponent.eSampleName , "_All_images\ Particles" , "_Listmode" , ".cvs" ]
+
+cefas_image_file_pattern = [ NamePatternComponent.eSampleName ,
+                             "_" , NamePatternComponent.eImageType, "_" , NamePatternComponent.eIndex  , ".cvs" ]
+
+ulco_pulse_file_pattern = cefas_pulse_file_pattern
+ulco_listmode_file_pattern = cefas_listmode_file_pattern
+
 
 cefas_cytosense_pipeline = [
-        analyse_cvs(english_csv_configuration)
+        move_file_to_raw_folder(cefas_pulse_file_pattern_extra_info, cefas_pulse_file_pattern),
+        move_file_to_raw_folder(cefas_listmode_file_pattern_extra_info, cefas_listmode_file_pattern),
+        analyse_cvs(cefas_pulse_file_pattern, english_csv_configuration),
+        analyse_cvs(cefas_listmode_file_pattern, english_csv_configuration),
+    ]
 
-]
+ulco_cytosense_pipeline = [
+        analyse_cvs(ulco_pulse_file_pattern, french_csv_configuration),
+        analyse_cvs(ulco_listmode_file_pattern, french_csv_configuration),
+
+    ]
 
 ulco_samples_in_the_same_folder_pipeline = [
 
@@ -83,4 +108,53 @@ ulco_samples_in_the_same_folder_pipeline = [
     process_ulco_samples(ulco_cytosense_pipeline),
     generate_ecotaxa_import()
 ]
+
+class define_sample_folder(Task):
+    def __init__():
+        pass
+
+    def run(self, data):
+        try:
+            self._data['pipeline_folder'] = data['pipeline_folder']
+            self._data['sample_folder'] = data['sample_folder']
+            self._data['sample_name'] = data['sample_name']
+        except:
+            raise("Missing key")
+        self.build_project_structure()
+        return self._data
+
+    def build_project_structure(self):
+        task = define_sample_pipeline_folder()
+        self._data = task.run(self._data)
+        # self._data['raw_folder'] = Path.join(self._data['pipeline_folder'], self._data['sample_name'], "_raw")
+        # self._data['work_folder'] = Path.join(self._data['pipeline_folder'], self._data['sample_name'], "_work")
+        # self._data['images_folder'] = Path.join(self._data['raw_folder'], str(self._data['sample_name'], "_Images"))
+        create_folder(self._data['raw_folder'])
+        create_folder(self._data['work_folder'])
+
+class copy_sample_in_pipeline_folder(Task):
+    def run(self, data):
+        try:
+            _ = data['sample_folder']
+            _ = data['raw_folder']
+        except:
+            raise("Missing key")
+        self._copy_files()
+        return self._data
+
+    def _copy_files():
+        pass
+
+
+
+
+ulco_raw_sample_pipeline = [
+    define_sample_folder(),
+    copy_sample_in_pipeline_folder(),
+]
+
+ulco_sample_pipeline = [
+    define_sample_pipeline_folder()].append(ulco_cytosense_pipeline)
+
+
 

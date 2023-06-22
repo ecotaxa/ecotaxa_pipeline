@@ -1,0 +1,24 @@
+
+@startuml ULCO Cytosense pipeline
+
+start
+
+    :ask for **sample** folder;
+    :copy **sample** _raw folder;
+
+    :analyse_csv(pulse file);
+    :analyse_csv(listmode file);
+    :analyse_info();
+
+    :copy_img_from_raw_to_work(cropped);
+    :copy_img_from_raw_to_work(pulse);
+
+    :join_tsv();
+
+    :generate_ecotaxa_import();
+    :zip_ecotaxa_import();
+    :import_to_ecotaxa();
+
+end
+
+@enduml

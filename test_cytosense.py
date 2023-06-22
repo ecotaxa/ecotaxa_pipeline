@@ -13,16 +13,16 @@ ulcoModel = cytosenseModel([pulse(), UlcoListnode()]) #, Info()])
 
 
 
-message_project_creation = {
-  "title" : "mock_small_data",
-  "cpics_raw_path" : "tests/cytosense/ULCO/mock_small_data",
-  "CpicsProcess_path" : "tests/cytosense/result",
-  "model" : ulcoModel
-}
-c = CytoSense(message_project_creation["cpics_raw_path"], 
-              message_project_creation["CpicsProcess_path"], 
-              message_project_creation["model"] , 
-              message_project_creation["title"] , "ULCO v1" )
+# message_project_creation = {
+#   "title" : "mock_small_data",
+#   "cpics_raw_path" : "tests/cytosense/ULCO/mock_small_data",
+#   "CpicsProcess_path" : "tests/cytosense/result",
+#   "model" : ulcoModel
+# }
+# c = CytoSense(message_project_creation["cpics_raw_path"], 
+#               message_project_creation["CpicsProcess_path"], 
+#               message_project_creation["model"] , 
+#               message_project_creation["title"] , "ULCO v1" )
 
 
 # message_project_creation = {
@@ -101,7 +101,60 @@ c = CytoSense(message_project_creation["cpics_raw_path"],
 #c.copy_raw_data()
 
 # Process data to generate TSV and vignette to export
-c.process_project()
+# c.process_project()
 
 # Import in ecotaxa
 # c.import_in_ecotaxa()
+
+
+modelCefas = cytosenseModel([pulse(), CefasListNode()]) #, Info()])
+# print_dict(modelCefas.mapping)
+#print_dict(modelCefas.key['object_id'])
+
+
+
+import unittest
+
+class Test_Tasks(unittest.TestCase):
+
+  def test_cytosense(self):
+    message_project_creation = {
+      "title" : "mock_small_data",
+      "cpics_raw_path" : "tests/cytosense/ULCO/mock_small_data",
+      "CpicsProcess_path" : "tests/cytosense/result",
+      "model" : ulcoModel
+    }
+    ut = CytoSense(message_project_creation["cpics_raw_path"], 
+                  message_project_creation["CpicsProcess_path"], 
+                  message_project_creation["model"] , 
+                  message_project_creation["title"] , "ULCO v1" )
+    self.run(ut)
+
+  def test_cefas_cytosense(self):
+    message_project_creation = {
+      "title" : "WORKSHOP_SMALL_CYTOSENSE (data from) Cefas III device_PROJECT",
+      "cpics_raw_path" : "/home/sgalvagno/Test/CytoSense/Pond_NA",
+      "CpicsProcess_path" : "/home/sgalvagno/Test/CytoSense/result",
+      "model" : modelCefas
+    }
+    ut = CytoSense(message_project_creation["cpics_raw_path"], 
+              message_project_creation["CpicsProcess_path"], 
+              message_project_creation["model"] , 
+              message_project_creation["title"] )
+    self.run(ut)
+
+
+  def run(self ,c):
+    # TODO allow to copy all or sync or juste add if new 
+    # Copy raw data in export folder
+    #c.copy_raw_data()
+
+    # Process data to generate TSV and vignette to export
+    c.process_project()
+
+    # Import in ecotaxa
+    # c.import_in_ecotaxa()
+
+if __name__ == '__main__':
+    unittest.main()
+

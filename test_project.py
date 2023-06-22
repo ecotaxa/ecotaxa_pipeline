@@ -91,8 +91,8 @@ class TestProject(unittest.TestCase):
 
 
     # @patch('tools.create_folder')
-    # @mock.patch('tools.create_folder')
-    @mock.patch('create_folder')
+    @mock.patch('tools.create_folder')
+    # @mock.patch('create_folder')
     # @unittest. .mock.patch('tools.create_folder')
     def test_create_folder(self, create_folder_mock):
         create_folder_mock.return_value = 'path'

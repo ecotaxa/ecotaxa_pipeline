@@ -50,3 +50,14 @@ c.process_project()
 # c.import_in_ecotaxa()
 
 
+
+import unittest
+
+class Test_Cefas_Tasks(unittest.TestCase):
+
+    def test_cefas_cytosense(self):
+      pass
+
+
+if __name__ == '__main__':
+    unittest.main()
