@@ -5,10 +5,16 @@
 __MACOSX
 
 # some result folders from test runs 
-WORKSHOP_SMALL_CYTOSENSE (data from) ULCO device_PROJECT
 poly
+result
+# I don't understant why result is not filtered
+WORKSHOP_SMALL_CYTOSENSE\ (data from)\ ULCO\ device_PROJECT
 R4_photos_flr16_2uls_10min 2022-09-14 12h28_Images
-#result
+ULCO/R0_010421_photos_flr26_5ul_10min_LOWER_PMT\ 2021-04-01\ 15h43
+R0_010421_photos_flr26_5ul_10min_LOWER_PMT\ 2021-04-01\ 15h43_PROJECT
+R0_010421_photos_flr26_5ul_10min_LOWER_PMT\ 2021-04-01\ 15h43
+WORKSHOP_SMALL_CYTOSENSE\ (data from)\ mock\ ULCO\ device_PROJECT
+result/mock_small_data
 #mock/R4_photos_flr16_2uls_10min\ 2022-09-14\ 12h28_Images
 #tests/cytosense/ULCO/mock/R4_photos_flr16_2uls_10min\ 2022-09-14\ 12h28_Images
 #!result/*_reference
