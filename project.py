@@ -6,6 +6,27 @@ from tsv import Tsv
 
 
 class Project:
+     
+    def __init__(self, project : dict):
+          
+        try: 
+            self.project_name = project['name']
+            #self.raw_data_folder = project['raw_data_folder']
+            #self.work_data_folder = project['work_data_folder']
+            self.project_path = project['path']
+            self.raw_data_folder = os.path.join(self.project_path, "_raw")
+            self.work_data_folder = os.path.join(self.project_path, "_work")
+            self.pipeline = project['pipeline']
+            self.metadata = project['metadata']
+        except:
+            raise("missing key in project argument")
+
+    def generate_project_architecture(self) :
+        create_folder(self.project_path) 
+        create_folder(self.raw_data_folder)
+        create_folder(self.work_data_folder)
+
+class Project2:
     def __init__(self, raw_data_path, data_to_export_base_path, model : Template, title, instrument):
         self.raw_data_path = raw_data_path
         self.project_path = os.path.join(data_to_export_base_path, title)

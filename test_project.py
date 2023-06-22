@@ -1,49 +1,124 @@
-# Sebastien Galvagno 06/2023
-from cpics import CPICsProject 
-from cpicsModel import cpicsModel, CTD_sbe37
 
-'''
-paths on complex
-"/home/share/cpics_test_data/cpics/data_test/CPICSM160"
-"/home/sgalvagno/cpicsEcotaxa"
-'''
-'''
-paths for sebastien
-"/home/sgalvagno/Test/"
-"/home/sgalvagno/Test/cpicsEcotaxa"
-'''
+# from ... import  Project
 
-ctdModel=CTD_sbe37()
-# ctdModel.printmapping()
-roisModel = cpicsModel(ctdModel)
+# import sys
+# sys.path.insert(0, '..')
 
-# roisModel.printmapping()
+# import sys
+# from pathlib import Path
+# sys.path.append(str(Path('.').absolute().parent))
 
-# Create new project in CpicsProcess
-# POST /project/
-message_project_creation = {
-  "title" : "WORKSHOP_SMALL_CPICS_PROJECT",
-  "cpics_raw_path" : "/home/sgalvagno/Test",
-  "CpicsProcess_path" : "/home/sgalvagno/cpicsEcotaxa",
-  "model" : roisModel
-}
+# import os
+# import sys
+# currentdir = os.path.dirname(os.path.realpath(__file__))
+# parentdir = os.path.dirname(currentdir)
+# sys.path.append(parentdir)
 
-_message_project_creation = {
-  "title" : "WORKSHOP_SMALL_CPICS_PROJECT",
-  "cpics_raw_path" : "/Users/jcoustenoble/Desktop/CPICS_RAW/WORKSHOP_SMALL_CPICS_PROJECT",
-  "CpicsProcess_path" : "/Users/jcoustenoble/Desktop/CPICS_EXPORT",
-  "model" : roisModel
-}
+# from ...project import Project
 
-# Create project instance and folder
-c = CPICsProject(message_project_creation["cpics_raw_path"], message_project_creation["CpicsProcess_path"], message_project_creation["model"] , message_project_creation["title"])
 
-# TODO allow to copy all or sync or juste add if new 
-# Copy raw data in export folder
-c.copy_raw_data()
 
-# Process data to generate TSV and vignette to export
-c.process_project()
+# if __name__ == "__main__":
+#     p = Project()
+#     print("Everything passed")
 
-# Import in ecotaxa
-c.import_in_ecotaxa()
+# import os
+# import sys
+# sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+# import Project
+# import os
+# import shutil
+# import sys
+# from os.path import join, dirname, realpath
+# from pathlib import Path
+
+# import pytest
+import os
+from pathlib import Path
+
+import unittest
+from unittest import mock
+
+# from unittest.mock import patch
+# from unittest.mock import MagicMock
+# from unittest.mock as mock
+
+
+# # Import services under test as a library
+# sys.path.extend([join("", "..", "..", "py")])
+
+# HERE = Path(dirname(realpath(__file__)))
+
+# target = __import__("Project.py")
+
+# from pipeline.project import Project
+from project import Project
+# from tools import create_folder
+import tools
+
+from tools import create_folder
+
+class TestProject(unittest.TestCase):
+
+    project = {
+            'name':'name',
+            'path':'path',
+            'work_data_folder':'work_data_folder',
+            'pipeline':'pipeline',
+            'metadata':{},
+    }
+
+    def test_creation_fail_no_argument(self):
+        self.assertRaises(Exception, Project)
+    
+    def test_creation_fail_missing_argument(self):
+        project = {
+            'name':'name',
+        }
+        self.assertRaises(Exception, Project, project)
+
+    def test_creation(self):
+        p = Project(self.project)
+
+        # strange os.path don't exist
+        # assert(p.raw_data_folder == os.path.join(self.project.path, "_raw").name )
+        # assert(p.work_data_folder == os.path.join(self.project.path, "_work").name )
+
+        self.assertEquals(p.raw_data_folder, "path/_raw")
+        self.assertEquals(p.work_data_folder, "path/_work")
+
+
+
+    # @patch('tools.create_folder')
+    # @mock.patch('tools.create_folder')
+    @mock.patch('create_folder')
+    # @unittest. .mock.patch('tools.create_folder')
+    def test_create_folder(self, create_folder_mock):
+        create_folder_mock.return_value = 'path'
+
+        # tools.create_folder('otot')
+        create_folder('toto')
+
+        # self._folder = []
+        utp = Project(self.project)
+        utp.generate_project_architecture()
+        self.assertTrue(create_folder_mock.called)
+        create_folder_mock.assert_called()
+        create_folder_mock.assert_called_with("path")
+        print(self._folder)
+        # self.assertIn("path", )
+        # assert( "path" in create_folder.folder)
+        # assert(len(create_folder.folder) == 3)
+
+
+if __name__ == '__main__':
+    unittest.main()
+
+
+    # # @patch('tools.create_folder')
+    # def create_folder(path:Path):
+    #     raise("you call me")
+    #     create_folder.folder.append(path.name)
+    # create_folder.folder = []
+
