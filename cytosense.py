@@ -1,6 +1,7 @@
 
 
 
+from enum import Enum
 import os
 from ParserToTsv import ParserToTsv
 from project import Project2
@@ -12,6 +13,8 @@ from filter import dynamic_filter, file_filter_composition, filter_extension, fi
 from tools import copy_to_file, expand_zip_in_folder
 from tsv import Tsv
 
+
+NamePatternComponent = Enum('NamePatternComponent', ['eSampleName', 'eIndex', 'eImageType'])
 
 
 class CytoSense(Project2):
