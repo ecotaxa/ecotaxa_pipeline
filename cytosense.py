@@ -7,7 +7,7 @@ from project import Project2
 from enums import Instrument
 from pathlib import Path
 from filter import dynamic_filter, file_filter_composition, filter_extension, filter_folder, filter_hiddenFile
-# from summarise_pulses import saveCSV, summarise_pulses
+# from summarise_pulses import save_dataframe_to_csv, summarise_pulses
 
 from tools import copy_to_file, expand_zip_in_folder
 from tsv import Tsv
@@ -146,11 +146,11 @@ class CytoSense(Project2):
             pulses_filename = self.pulse_fits_path() 
             parser.read_csv_filecyto( pulses_filename, self.project_path,{"delimiter":"," , "fn":"pulseRowFn2"})
         else:
-            from summarise_pulses import saveCSV, summarise_pulses
+            from summarise_pulses import save_dataframe_to_csv, summarise_pulses
             pulses_filename = self.raw_data_path +"/"+filename + "_" + self.data_filename + ".csv"
             poly = summarise_pulses(pulses_filename)
             poly_filename = self.raw_data_path +"/poly/"+filename + "_" + self.data_filename + ".csv"
-            saveCSV(poly, poly_filename)
+            save_dataframe_to_csv(poly, poly_filename)
             parser.read_csv_filecyto( poly_filename, self.project_path,{"delimiter":"," , "fn":"pulseRowFn2"})
 
 
@@ -178,11 +178,11 @@ class CytoSense(Project2):
         #     pulses_filename = self.pulse_fits_path() 
         #     parser.read_csv_filecyto( pulses_filename, self.project_path,{"delimiter":"," , "fn":"pulseRowFn2"})
         # else:
-        #     from summarise_pulses import saveCSV, summarise_pulses
+        #     from summarise_pulses import save_dataframe_to_csv, summarise_pulses
         #     pulses_filename = self.raw_data_path +"/"+filename + "_" + self.data_filename + ".csv"
         #     poly = summarise_pulses(pulses_filename)
         #     poly_filename = self.raw_data_path +"/poly/"+filename + "_" + self.data_filename + ".csv"
-        #     saveCSV(poly, poly_filename)
+        #     save_dataframe_to_csv(poly, poly_filename)
         #     parser.read_csv_filecyto( poly_filename, self.project_path,{"delimiter":"," , "fn":"pulseRowFn2"})
 
         self.analyse_Pulse(filename, parser)

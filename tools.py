@@ -10,6 +10,10 @@ from pathlib import Path
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
 
+
+def is_file_exist(path):
+    return os.path.exists(path)
+
 def copy_to_file(filename: Path, subFolder : Path, rename = False , newName = ""):
     if not os.path.exists(filename):
         eprint("file don't exist: " + str(filename.absolute()))

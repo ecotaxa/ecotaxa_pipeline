@@ -4,9 +4,10 @@ class Task():
     _need_keys = []
     _update_keys = []
     _create_keys = []
+    _delete_keys = []
 
     _data = {}
-    name : str = "Task"
+    name : str = None
 
     # def __init__(self) #, name: str):
         # self.name = name
@@ -16,12 +17,15 @@ class Task():
         return self._data
 
     def test_need_keys(self, data):
+        self._data = data
         try:
             for key in self._need_keys:
-                # _ = self._data[key]
-                self._data[key] = data[key]
+                _ = self._data[key]
+                # self._data[key] = data[key]
         except:
             raise("Missing key: " + key + " in data argument")
 
-
+    def remove_keys(self):
+        for key in self._delete_keys:
+            self._data[key] = None
 

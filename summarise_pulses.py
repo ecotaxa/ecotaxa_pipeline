@@ -5,7 +5,7 @@ import numpy as np
 
 
 def summarise_pulses(name, show_pulse=False):
-  print("summarizing pulse: "+name)
+  print("summarizing pulse: " + str(name))
   # 1/ Read one pulse file
   # read
   df = pd.read_csv(name, sep=';', decimal=",")
@@ -85,7 +85,8 @@ def summarise_pulses(name, show_pulse=False):
     
   return final
 
-def saveCSV(df, name):
+def save_dataframe_to_csv(df, name):
   filepath = Path(name)  
   filepath.parent.mkdir(parents=True, exist_ok=True)  
   df.to_csv(filepath, index=False)
+
