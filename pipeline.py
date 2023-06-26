@@ -3,6 +3,9 @@ from task import Task
 
 
 class Pipeline():
+    '''
+        task pipeline grammar : tasks = [ Task | [ Task ] ]
+    '''
 
     _tasks = [] # list(Task) 
     _data = {}
@@ -11,15 +14,20 @@ class Pipeline():
         self._tasks = tasks
     
 
+    # run the tasks
     def run(self, data):
         self._data = data
-        for task in self._tasks:
-            # if isinstance(task, Task) :
-            #     # raise "Not instatiate"
-            #     task = task.__init__()
+        self._run_tasks(self._tasks)
+        return self._data
 
-            print("running task: " + task.__class__.__name__)
+    # recursive function to execute the task pipeline
+    def _run_tasks(self, tasks):
+        for task in tasks:
 
-            self._data = task.run(self._data)
-            pass
-
+            if type(task) == list:
+                self._run_tasks(task)
+            else:
+                print("running task: " + task.__class__.__name__)
+                self._data = task.run(self._data)
+            
+    

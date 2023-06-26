@@ -127,18 +127,36 @@ class Test_Pipeline(unittest.TestCase):
 
         ulco_cytosense_pipeline = [
             add_ulco_pulse_csv_file_to_parse(),
-            #analyse_cvs(ulco_pulse_file_pattern, french_csv_configuration),
-            #analyse_cvs(ulco_listmode_file_pattern, french_csv_configuration),
         ]
         ulco_sample_pipeline_tasks = [ define_sample_pipeline_folder()]    
         ulco_sample_pipeline_tasks.append(ulco_cytosense_pipeline)
 
-        # tasks = ulco_sample_pipeline
-
         ut = pipeline.Pipeline(ulco_sample_pipeline_tasks)
         self.assertRaises(Exception, ut.run )
 
-    def test_ulco_pipeline(self):
+
+    def test_ulco_pipeline_task_lists(self):
+
+        data = { 
+            'pipeline_folder': '/pipeline_folder',
+            'sample_name': 'mySample',
+        }
+
+        ulco_cytosense_pipeline = [
+            add_ulco_pulse_csv_file_to_parse(),
+        ]
+
+        ulco_sample_pipeline_tasks = [ define_sample_pipeline_folder() ]
+        ulco_sample_pipeline_tasks  = ulco_sample_pipeline_tasks + ulco_cytosense_pipeline
+
+        ut = pipeline.Pipeline(ulco_sample_pipeline_tasks)
+        result = ut.run(data)
+
+        self.assertEqual(result['csv_pulse'],  {'filename': 'mySample_Pulse.csv',
+                                                'mapping': pulse,
+                                                'path': PurePath('/pipeline_folder/mySample/_raw/mySample_Pulse.csv')})
+        
+    def test_ulco_pipeline__array_of_tasks_embedded(self):
 
         data = { 
             'pipeline_folder': '/pipeline_folder',
@@ -150,18 +168,23 @@ class Test_Pipeline(unittest.TestCase):
             #analyse_cvs(ulco_pulse_file_pattern, french_csv_configuration),
             #analyse_cvs(ulco_listmode_file_pattern, french_csv_configuration),
         ]
-        ulco_sample_pipeline_tasks = [ define_sample_pipeline_folder()]    
-        ulco_sample_pipeline_tasks  = ulco_sample_pipeline_tasks + ulco_cytosense_pipeline
 
-        # tasks = ulco_sample_pipeline
+        # grammar pipeline = [ Task | [ Task ] ]
+        ulco_sample_pipeline_tasks = [ define_sample_pipeline_folder(), 
+                                       ulco_cytosense_pipeline 
+                                    ]    
 
         ut = pipeline.Pipeline(ulco_sample_pipeline_tasks)
         result = ut.run(data)
 
         self.assertEqual(result['csv_pulse'],  {'filename': 'mySample_Pulse.csv',
                                                 'mapping': pulse,
-                                                'path': PurePath('/_raw/mySample_Pulse.csv')})
+                                                'path': PurePath('/pipeline_folder/mySample/_raw/mySample_Pulse.csv')})
         
+    
+
+
+
 
 if __name__ == '__main__':
     unittest.main()
