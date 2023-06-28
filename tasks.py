@@ -59,7 +59,7 @@ class add_ulco_pulse_csv_file_to_parse(Task):
         global is_file_exist
         filename = self.build_name()
         path = PurePath( self._data['raw_folder'], filename )
-        if tools.is_file_exist(path): 
+        if not tools.is_file_exist(path): 
             raise "File " + str(path) + "do not exist"
         csv_item = { 'path': path, 'filename':  filename, 'mapping': pulse }
         self._data['csv_pulse']= csv_item 
