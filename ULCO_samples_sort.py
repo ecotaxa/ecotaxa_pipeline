@@ -71,28 +71,14 @@ english_csv_configuration = { 'delimiter' : ',' , 'decimal' : '.' }
 
 
 
-NamePatternComponent = Enum('NamePatternComponent', ['eSampleName' , 'eIndex', 'eImageType'])
-
-
-# FileExtension = Enum ( 'FileExtension', [] )
-
-cefas_pulse_file_pattern = [ NamePatternComponent.eSampleName , "_Pulse" , ".csv" ]
-cefas_pulse_file_pattern_extra_info = [ NamePatternComponent.eSampleName , "_All_images\ Particles" , "_Pulse" , ".csv" ]
-cefas_listmode_file_pattern = [ NamePatternComponent.eSampleName , "_Listmode" , ".csv" ]
-cefas_listmode_file_pattern_extra_info = [ NamePatternComponent.eSampleName , "_All_images\ Particles" , "_Listmode" , ".csv" ]
-
-cefas_image_file_pattern = [ NamePatternComponent.eSampleName ,
-                             "_" , NamePatternComponent.eImageType, "_" , NamePatternComponent.eIndex  , ".csv" ]
-
-ulco_pulse_file_pattern = cefas_pulse_file_pattern
-ulco_listmode_file_pattern = cefas_listmode_file_pattern
+import Cytosense.define as cytosense
 
 
 cefas_cytosense_pipeline = [
-        move_file_to_raw_folder(cefas_pulse_file_pattern_extra_info, cefas_pulse_file_pattern),
-        move_file_to_raw_folder(cefas_listmode_file_pattern_extra_info, cefas_listmode_file_pattern),
-        analyse_cvs(cefas_pulse_file_pattern, english_csv_configuration),
-        analyse_cvs(cefas_listmode_file_pattern, english_csv_configuration),
+        move_file_to_raw_folder(cytosense.cefas_pulse_file_pattern_extra_info, cytosense.cefas_pulse_file_pattern),
+        move_file_to_raw_folder(cytosense.cefas_listmode_file_pattern_extra_info, cytosense.cefas_listmode_file_pattern),
+        analyse_cvs(cytosense.cefas_pulse_file_pattern, english_csv_configuration),
+        analyse_cvs(cytosense.cefas_listmode_file_pattern, english_csv_configuration),
     ]
 
 class cvs_file_to_parse(Task): pass
@@ -101,8 +87,8 @@ ulco_cytosense_pipeline = [
 
         # cvs_file_to_parse(filetype="PULSE", mapping={}, filename_pattern=ulco_pulse_file_pattern),
         add_ulco_pulse_csv_file_to_parse(),
-        analyse_cvs(ulco_pulse_file_pattern, french_csv_configuration),
-        analyse_cvs(ulco_listmode_file_pattern, french_csv_configuration),
+        analyse_cvs(cytosense.ulco_pulse_file_pattern, french_csv_configuration),
+        analyse_cvs(cytosense.ulco_listmode_file_pattern, french_csv_configuration),
 
     ]
 
