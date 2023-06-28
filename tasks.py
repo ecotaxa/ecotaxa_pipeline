@@ -41,7 +41,8 @@ class summarize_csv_pulse(Task):
 
 
 import tools
-import ULCO_samples_sort as ulco    
+# import ULCO_samples_sort as ulco    
+from csv_configuration import french_csv_configuration, english_csv_configuration
 
 class add_ulco_pulse_csv_file_to_parse(Task):
     _need_keys = [ 'raw_folder', 'sample_name']
@@ -49,7 +50,7 @@ class add_ulco_pulse_csv_file_to_parse(Task):
 
     is_file_exist = tools.is_file_exist
 
-    def __init__(self, csv_configuration = ulco.english_csv_configuration):
+    def __init__(self, csv_configuration = english_csv_configuration):
         self._csv_configuration = csv_configuration
 
     def run(self, data):

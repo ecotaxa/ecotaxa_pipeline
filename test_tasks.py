@@ -4,8 +4,9 @@ from pathlib import PurePath
 import unittest
 from cytosense import NamePatternComponent
 from cytosenseModel import pulse
-
 from tasks import add_ulco_pulse_csv_file_to_parse, define_sample_pipeline_folder, summarize_csv_pulse
+
+# from tasks import add_ulco_pulse_csv_file_to_parse, define_sample_pipeline_folder, summarize_csv_pulse
 
 
 

@@ -7,11 +7,12 @@ import pipeline
 # from pipeline import define_sample_pipeline_folder
 
 from task import Task
-from tasks import add_ulco_pulse_csv_file_to_parse, define_sample_pipeline_folder
+# from tasks import add_ulco_pulse_csv_file_to_parse, define_sample_pipeline_folder
 
 
 from pathlib import PurePath
 from task import Task
+from tasks import add_ulco_pulse_csv_file_to_parse, define_sample_pipeline_folder
 
 
 
