@@ -198,9 +198,9 @@ class Test_Tasks(unittest.TestCase):
         }
 
         ut = add_ulco_pulse_csv_file_to_parse()
-        ut.is_file_exist = lambda : False # is_file_exist_mooc_false
+        # ut.is_file_exist = lambda : False # is_file_exist_mooc_false
 
-        self.assertRaises(Exception, ut.run,data)
+        self.assertRaises(Exception, ut.run, data)
 
         
 

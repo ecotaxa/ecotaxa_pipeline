@@ -171,6 +171,41 @@ class Test_Pipeline(unittest.TestCase):
                                                 'mapping': pulse,
                                                 'path': PurePath('/pipeline_folder/mySample/_raw/mySample_Pulse.csv')})
         
+    
+    # def test_ulco_pipeline__pulse_analyse(self):
+    def test_ulco_pipeline__on_test_sample(self):
+
+        local_path = PurePath('tests/cytosense/ULCO/mock')
+        data = {
+            'pipeline_folder': local_path,
+            'sample_name': 'R4_photos_flr16_2uls_10min 2022-09-14 12h28',
+        }
+
+        ulco_cytosense_pipeline = [
+            add_ulco_pulse_csv_file_to_parse(),
+            #analyse_cvs(ulco_pulse_file_pattern, french_csv_configuration),
+            #analyse_cvs(ulco_listmode_file_pattern, french_csv_configuration),
+        ]
+
+        # grammar pipeline = [ Task | [ Task ] ]
+        ulco_sample_pipeline_tasks = [ define_sample_pipeline_folder(), 
+                                       ulco_cytosense_pipeline 
+                                    ]    
+
+        ut = pipeline.Pipeline(ulco_sample_pipeline_tasks)
+        result = ut.run(data)
+
+        # self.assertEqual(result['csv_pulse'],  {'filename': 'R4_photos_flr16_2uls_10min 2022-09-14 12h28_Pulse.csv',
+        #                                         'mapping': pulse,
+        #                                         'path': PurePath('tests/cytosense/mock/_raw/R4_photos_flr16_2uls_10min 2022-09-14 12h28_Pulse.csv')})
+        
+        self.assertEqual(result['csv_pulse']['filename'], 'R4_photos_flr16_2uls_10min 2022-09-14 12h28_Pulse.csv')
+        self.assertEqual(result['csv_pulse']['mapping'], pulse)
+
+        print("['csv_pulse']['path']" + str(result['csv_pulse']['path']))
+        test_path = 'tests/cytosense/ULCO/mock/_raw/R4_photos_flr16_2uls_10min 2022-09-14 12h28_Pulse.csv'
+        self.assertEqual(result['csv_pulse']['path'].as_posix(), PurePath(test_path).as_posix())
+        # self.assertEqual(result['csv_pulse']['path'], PurePath(test_path))
 
 
     def test_ulco_pipeline_analyse_pulco(self):
