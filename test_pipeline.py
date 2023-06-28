@@ -10,18 +10,8 @@ from task import Task
 from tasks import add_ulco_pulse_csv_file_to_parse, define_sample_pipeline_folder
 
 
-
-
-
 from pathlib import PurePath
 from task import Task
-
-
-
-
-
-
-
 
 
 
@@ -156,7 +146,7 @@ class Test_Pipeline(unittest.TestCase):
                                                 'mapping': pulse,
                                                 'path': PurePath('/pipeline_folder/mySample/_raw/mySample_Pulse.csv')})
         
-    def test_ulco_pipeline__array_of_tasks_embedded(self):
+    def test_ulco_pipeline_array_of_tasks_embedded(self):
 
         data = { 
             'pipeline_folder': '/pipeline_folder',
@@ -181,9 +171,35 @@ class Test_Pipeline(unittest.TestCase):
                                                 'mapping': pulse,
                                                 'path': PurePath('/pipeline_folder/mySample/_raw/mySample_Pulse.csv')})
         
-    
 
 
+    def test_ulco_pipeline_analyse_pulco(self):
+
+        import ULCO_samples_sort as ulco    
+
+        data = { 
+            'pipeline_folder': '/pipeline_folder',
+            'sample_name': 'mySample',
+        }
+
+        ulco_cytosense_pipeline = [
+            add_ulco_pulse_csv_file_to_parse(),
+            analyse_cvs( ulco.ulco_pulse_file_pattern, ulco.french_csv_configuration),
+            #analyse_cvs(ulco_listmode_file_pattern, french_csv_configuration),
+        ]
+
+        # grammar pipeline = [ Task | [ Task ] ]
+        ulco_sample_pipeline_tasks = [ define_sample_pipeline_folder(), 
+                                       ulco_cytosense_pipeline 
+                                    ]    
+
+        ut = pipeline.Pipeline(ulco_sample_pipeline_tasks)
+        result = ut.run(data)
+
+        self.assertEqual(result['csv_pulse'],  {'filename': 'mySample_Pulse.csv',
+                                                'mapping': pulse,
+                                                'path': PurePath('/pipeline_folder/mySample/_raw/mySample_Pulse.csv')})
+        
 
 
 if __name__ == '__main__':
