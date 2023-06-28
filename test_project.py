@@ -118,7 +118,7 @@ if __name__ == '__main__':
 
     # # @patch('tools.create_folder')
     # def create_folder(path:Path):
-    #     raise("you call me")
+    #     raise Exception("you call me")
     #     create_folder.folder.append(path.name)
     # create_folder.folder = []
 

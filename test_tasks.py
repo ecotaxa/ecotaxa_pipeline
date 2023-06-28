@@ -42,7 +42,7 @@ def build_name( data: dict, file_pattern : list):
         name_index = pattern.index(NamePatternComponent.eSampleName)
         pattern[name_index] = str(data['sample_name'])
     except:
-        raise "NamePatternComponent.eSampleName not found" 
+        raise Exception( "NamePatternComponent.eSampleName not found" )
     path = "".join(pattern)
     return path
 
@@ -59,22 +59,22 @@ def build_name_kw( **kwargs):
         name_index = pattern.index(NamePatternComponent.eSampleName)
         pattern[name_index] = sample_name
     except:
-        raise "NamePatternComponent.eSampleName not found" 
+        raise Exception( "NamePatternComponent.eSampleName not found" )
     name = "".join(pattern)
     return name
 
 
 def build_name_ulco_pulse_filename(data):
-    # pattern = [ NamePatternComponent.eSampleName , "_Pulse" , ".cvs" ]
+    # pattern = [ NamePatternComponent.eSampleName , "_Pulses" , ".cvs" ]
     # try:
     #     # name_index = file_pattern.index(NamePatternComponent.eSampleName)
     #     name_index = pattern.index(NamePatternComponent.eSampleName)
     #     pattern[name_index] = str(data['sample_name'])
     # except:
-    #     raise "NamePatternComponent.eSampleName not found" 
+    #     raise Exception( "NamePatternComponent.eSampleName not found" )
     # path = "".join(pattern)
     # return path
-    return data['sample_name'] + "_Pulse.csv"
+    return data['sample_name'] + "_Pulses.csv"
 
 
 
@@ -100,37 +100,39 @@ class Test_Tasks(unittest.TestCase):
 
         self.assertEqual( d['pipeline_folder'], PurePath(data['pipeline_folder']))
         self.assertEqual( d['sample_name'], 'mySample')
-        self.assertEqual( d['raw_folder'], PurePath(data['pipeline_folder'], data['sample_name'], "_raw"))
-        self.assertEqual( d['work_folder'], PurePath(data['pipeline_folder'], data['sample_name'], "_work"))
-        self.assertEqual( d['images_folder'], PurePath(data['pipeline_folder'], data['sample_name'], "_raw" , str(data['sample_name'] + "_Images")))
+        # self.assertEqual( d['raw_folder'], PurePath(data['pipeline_folder'], data['sample_name'], "_raw"))
+        # self.assertEqual( d['work_folder'], PurePath(data['pipeline_folder'], data['sample_name'], "_work"))
+        # self.assertEqual( d['images_folder'], PurePath(data['pipeline_folder'], data['sample_name'], "_raw" , str(data['sample_name'] + "_Images")))
+        self.assertEqual( d['raw_folder'], PurePath(data['pipeline_folder']))
+        self.assertEqual( d['images_folder'], PurePath(data['pipeline_folder'], str(data['sample_name'] + "_Images")))
 
     def test_build_name(self):
         data = {'sample_name': 'mySample' }
-        file_pattern = [ NamePatternComponent.eSampleName , "_Pulse" , ".cvs" ]
+        file_pattern = [ NamePatternComponent.eSampleName , "_Pulses" , ".cvs" ]
         
         ut = build_name(data, file_pattern)
 
-        self.assertEqual(ut , str(data['sample_name']) + "_Pulse" + ".cvs" )
+        self.assertEqual(ut , str(data['sample_name']) + "_Pulses" + ".cvs" )
 
     def test_build_name2(self):
         data = {'sample_name': 'mySample' }
-        file_pattern = [ NamePatternComponent.eSampleName , "_Pulse" , ".cvs" ]
+        file_pattern = [ NamePatternComponent.eSampleName , "_Pulses" , ".cvs" ]
         
         ut = build_name(data, file_pattern)
 
-        self.assertEqual(ut , str(data['sample_name']) + "_Pulse" + ".cvs" )
+        self.assertEqual(ut , str(data['sample_name']) + "_Pulses" + ".cvs" )
 
     def test_build_name_kw(self):
-        file_pattern = [ NamePatternComponent.eSampleName , "_Pulse" , ".csv" ]
+        file_pattern = [ NamePatternComponent.eSampleName , "_Pulses" , ".csv" ]
         sample_name= 'mySample'
         ut = build_name_kw( sample_name = sample_name, file_pattern = file_pattern)
 
-        self.assertEqual(ut , sample_name + "_Pulse" + ".csv" )
+        self.assertEqual(ut , sample_name + "_Pulses" + ".csv" )
 
     def test_build_name_ulco_pulse_filename(self):
         data = {'sample_name': 'mySample' }
         ut = build_name_ulco_pulse_filename(data)
-        self.assertEqual(ut,"mySample_Pulse.csv")
+        self.assertEqual(ut,"mySample_Pulses.csv")
 
 
 
@@ -147,7 +149,7 @@ class Test_Tasks(unittest.TestCase):
     # def test_cvs_file_to_parse(self):
 
     #     mapping={}
-    #     filename_pattern = [ NamePatternComponent.eSampleName , "_Pulse" , ".csv" ]
+    #     filename_pattern = [ NamePatternComponent.eSampleName , "_Pulses" , ".csv" ]
     #     filename=""
 
     #     data = { 
@@ -176,6 +178,7 @@ class Test_Tasks(unittest.TestCase):
         ut.is_file_exist = myLambda
         self.assertEqual(myLambda , ut.is_file_exist)
 
+    # test have an issue, cannot mock is_file_exist()
     def test_add_ulco_pulse_csv_file_to_parse(self):
         data = { 
                 'raw_folder': PurePath('/_raw'),
@@ -186,9 +189,57 @@ class Test_Tasks(unittest.TestCase):
         ut.is_file_exist = lambda _ : True
         result = ut.run(data)
 
-        self.assertEqual(result['csv_pulse'],  {'filename': 'mySample_Pulse.csv',
+        self.assertEqual(result['csv_pulse'],  {'filename': 'mySample_Pulses.csv',
                                                 'mapping': pulse,
-                                                'path': PurePath('/_raw/mySample_Pulse.csv')})
+                                                'path': PurePath('/_raw/mySample_Pulses.csv')})
+
+
+    def test_add_ulco_pulse_csv_file_to_parse_true_cefas_file(self):
+        from csv_configuration import english_csv_configuration
+
+        local_path = PurePath('tests/cytosense/Cefas/mock')
+        data = {
+            'raw_folder': local_path,
+            'sample_name': 'Pond_NA 2023-05-24 09h23_All Imaged Particles',
+        }
+
+        ut = add_ulco_pulse_csv_file_to_parse(english_csv_configuration)
+        result = ut.run(data)
+
+        self.assertEqual(result['csv_pulse']['filename'],  'Pond_NA 2023-05-24 09h23_All Imaged Particles_Pulses.csv')
+        self.assertEqual(result['csv_pulse']['mapping'],  pulse)
+        self.assertEqual(result['csv_pulse']['path'],  PurePath('tests/cytosense/Cefas/mock/Pond_NA 2023-05-24 09h23_All Imaged Particles_Pulses.csv'))
+        self.assertEqual(result['csv_pulse']['csv_configuration']['decimal'],  '.')
+        self.assertEqual(result['csv_pulse']['csv_configuration']['delimiter'],  ',')
+
+        # self.assertEqual(result['csv_pulse'],  {'filename': 'Pond_NA 2023-05-24 09h23_All Imaged Particles_Pulses.csv',
+        #                                         'mapping': pulse,
+        #                                         'path': PurePath('tests/cytosense/Cefas/mock/Pond_NA 2023-05-24 09h23_All Imaged Particles_Pulses.csv'),
+        #                                         'csv_configuration': {'decimal': '.', 'delimiter': ','}})
+
+
+    def test_add_ulco_pulse_csv_file_to_parse_true_ulco_file(self):
+        from csv_configuration import french_csv_configuration
+
+        local_path = PurePath('tests/cytosense/ULCO/mock')
+        data = {
+            'raw_folder': local_path,
+            'sample_name': 'R4_photos_flr16_2uls_10min 2022-09-14 12h28',
+        }
+
+        ut = add_ulco_pulse_csv_file_to_parse(french_csv_configuration)
+        result = ut.run(data)
+
+        self.assertEqual(result['csv_pulse']['filename'],  'R4_photos_flr16_2uls_10min 2022-09-14 12h28_Pulses.csv')
+        self.assertEqual(result['csv_pulse']['mapping'],  pulse)
+        self.assertEqual(result['csv_pulse']['path'],  PurePath('tests/cytosense/ULCO/mock/R4_photos_flr16_2uls_10min 2022-09-14 12h28_Pulses.csv'))
+        self.assertEqual(result['csv_pulse']['csv_configuration']['decimal'],  ',')
+        self.assertEqual(result['csv_pulse']['csv_configuration']['delimiter'],  ';')
+
+        # self.assertEqual(result['csv_pulse'],  {'filename': 'R4_photos_flr16_2uls_10min 2022-09-14 12h28_Pulses.csv',
+        #                                         'mapping': pulse,
+        #                                         'path': PurePath('tests/cytosense/ULCO/mock/R4_photos_flr16_2uls_10min 2022-09-14 12h28_Pulses.csv'),
+        #                                         'csv_configuration': {'decimal': ',', 'delimiter': ';'}})
 
 
 
@@ -209,9 +260,9 @@ class Test_Tasks(unittest.TestCase):
         data = {
                 'raw_folder': PurePath('/_raw'),
                 'sample_name': 'mySample',
-                'csv_pulse':  {'filename': 'mySample_Pulse.csv',
+                'csv_pulse':  {'filename': 'mySample_Pulses.csv',
                                 'mapping': pulse,
-                                'path': PurePath('/_raw/mySample_Pulse.csv')}
+                                'path': PurePath('/_raw/mySample_Pulses.csv')}
             }
         # ut = summarize_csv_pulse()
         ut = summarize_csv_pulse_test()
@@ -220,7 +271,7 @@ class Test_Tasks(unittest.TestCase):
         # ut.save_dataframe_to_csv = save_csv
         result = ut.run(data)
 
-        self.assertEqual( result['csv_pulse']['path'] , PurePath( data['raw_folder'], str(data['sample_name'] + "_PolynomialPulse.csv") ) )
+        self.assertEqual( result['csv_pulse']['path'] , PurePath( data['raw_folder'], str(data['sample_name'] + "_Polynomial_Pulses.csv") ) )
         self.assertEqual(summarize_called, 1)
         self.assertEqual(save_called, 1)
 

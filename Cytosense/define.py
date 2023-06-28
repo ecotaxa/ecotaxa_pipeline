@@ -8,8 +8,8 @@ NamePatternComponent = Enum('NamePatternComponent', ['eSampleName' , 'eIndex', '
 
 # FileExtension = Enum ( 'FileExtension', [] )
 
-cefas_pulse_file_pattern = [ NamePatternComponent.eSampleName , "_Pulse" , ".csv" ]
-cefas_pulse_file_pattern_extra_info = [ NamePatternComponent.eSampleName , "_All_images\ Particles" , "_Pulse" , ".csv" ]
+cefas_pulse_file_pattern = [ NamePatternComponent.eSampleName , "_Pulses" , ".csv" ]
+cefas_pulse_file_pattern_extra_info = [ NamePatternComponent.eSampleName , "_All_images\ Particles" , "_Pulses" , ".csv" ]
 cefas_listmode_file_pattern = [ NamePatternComponent.eSampleName , "_Listmode" , ".csv" ]
 cefas_listmode_file_pattern_extra_info = [ NamePatternComponent.eSampleName , "_All_images\ Particles" , "_Listmode" , ".csv" ]
 

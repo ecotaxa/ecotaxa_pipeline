@@ -350,7 +350,7 @@ class CytoSense(Project2):
                     self.filename +  "_" + "Pulse" + "_" + index + ".jpg",
                 ]
             else:
-                raise("Your device is unknown")
+                raise Exception("Your device is unknown")
 
     def rank(self, r):
         return 0

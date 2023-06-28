@@ -29,7 +29,7 @@ class summarize_csv_pulse(Task):
         return self._data
 
     def build_name(self):
-        return PurePath( self._data['raw_folder'], str(self._data['sample_name'] + "_PolynomialPulse" + ".csv"))
+        return PurePath( self._data['raw_folder'], str(self._data['sample_name'] + "_Polynomial_Pulses" + ".csv"))
 
     def process(self):
 
@@ -65,7 +65,7 @@ class add_ulco_pulse_csv_file_to_parse(Task):
         filename = self.build_name()
         path = PurePath( self._data['raw_folder'], filename )
         if not tools.is_file_exist(path): 
-            raise "File " + str(path) + "do not exist"
+            raise Exception( "File " + str(path) + " do not exist")
         csv_item = { 
                 'path': path, 
                 'filename':  filename, 
@@ -75,10 +75,8 @@ class add_ulco_pulse_csv_file_to_parse(Task):
         self._data['csv_pulse']= csv_item 
 
     def build_name(self):
-        # ulco.ulco_pulse_file_pattern : [ NamePatternComponent.eSampleName , "_Pulse" , ".csv" ]
-        return self._data['sample_name'] + "_Pulse.csv"
-
-
+        # ulco.ulco_pulse_file_pattern : [ NamePatternComponent.eSampleName , "_Pulses" , ".csv" ]
+        return self._data['sample_name'] + "_Pulses.csv"
 
 
 
@@ -101,15 +99,18 @@ class define_sample_pipeline_folder(Task):
         #     self._data['pipeline_folder'] = data['pipeline_folder']
         #     self._data['sample_name'] = data['sample_name']
         # except:
-        #     raise "Missing key"
+        #     raise Exception( "Missing key")
         
 
         self._define_keys()
         return self._data
 
     def _define_keys(self):
-        self._data['raw_folder'] = PurePath(self._data['pipeline_folder'], self._data['sample_name'], "_raw")
-        self._data['work_folder'] = PurePath(self._data['pipeline_folder'], self._data['sample_name'], "_work")
+        # self._data['raw_folder'] = PurePath(self._data['pipeline_folder'], self._data['sample_name'], "_raw")
+        # self._data['work_folder'] = PurePath(self._data['pipeline_folder'], self._data['sample_name'], "_work")
+        # self._data['images_folder'] = PurePath(self._data['raw_folder'], str(self._data['sample_name'] + "_Images"))
+        self._data['raw_folder'] = PurePath(self._data['pipeline_folder'])
+        self._data['work_folder'] = PurePath(self._data['pipeline_folder'], "_work" ,self._data['sample_name'])
         self._data['images_folder'] = PurePath(self._data['raw_folder'], str(self._data['sample_name'] + "_Images"))
 
 

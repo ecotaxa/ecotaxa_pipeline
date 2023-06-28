@@ -23,7 +23,7 @@ class Task():
                 _ = self._data[key]
                 # self._data[key] = data[key]
         except:
-            raise("Missing key: " + key + " in data argument")
+            raise Exception("Missing key: " + key + " in data argument")
 
     def remove_keys(self):
         for key in self._delete_keys:

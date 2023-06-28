@@ -19,7 +19,7 @@ class Project:
             self.pipeline = project['pipeline']
             self.metadata = project['metadata']
         except:
-            raise("missing key in project argument")
+            raise Exception("missing key in project argument")
 
     def generate_project_architecture(self) :
         create_folder(self.project_path) 
