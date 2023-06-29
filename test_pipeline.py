@@ -126,6 +126,7 @@ class Test_Pipeline(unittest.TestCase):
         self.assertRaises(Exception, ut.run )
 
 
+    # test fail cannot mock is_file_exist
     def test_ulco_pipeline_task_lists(self):
 
         data = { 
@@ -146,7 +147,9 @@ class Test_Pipeline(unittest.TestCase):
         self.assertEqual(result['csv_pulse'],  {'filename': 'mySample_Pulses.csv',
                                                 'mapping': pulse,
                                                 'path': PurePath('/pipeline_folder/mySample/_raw/mySample_Pulses.csv')})
-        
+
+
+    # test fail cannot mock is_file_exist
     def test_ulco_pipeline_array_of_tasks_embedded(self):
 
         data = { 
@@ -293,10 +296,6 @@ class Test_Pipeline(unittest.TestCase):
         self.assertEqual(result['csv_pulse']['path'], PurePath(test_path), "path different")
 
 
-# 'csv_configuration': {'decimal': '.', 'delimiter': ','},
-# -  'filename': 'R4_photos_flr16_2uls_10min 2022-09-14 12h28_Pulses.csv',
-#    'mapping': <class 'cytosenseModel.pulse'>,
-# -  'path': PurePosixPath('tests/cytosense/ULCO/mock/R4_photos_flr16_2uls_10min 2022-09-14 12h28_Polynomial_Pulses.csv')}        
 
 
 if __name__ == '__main__':

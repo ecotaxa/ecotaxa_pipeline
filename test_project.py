@@ -89,7 +89,7 @@ class TestProject(unittest.TestCase):
         self.assertEquals(p.work_data_folder, "path/_work")
 
 
-
+    # test failed: cannot mock create_folder
     # @patch('tools.create_folder')
     @mock.patch('tools.create_folder')
     # @mock.patch('create_folder')

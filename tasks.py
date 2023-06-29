@@ -39,7 +39,7 @@ class summarize_csv_pulse(Task):
 
         pulses_filename = self._data['csv_pulse']['path']
         # poly_dataframe = self.summarise_pulses_function(pulses_filename)
-        poly_dataframe = summarise_pulses.summarise_pulses(pulses_filename, csv_configuration=french_csv_configuration)
+        poly_dataframe = summarise_pulses.summarise_pulses(pulses_filename, csv_configuration=self._data['csv_pulse']['csv_configuration'])
         poly_filename = self.build_name()
         self._data['csv_pulse']['filename'] = self._filename()
         # self.save_dataframe_to_csv(poly_dataframe, poly_filename)

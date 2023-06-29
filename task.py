@@ -12,9 +12,15 @@ class Task():
     # def __init__(self) #, name: str):
         # self.name = name
 
-    # to use in pipeline 
-    # we cannot be use in a single task, but in that case not need to test input keys
-    # TODO need to use decorator or descriptor
+    def run(self):
+        pass
+
+
+    # TODO need this function only for test -> need to do a class an inherit from twice
+    # TO TEST  put code below in test class
+    # # to use in pipeline 
+    # # we cannot be use in a single task, but in that case not need to test input keys
+    # # TODO need to use decorator or descriptor
     def _run(self, data):
         self._data = data
         self.test_need_keys(data)
@@ -22,9 +28,6 @@ class Task():
         self.run()
         self.remove_keys()
         return self._data
-
-    def run(self):
-        pass
 
     def test_need_keys(self, data):
         try:
