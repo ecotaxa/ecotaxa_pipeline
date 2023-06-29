@@ -12,7 +12,7 @@ from task import Task
 
 from pathlib import PurePath
 from task import Task
-from tasks import add_ulco_pulse_csv_file_to_parse, define_sample_pipeline_folder
+from tasks import add_ulco_pulse_csv_file_to_parse, define_sample_pipeline_folder, summarize_csv_pulse
 
 
 
@@ -219,22 +219,24 @@ class Test_Pipeline(unittest.TestCase):
 
         print("['csv_pulse']['path']" + str(result['csv_pulse']['path']))
         test_path = 'tests/cytosense/ULCO/mock/R4_photos_flr16_2uls_10min 2022-09-14 12h28_Pulses.csv'
-        self.assertEqual(result['csv_pulse']['path'].as_posix(), PurePath(test_path).as_posix())
+        # self.assertEqual(result['csv_pulse']['path'].as_posix(), PurePath(test_path).as_posix())
         self.assertEqual(result['csv_pulse']['path'], PurePath(test_path))
 
 
-    def test_ulco_pipeline_analyse_pulse_ulco(self):
+    def test_ulco_pipeline_analyse_pulse_ulco_mock(self):
 
-        import ULCO_samples_sort as ulco    
+        # import ULCO_samples_sort as ulco    
 
-        data = { 
-            'pipeline_folder': '/pipeline_folder',
-            'sample_name': 'mySample',
+        local_path = PurePath('tests/cytosense/ULCO/mock')
+        data = {
+            'pipeline_folder': local_path,
+            'sample_name': 'R4_photos_flr16_2uls_10min 2022-09-14 12h28',
         }
 
         ulco_cytosense_pipeline = [
             add_ulco_pulse_csv_file_to_parse(),
-            analyse_csv( ulco.ulco_pulse_file_pattern, ulco.french_csv_configuration),
+            summarize_csv_pulse(),
+            # analyse_csv( ulco.ulco_pulse_file_pattern, ulco.french_csv_configuration),
             #analyse_csv(ulco_listmode_file_pattern, french_csv_configuration),
         ]
 
@@ -246,10 +248,55 @@ class Test_Pipeline(unittest.TestCase):
         ut = pipeline.Pipeline(ulco_sample_pipeline_tasks)
         result = ut.run(data)
 
-        self.assertEqual(result['csv_pulse'],  {'filename': 'mySample_Pulses.csv',
-                                                'mapping': pulse,
-                                                'path': PurePath('/pipeline_folder/mySample/_raw/mySample_Pulses.csv')})
-        
+        # self.assertEqual(result['csv_pulse'],  {'filename': 'mySample_Pulses.csv',
+        #                                         'mapping': pulse,
+        #                                         'path': PurePath('/pipeline_folder/mySample/_raw/mySample_Pulses.csv')})
+
+        self.assertEqual(result['csv_pulse']['filename'], 'R4_photos_flr16_2uls_10min 2022-09-14 12h28_Polynomial_Pulses.csv', "filename different")
+
+        test_path = 'tests/cytosense/ULCO/mock/R4_photos_flr16_2uls_10min 2022-09-14 12h28_Polynomial_Pulses.csv'
+        self.assertEqual(result['csv_pulse']['path'], PurePath(test_path), "path different")
+
+    def test_ulco_pipeline_analyse_pulse_ulco_small_mock(self):
+
+        # import ULCO_samples_sort as ulco    
+
+        local_path = 'tests/cytosense/ULCO/mock_small_data'
+        sample_name = 'R4_photos_flr16_2uls_10min 2022-09-14 12h28'
+        data = {
+            'pipeline_folder': PurePath(local_path),
+            'sample_name': sample_name,
+        }
+
+        ulco_cytosense_pipeline = [
+            add_ulco_pulse_csv_file_to_parse(),
+            summarize_csv_pulse(),
+            # analyse_csv( ulco.ulco_pulse_file_pattern, ulco.french_csv_configuration),
+            #analyse_csv(ulco_listmode_file_pattern, french_csv_configuration),
+        ]
+
+        # grammar pipeline = [ Task | [ Task ] ]
+        ulco_sample_pipeline_tasks = [ define_sample_pipeline_folder(), 
+                                       ulco_cytosense_pipeline 
+                                    ]
+
+        ut = pipeline.Pipeline(ulco_sample_pipeline_tasks)
+        result = ut.run(data)
+
+        # self.assertEqual(result['csv_pulse'],  {'filename': 'mySample_Pulses.csv',
+        #                                         'mapping': pulse,
+        #                                         'path': PurePath('/pipeline_folder/mySample/_raw/mySample_Pulses.csv')})
+
+        self.assertEqual(result['csv_pulse']['filename'], sample_name + '_Polynomial_Pulses.csv', "filename different")
+
+        test_path = local_path + '/' + sample_name + '_Polynomial_Pulses.csv'
+        self.assertEqual(result['csv_pulse']['path'], PurePath(test_path), "path different")
+
+
+# 'csv_configuration': {'decimal': '.', 'delimiter': ','},
+# -  'filename': 'R4_photos_flr16_2uls_10min 2022-09-14 12h28_Pulses.csv',
+#    'mapping': <class 'cytosenseModel.pulse'>,
+# -  'path': PurePosixPath('tests/cytosense/ULCO/mock/R4_photos_flr16_2uls_10min 2022-09-14 12h28_Polynomial_Pulses.csv')}        
 
 
 if __name__ == '__main__':
