@@ -38,6 +38,10 @@ class ulco_samples_sort(Task):
 
 class process_ulco_samples(Task):
 
+    def __init__(self, tasks):
+        #TODO
+        pass
+
     def run(self, data : dict):
         try:
             self._source_folder = data['source_folder']
@@ -65,6 +69,24 @@ class analyse_csv(Task):
     def __init__(self, *args):
         pass
 
+class analyse_pulses_csv(Task):
+    _need_keys = [ 'csv_pulses']
+    _update_keys = ['tsv_list']
+    # _create_keys = [ 'CVSname_folder']
+
+    def __init__(self, *args):
+        pass
+
+    def run (self):
+        self.test_need_keys(data)
+        self.analysecsv()
+        self.remove_keys()
+        return self._data
+
+    def analysecsv():
+        pass        
+
+
 class move_file_to_raw_folder(Task):
     def __init__(self, *args):
         pass
@@ -75,10 +97,10 @@ import Cytosense.define as cytosense
 from csv_configuration import french_csv_configuration, english_csv_configuration
 
 cefas_cytosense_pipeline = [
-        move_file_to_raw_folder(cytosense.cefas_pulse_file_pattern_extra_info, cytosense.cefas_pulse_file_pattern),
-        move_file_to_raw_folder(cytosense.cefas_listmode_file_pattern_extra_info, cytosense.cefas_listmode_file_pattern),
-        analyse_csv(cytosense.cefas_pulse_file_pattern, english_csv_configuration),
-        analyse_csv(cytosense.cefas_listmode_file_pattern, english_csv_configuration),
+        # move_file_to_raw_folder(cytosense.cefas_pulse_file_pattern_extra_info, cytosense.cefas_pulse_file_pattern),
+        # move_file_to_raw_folder(cytosense.cefas_listmode_file_pattern_extra_info, cytosense.cefas_listmode_file_pattern),
+        # analyse_csv(cytosense.cefas_pulse_file_pattern, english_csv_configuration),
+        # analyse_csv(cytosense.cefas_listmode_file_pattern, english_csv_configuration),
     ]
 
 class cvs_file_to_parse(Task): pass
