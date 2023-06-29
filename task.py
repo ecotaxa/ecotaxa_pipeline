@@ -12,12 +12,21 @@ class Task():
     # def __init__(self) #, name: str):
         # self.name = name
 
-    def run(self, data):
+    # to use in pipeline 
+    # we cannot be use in a single task, but in that case not need to test input keys
+    # TODO need to use decorator or descriptor
+    def _run(self, data):
         self._data = data
+        self.test_need_keys(data)
+        # self._data = 
+        self.run()
+        self.remove_keys()
         return self._data
 
+    def run(self):
+        pass
+
     def test_need_keys(self, data):
-        self._data = data
         try:
             for key in self._need_keys:
                 _ = self._data[key]

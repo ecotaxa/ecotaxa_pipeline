@@ -28,6 +28,6 @@ class Pipeline():
                 self._run_tasks(task)
             else:
                 print("running task: " + task.__class__.__name__)
-                self._data = task.run(self._data)
+                self._data = task._run(self._data)
             
     

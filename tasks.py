@@ -22,18 +22,19 @@ class summarize_csv_pulse(Task):
     #     # self.summarise_pulses_function = summarise_pulses_function if summarise_pulses_function else summarise_pulses.summarise_pulses
     #     self.summarise_pulses_function = summarise_pulses_function
 
-    def run(self, data):
-        self.test_need_keys(data)
-        self.process()
-        self.remove_keys()
-        return self._data
-
     _filename = lambda self: str(self._data['sample_name'] + "_Polynomial_Pulses" + ".csv")
 
     def build_name(self):
         return PurePath( self._data['raw_folder'], self._filename() )
 
-    def process(self):
+    def run(self):
+    #     self.test_need_keys(data)
+    #     self.process()
+    #     self.remove_keys()
+    #     return self._data
+
+  
+    # def process(self):
         import summarise_pulses
 
         pulses_filename = self._data['csv_pulse']['path']
@@ -42,7 +43,7 @@ class summarize_csv_pulse(Task):
         poly_filename = self.build_name()
         self._data['csv_pulse']['filename'] = self._filename()
         # self.save_dataframe_to_csv(poly_dataframe, poly_filename)
-        summarise_pulses.save_dataframe_to_csv(poly_dataframe, poly_filename)
+        summarise_pulses.save_dataframe_to_csv(poly_dataframe, poly_filename, csv_configuration=french_csv_configuration)
         self._data['csv_pulse']['path'] = poly_filename
 
 
@@ -59,13 +60,13 @@ class add_ulco_pulse_csv_file_to_parse(Task):
     def __init__(self, csv_configuration = english_csv_configuration):
         self._csv_configuration = csv_configuration
 
-    def run(self, data):
-        self.test_need_keys(data)
-        self.addcsv()
-        self.remove_keys()
-        return self._data
+    def run(self):
+    #     self.test_need_keys(data)
+    #     self.addcsv()
+    #     self.remove_keys()
+    #     return self._data
 
-    def addcsv(self):
+    # def addcsv(self):
 
         global is_file_exist
         filename = self.build_name()
@@ -95,23 +96,29 @@ class define_sample_pipeline_folder(Task):
     # _update_keys = []
     _create_keys = ['raw_folder', 'work_folder', 'images_folder']
 
-    def run(self, data):
+    def _run(self, data):
         if  type(data['pipeline_folder']) == str:
             data['pipeline_folder'] = PurePath(data['pipeline_folder'])
+            self._data = super()._run(data)
+            return self._data
+
+    def run(self):
+    #     if  type(data['pipeline_folder']) == str:
+    #         data['pipeline_folder'] = PurePath(data['pipeline_folder'])
 
 
-        self.test_need_keys(data)
-        # try:
-        #     self._data['pipeline_folder'] = data['pipeline_folder']
-        #     self._data['sample_name'] = data['sample_name']
-        # except:
-        #     raise Exception( "Missing key")
+    #     self.test_need_keys(data)
+    #     # try:
+    #     #     self._data['pipeline_folder'] = data['pipeline_folder']
+    #     #     self._data['sample_name'] = data['sample_name']
+    #     # except:
+    #     #     raise Exception( "Missing key")
         
 
-        self._define_keys()
-        return self._data
+    #     self._define_keys()
+    #     return self._data
 
-    def _define_keys(self):
+    # def _define_keys(self):
         # self._data['raw_folder'] = PurePath(self._data['pipeline_folder'], self._data['sample_name'], "_raw")
         # self._data['work_folder'] = PurePath(self._data['pipeline_folder'], self._data['sample_name'], "_work")
         # self._data['images_folder'] = PurePath(self._data['raw_folder'], str(self._data['sample_name'] + "_Images"))
