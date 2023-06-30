@@ -3,7 +3,14 @@
 from enum import Enum
 
 
-NamePatternComponent = Enum('NamePatternComponent', ['eSampleName' , 'eIndex', 'eImageType'])
+# NamePatternComponent = Enum('NamePatternComponent', ['eSampleName' , 'eIndex', 'eImageType'])
+
+
+class NamePatternComponent(str, Enum):
+    eSampleName='eSampleName' 
+    eIndex='eIndex'
+    eImageType='eImageType'
+
 
 
 # FileExtension = Enum ( 'FileExtension', [] )
