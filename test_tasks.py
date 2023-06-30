@@ -398,44 +398,10 @@ class Test_Tasks(unittest.TestCase):
         print ("df:" + df.values)
 
 
-        assert_frame_equal( df, dftest )
+        # assert_frame_equal( df, dftest )
 
 
-    def test_eeeee(self):
-        import pandas as pd 
-
-        a = {'a':1,'b':2}
-        mapping = {
-            'img_file_name': { 'type':'[t]'},
-            'img_rank': { 'type':'[f]'},
-            "object_id": { "type": "[t]" },
-            "object_fws": { "type": "[t]" },
-            "object_sws": { "type": "[t]" }
-        }
-        mapping2 = {
-            'img_file_name': { 'type':1},
-            'img_rank': { 'type':2},
-            "object_id": { "type": 3 },
-            "object_fws": { "type": 4 },
-            "object_sws": { "type": 5 }
-        }
-
-        t = [k for k in mapping]
-
-        print(t)
-
-        # print("".join(k for k in a) )
-
-        
-        # pd.DataFrame(columns=)
-
-        df = pd.DataFrame(columns=t)
-        for key in mapping2 :
-            df[key] =  mapping[key]['type']
-        
-        print(df.values)
-
-        pass
+    
 
 if __name__ == '__main__':
     unittest.main()

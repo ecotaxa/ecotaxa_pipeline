@@ -2,6 +2,7 @@
 
 
 from pathlib import PurePath
+from Cytosense.define import NamePatternComponent
 from cytosenseModel import pulse
 
 from task import Task
@@ -86,7 +87,37 @@ class add_ulco_pulse_csv_file_to_parse(Task):
         return self._data['sample_name'] + "_Pulses.csv"
 
 
+class add_ulco_listmode_csv_file_to_parse(Task):
+    _need_keys = [ 'raw_folder', 'sample_name']
+    _update_keys = [ 'csv_listmode']
 
+    is_file_exist = tools.is_file_exist
+
+    def __init__(self, csv_configuration = english_csv_configuration):
+        self._csv_configuration = csv_configuration
+
+    def run(self):
+
+        global is_file_exist
+        filename = self.build_name()
+        path = PurePath( self._data['raw_folder'], filename )
+        if not tools.is_file_exist(path): 
+            raise Exception( "File " + str(path) + " do not exist")
+        csv_item = { 
+                'path': path, 
+                'filename':  filename, 
+                'mapping': pulse,
+                'csv_configuration': self._csv_configuration
+                }
+        self._data['csv_listmode']= csv_item 
+
+    def build_name(self):
+        # ulco.ulco_pulse_file_pattern : [ NamePatternComponent.eSampleName , "_Pulses" , ".csv" ]
+        return self._data['sample_name'] + "_ListMode.csv"
+        
+     
+
+    
 
 
 
@@ -128,6 +159,35 @@ class define_sample_pipeline_folder(Task):
 
 
 
+import pandas as pd
 
+class analyze_csv_pulse(Task):
 
+    _need_keys = [ 'csv_pulse']
+    _update_keys = ['tsv_list']
+
+    _df: pd.DataFrame
+
+    def run(self):
+        self._mapping = self._data['csv_pulse']['mapping']
+        self._df = self._init_df()
+
+        self._data['tsv_pulse']={}
+        self._data['tsv_pulse']['dataframe']=self._df
+
+        # self.df.to_csv("tests/cytosense/result/test_analyze_csv_pulse.csv")
+        self._df.to_csv("tests/test_analyze_csv_pulse.csv")
+
+    def _add_type(self):
+        row = {}
+        for key in self._mapping:
+            print("mapping["+key+"]=" + str(self.mapping[key]['type']))
+            row[key] = self.mapping[key]['type']
+        self._df.loc[0]=row
+
+    def _init_df(self) :
+        df = pd.DataFrame(columns=[key for key in self._mapping])
+        for key in self._mapping :
+            df[key] =  self._mapping[key]['type']
+        return df
 
