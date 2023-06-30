@@ -96,6 +96,8 @@ def summarise_pulses(name, csv_configuration={ 'delimiter' : ',' , 'decimal' : '
         axis=1)
   except KeyError:
     raise Exception("Verify your pulses csv file: your csv_configuration seems to use the wrong delimiter")
+  except np.linalg.LinAlgError:
+    raise Exception("Wrong file: " + str(name) + " not a pulses file")
   
   return final
 

@@ -4,7 +4,7 @@ from pathlib import PurePath
 import unittest
 from cytosense import NamePatternComponent
 from cytosenseModel import pulse
-from tasks import add_ulco_pulse_csv_file_to_parse, define_sample_pipeline_folder, summarize_csv_pulse
+from tasks import add_ulco_pulse_csv_file_to_parse, analyze_csv_pulse, define_sample_pipeline_folder, summarize_csv_pulse
 
 # from tasks import add_ulco_pulse_csv_file_to_parse, define_sample_pipeline_folder, summarize_csv_pulse
 
@@ -213,6 +213,7 @@ class Test_Tasks(unittest.TestCase):
         self.assertEqual(result['csv_pulse']['csv_configuration']['decimal'],  '.')
         self.assertEqual(result['csv_pulse']['csv_configuration']['delimiter'],  ',')
 
+
         # self.assertEqual(result['csv_pulse'],  {'filename': 'Pond_NA 2023-05-24 09h23_All Imaged Particles_Pulses.csv',
         #                                         'mapping': pulse,
         #                                         'path': PurePath('tests/cytosense/Cefas/mock/Pond_NA 2023-05-24 09h23_All Imaged Particles_Pulses.csv'),
@@ -280,7 +281,6 @@ class Test_Tasks(unittest.TestCase):
     def test_process_pulse(self):
         local_path = 'tests/cytosense/ULCO/mock_small_data'
         sample_name = 'R4_photos_flr16_2uls_10min 2022-09-14 12h28'
-        # filename = local_path + '/' + sample_name +  '_Pulses.csv'
         filename = sample_name +  '_Pulses.csv'
         polynomail_filename = sample_name +  '_Polynomial_Pulses.csv'
         data = {
@@ -300,12 +300,142 @@ class Test_Tasks(unittest.TestCase):
         result = ut._run(data)
 
         # self.assertEqual( result['csv_pulse']['filename'] , PurePath( data['raw_folder'], str(data['sample_name'] + "_Polynomial_Pulses.csv") ) )
-        self.assertEqual( result['csv_pulse']['filename'], polynomail_filename , "Differnet filename" )
+        self.assertEqual( result['csv_pulse']['filename'], polynomail_filename , "Different filename" )
         self.assertEqual( result['csv_pulse']['path'],  PurePath( local_path , polynomail_filename ), "Different path" ) 
         # self.assertEqual( result['csv_pulse']['path'] , PurePath( data['raw_folder'], str(data['sample_name'] + "_Polynomial_Pulses.csv") ) )
         # self.assertEqual(summarize_called, 1)
         # self.assertEqual(save_called, 1)
 
+
+    def test_process_pulse_wrong_pulse_file(self):
+        local_path = 'tests/cytosense/ULCO/mock_small_data'
+        sample_name = 'R4_photos_flr16_2uls_10min 2022-09-14 12h28'
+        # filename = sample_name +  '_Pulses.csv'
+        polynomail_filename = sample_name +  '_Polynomial_Pulses.csv'
+        data = {
+                'raw_folder': PurePath(local_path),
+                'sample_name': sample_name,
+                'csv_pulse':  {'filename': polynomail_filename,
+                                'mapping': pulse,
+                                'path': PurePath(local_path , polynomail_filename),
+                                'csv_configuration': {'decimal': ',', 'delimiter': ';'}
+                            }
+            }
+        
+        ut = summarize_csv_pulse_test()
+        # result = ut._run(data)
+        utlabmda = lambda : ut._run(data)
+
+        self.assertRaises(Exception, utlabmda )
+ 
+
+    def test_init_dataframe(self):
+        local_path = 'tests/cytosense/ULCO/mock_small_data'
+        sample_name = 'R4_photos_flr16_2uls_10min 2022-09-14 12h28'
+        filename = sample_name +  '_Pulses.csv'
+
+        mapping = {
+            'img_file_name': { 'type' : '[t]'},
+            'img_rank': { 'type':'[f]'},
+            "object_id": { "type": "[t]" },
+            "object_fws": { "type": "[t]" },
+            "object_sws": { "type": "[t]" }
+        }
+        polynomail_filename = sample_name +  '_Polynomial_Pulses.csv'
+        data = {
+                'raw_folder': PurePath(local_path),
+                'sample_name': sample_name,
+                'csv_pulse':  {'filename': filename,
+                                'mapping': mapping,
+                                'path': PurePath(local_path , filename),
+                                'csv_configuration': {'decimal': ',', 'delimiter': ';'}
+                            }
+        }
+        ut = summarize_csv_pulse_test()
+        result = ut._run(data)
+        self.assertEqual(result['csv_pulse']['mapping'],  mapping)
+
+
+    def test_process_pulse_analyse(self):
+        import pandas as pd 
+
+        local_path = 'tests/cytosense/ULCO/mock_small_data'
+        sample_name = 'R4_photos_flr16_2uls_10min 2022-09-14 12h28'
+        # filename = sample_name +  '_Pulses.csv'
+        polynomail_filename = sample_name +  '_Polynomial_Pulses.csv'
+        mapping = {
+            'img_file_name': { 'type':'[t]'},
+            'img_rank': { 'type':'[f]'},
+            "object_id": { "type": "[t]" },
+            "object_fws": { "type": "[t]" },
+            "object_sws": { "type": "[t]" }
+        }
+        data = {
+                'raw_folder': PurePath(local_path),
+                'sample_name': sample_name,
+                'csv_pulse':  {'filename': polynomail_filename,
+                                'mapping': mapping,
+                                'path': PurePath(local_path , polynomail_filename),
+                                'csv_configuration': {'decimal': ',', 'delimiter': ';'}
+                            }
+            }
+        dftest = pd.DataFrame({ 'img_file_name': ['[t]'],
+                                'img_rank': ['[f]'],
+                                'object_id': ['[t]'],
+                                'object_fws': ['[t]'],
+                                'object_sws': ['[t]']             
+                               })
+        print ("dftest:" + dftest.values)
+
+
+
+        ut = analyze_csv_pulse()
+        result = ut._run(data)
+
+        from pandas.testing import assert_frame_equal        
+        
+        df = result['tsv_pulse']['dataframe']
+        print ("df:" + df.values)
+
+
+        assert_frame_equal( df, dftest )
+
+
+    def test_eeeee(self):
+        import pandas as pd 
+
+        a = {'a':1,'b':2}
+        mapping = {
+            'img_file_name': { 'type':'[t]'},
+            'img_rank': { 'type':'[f]'},
+            "object_id": { "type": "[t]" },
+            "object_fws": { "type": "[t]" },
+            "object_sws": { "type": "[t]" }
+        }
+        mapping2 = {
+            'img_file_name': { 'type':1},
+            'img_rank': { 'type':2},
+            "object_id": { "type": 3 },
+            "object_fws": { "type": 4 },
+            "object_sws": { "type": 5 }
+        }
+
+        t = [k for k in mapping]
+
+        print(t)
+
+        # print("".join(k for k in a) )
+
+        
+        # pd.DataFrame(columns=)
+
+        df = pd.DataFrame(columns=t)
+        for key in mapping2 :
+            df[key] =  mapping[key]['type']
+        
+        print(df.values)
+
+        pass
 
 if __name__ == '__main__':
     unittest.main()
