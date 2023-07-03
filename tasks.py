@@ -165,12 +165,16 @@ class analyze_csv_pulse(Task):
 
     _need_keys = [ 'csv_pulse']
     _update_keys = ['tsv_list']
+    _mapping = {}
 
     _df: pd.DataFrame
 
     def run(self):
         self._mapping = self._data['csv_pulse']['mapping']
         self._df = self._init_df()
+        self._add_type()
+
+        self._mapcvstodf()
 
         self._data['tsv_pulse']={}
         self._data['tsv_pulse']['dataframe']=self._df
@@ -181,8 +185,8 @@ class analyze_csv_pulse(Task):
     def _add_type(self):
         row = {}
         for key in self._mapping:
-            print("mapping["+key+"]=" + str(self.mapping[key]['type']))
-            row[key] = self.mapping[key]['type']
+            print("mapping["+key+"]=" + str(self._mapping[key]['type']))
+            row[key] = self._mapping[key]['type']
         self._df.loc[0]=row
 
     def _init_df(self) :
@@ -190,4 +194,7 @@ class analyze_csv_pulse(Task):
         for key in self._mapping :
             df[key] =  self._mapping[key]['type']
         return df
+
+    def _mapcvstodf(self):
+        pass
 

@@ -398,7 +398,7 @@ class Test_Tasks(unittest.TestCase):
         print ("df:" + df.values)
 
 
-        # assert_frame_equal( df, dftest )
+        assert_frame_equal( df, dftest )
 
 
     
