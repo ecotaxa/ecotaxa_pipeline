@@ -1,6 +1,6 @@
 
 
-from cytosenseModel import cytosenseModel ,  pulse,Listnode, Info, CefasListNode
+from cytosenseModel import cytosenseModel ,  pulse,Listnode, Info, CefasListmode
 
 
 

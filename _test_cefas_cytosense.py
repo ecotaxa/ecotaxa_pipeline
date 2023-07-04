@@ -1,10 +1,10 @@
 
 from cytosense import CytoSense
-from cytosenseModel import cytosenseModel ,  pulse, UlcoListmode, Info, CefasListNode
+from cytosenseModel import cytosenseModel ,  pulse, UlcoListmode, Info, CefasListmode
 from tools import print_dict
 
 
-modelCefas = cytosenseModel([pulse(), CefasListNode()]) #, Info()])
+modelCefas = cytosenseModel([pulse(), CefasListmode()]) #, Info()])
 # print_dict(modelCefas.mapping)
 #print_dict(modelCefas.key['object_id'])
 
