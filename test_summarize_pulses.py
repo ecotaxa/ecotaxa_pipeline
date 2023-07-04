@@ -2,7 +2,7 @@
 from pathlib import PurePath
 import unittest
 
-from summarise_pulses import summarise_pulses
+from summarise_pulses import CSVException, summarise_pulses
 
 
 
@@ -14,14 +14,14 @@ class Test_Summarize_pipeline(unittest.TestCase):
         filename = 'nofile'
         utlambda = lambda : summarise_pulses( filename, csv_configuration={ 'wrong_key' : ',' , 'decimal' : '.' } )
 
-        self.assertRaises( Exception , utlambda )
+        self.assertRaises( CSVException , utlambda )
 
     def test_bad_configuration_file_not_exist(self):
 
         filename = 'nofile'
         utlambda = lambda : summarise_pulses( filename )
 
-        self.assertRaises( Exception , utlambda )
+        self.assertRaises( CSVException , utlambda )
 
     def test_with_true_file_and_wrong_delimiter(self):
         local_path = 'tests/cytosense/ULCO/mock_small_data'
@@ -30,7 +30,7 @@ class Test_Summarize_pipeline(unittest.TestCase):
         # pfilename = PurePath ( local_path , filename)
 
         utlambda = lambda : summarise_pulses( PurePath(filename) )
-        self.assertRaises(Exception, utlambda)
+        self.assertRaises(CSVException, utlambda)
         #TODO build an Exception class, to didn't mask
 
 

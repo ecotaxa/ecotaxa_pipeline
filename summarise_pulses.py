@@ -6,7 +6,7 @@ import numpy as np
 
 def test_argument(csv_configuration):
     if not ( 'delimiter' in csv_configuration and 'decimal' in csv_configuration):
-     raise Exception("You csv_configuration argument is not conform to its structure")
+     raise CSVException("Your csv_configuration argument is not conform to its structure")
 
 
 #TODO put this functions in the summarize_csv_pulse task class, thus Particle ID could be filtered and we would gain some speed in processing the file as due to the Cytosense process a lot of particle images are not present (not need to sum them)
@@ -94,10 +94,13 @@ def summarise_pulses(name, csv_configuration={ 'delimiter' : ',' , 'decimal' : '
         [final,
         pd.DataFrame(fits[channel].to_list(), columns=[channel + '_coef_' + str(i) for i in range(n_poly)])],
         axis=1)
+      
+  except FileNotFoundError:
+    raise CSVException("file: " + name + " don't exist")
   except KeyError:
-    raise Exception("Verify your pulses csv file: your csv_configuration seems to use the wrong delimiter")
+    raise CSVException("Verify your pulses csv file: your csv_configuration seems to use the wrong delimiter")
   except np.linalg.LinAlgError:
-    raise Exception("Wrong file: " + str(name) + " not a pulses file")
+    raise CSVException("Wrong file: " + str(name) + " not a pulses file")
   
   return final
 
@@ -108,4 +111,9 @@ def save_dataframe_to_csv(df, name, csv_configuration={ 'delimiter' : ',' , 'dec
   filepath = Path(name)  
   filepath.parent.mkdir(parents=True, exist_ok=True)  
   df.to_csv(filepath, index=False, sep=csv_configuration['delimiter'], decimal=csv_configuration['decimal'] )
+
+
+class CSVException(Exception):
+  def __init__(self, *args: object) -> None:
+    super().__init__(*args)
 
