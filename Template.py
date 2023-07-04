@@ -5,6 +5,7 @@ class Template:
     
     _mapping = {}
     _keyorder = []
+    _name = ""
     
     # def __init__(self, mapping):
     def __init__(self):
@@ -12,20 +13,19 @@ class Template:
         self._keyorder = self._mapping.keys()
 
     @property
-    def mapping(self) -> dict:
-        return self._mapping
+    def mapping(self) -> dict: return self._mapping
 
     # @property 
-    def keyorder(self):
-        return self._keyorder
+    def keyorder(self): return self._keyorder
+
+    @property
+    def name(self): return self._name
 
     def append(self, template):
         #dict = template.mapping()
         #self.mapping = { **self._mapping , **template }
         self.mapping.update(template)
         self._keyorder = self._mapping.keys()
-
-
 
     def _order(self):
         self._keyorder = self._mapping.keys()

@@ -1,6 +1,6 @@
 
 from cytosense import CytoSense
-from cytosenseModel import cytosenseModel ,  pulse, UlcoListnode, Info, CefasListNode
+from cytosenseModel import cytosenseModel ,  pulse, UlcoListmode, Info, CefasListNode
 from tools import print_dict
 
 

@@ -2,11 +2,11 @@
 
 
 from cytosense import CytoSense
-from cytosenseModel import cytosenseModel,  pulse, UlcoListnode, Info, CefasListNode
+from cytosenseModel import cytosenseModel,  pulse, UlcoListmode, Info, CefasListNode
 from tools import print_dict
 
 
-ulcoModel = cytosenseModel([pulse(), UlcoListnode()]) #, Info()])
+ulcoModel = cytosenseModel([pulse(), UlcoListmode()]) #, Info()])
 #ulcoModel = cytosenseModel([ UlcoListnode()]) #, Info()])
 # print_dict(ulcoModel.mapping)
 
