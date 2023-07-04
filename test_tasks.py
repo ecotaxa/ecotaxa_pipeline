@@ -199,50 +199,46 @@ class Test_Tasks(unittest.TestCase):
     def test_add_ulco_pulse_csv_file_to_parse_true_cefas_file(self):
         from csv_configuration import english_csv_configuration
 
-        local_path = PurePath('tests/cytosense/Cefas/mock')
+        local_path = 'tests/cytosense/Cefas/mock'
+        sample_name = 'Pond_NA 2023-05-24 09h23_All Imaged Particles'
         data = {
-            'raw_folder': local_path,
-            'sample_name': 'Pond_NA 2023-05-24 09h23_All Imaged Particles',
+            'raw_folder': PurePath(local_path),
+            'sample_name': sample_name,
         }
+        test_filename = sample_name + "_Pulses.csv"
+        test_path = local_path + "/" + test_filename
 
         ut = add_ulco_pulse_csv_file_to_parse(english_csv_configuration)
         result = ut._run(data)
 
-        self.assertEqual(result['csv_pulse']['filename'],  'Pond_NA 2023-05-24 09h23_All Imaged Particles_Pulses.csv')
-        self.assertEqual(result['csv_pulse']['mapping'],  pulse)
-        self.assertEqual(result['csv_pulse']['path'],  PurePath('tests/cytosense/Cefas/mock/Pond_NA 2023-05-24 09h23_All Imaged Particles_Pulses.csv'))
+        self.assertEqual(result['csv_pulse']['filename'],  test_filename , " -- filename different")
+        self.assertEqual(result['csv_pulse']['mapping'],  pulse , " -- mapping different")
+        self.assertEqual(result['csv_pulse']['path'],  PurePath(test_path) , " -- path different")
         self.assertEqual(result['csv_pulse']['csv_configuration']['decimal'],  '.')
         self.assertEqual(result['csv_pulse']['csv_configuration']['delimiter'],  ',')
-
-
-        # self.assertEqual(result['csv_pulse'],  {'filename': 'Pond_NA 2023-05-24 09h23_All Imaged Particles_Pulses.csv',
-        #                                         'mapping': pulse,
-        #                                         'path': PurePath('tests/cytosense/Cefas/mock/Pond_NA 2023-05-24 09h23_All Imaged Particles_Pulses.csv'),
-        #                                         'csv_configuration': {'decimal': '.', 'delimiter': ','}})
 
 
     def test_add_ulco_pulse_csv_file_to_parse_true_ulco_file(self):
         from csv_configuration import french_csv_configuration
 
-        local_path = PurePath('tests/cytosense/ULCO/mock')
+        local_path = 'tests/cytosense/ULCO/mock'
+        sample_name = 'R4_photos_flr16_2uls_10min 2022-09-14 12h28'
         data = {
-            'raw_folder': local_path,
-            'sample_name': 'R4_photos_flr16_2uls_10min 2022-09-14 12h28',
+            'raw_folder': PurePath(local_path),
+            'sample_name': sample_name,
         }
+        test_filename = sample_name + "_Pulses.csv"
+        test_path = local_path + "/" + test_filename
 
         ut = add_ulco_pulse_csv_file_to_parse(french_csv_configuration)
         result = ut._run(data)
 
-        self.assertEqual(result['csv_pulse']['filename'],  'R4_photos_flr16_2uls_10min 2022-09-14 12h28_Pulses.csv')
-        self.assertEqual(result['csv_pulse']['mapping'],  pulse)
-        self.assertEqual(result['csv_pulse']['path'],  PurePath('tests/cytosense/ULCO/mock/R4_photos_flr16_2uls_10min 2022-09-14 12h28_Pulses.csv'))
+        self.assertEqual(result['csv_pulse']['filename'],  test_filename , " -- filename different")
+        self.assertEqual(result['csv_pulse']['mapping'],  pulse , " -- mapping different")
+        self.assertEqual(result['csv_pulse']['path'],  PurePath(test_path) , " -- path different")
         self.assertEqual(result['csv_pulse']['csv_configuration']['decimal'],  ',')
         self.assertEqual(result['csv_pulse']['csv_configuration']['delimiter'],  ';')
 
-        # self.assertEqual(result['csv_pulse'],  {'filename': 'R4_photos_flr16_2uls_10min 2022-09-14 12h28_Pulses.csv',
-        #                                         'mapping': pulse,
-        #                                         'path': PurePath('tests/cytosense/ULCO/mock/R4_photos_flr16_2uls_10min 2022-09-14 12h28_Pulses.csv'),
-        #                                         'csv_configuration': {'decimal': ',', 'delimiter': ';'}})
 
     def test_add_ulco_listmode_csv_file_to_parse_true_ulco_file(self):
         from csv_configuration import french_csv_configuration
@@ -314,8 +310,8 @@ class Test_Tasks(unittest.TestCase):
                                 'csv_configuration': {'decimal': ',', 'delimiter': ';'}
                             }
             }
-        # ut = summarize_csv_pulse()
-        ut = summarize_csv_pulse_test()
+        ut = summarize_csv_pulse()
+        # ut = summarize_csv_pulse_test()
         # ut.save_dataframe_to_csv = lambda : 'csv saved'
         # ut.summarise_pulses_function = summarize_pulses_function
         # ut.save_dataframe_to_csv = save_csv
@@ -332,7 +328,6 @@ class Test_Tasks(unittest.TestCase):
     def test_process_pulse_wrong_pulse_file(self):
         local_path = 'tests/cytosense/ULCO/mock_small_data'
         sample_name = 'R4_photos_flr16_2uls_10min 2022-09-14 12h28'
-        # filename = sample_name +  '_Pulses.csv'
         polynomial_filename = sample_name +  '_Polynomial_Pulses.csv'
         data = {
                 'raw_folder': PurePath(local_path),
@@ -345,7 +340,6 @@ class Test_Tasks(unittest.TestCase):
             }
         
         ut = summarize_csv_pulse_test()
-        # result = ut._run(data)
         utlabmda = lambda : ut._run(data)
 
         self.assertRaises(Exception, utlabmda )
@@ -382,13 +376,9 @@ class Test_Tasks(unittest.TestCase):
     def test_process_pulse_analyse_empty_file(self):
         import pandas as pd 
 
-        # local_path = 'tests/cytosense/ULCO/mock_small_data'
-        # sample_name = 'R4_photos_flr16_2uls_10min 2022-09-14 12h28'
         local_path = 'tests'
         sample_name = 'empty'
-        # filename = sample_name +  '_Pulses.csv'
         polynomail_filename = sample_name +  '_Polynomial_Pulses.csv'
-
         model = Template()
         model._mapping = {
                 'img_file_name': { 'type':'[t]', 'index':0},
@@ -424,8 +414,8 @@ class Test_Tasks(unittest.TestCase):
 
         assert_frame_equal( df, dftest )
 
+
     # def test_analyse_cvs_pulse_init_df(self):
-        
     #     ut = analyze_csv_pulse()
     #     ut._init_df()
 
@@ -439,8 +429,7 @@ class Test_Tasks(unittest.TestCase):
         polynomial_filename = sample_name +  '_Polynomial_Pulses.csv'
         
         corrupted_model = pulse 
-        # corrupted_model._mapping[0]=None
-        # corrupted_model._mapping['object_id'] = None
+        # cannot test, because model is not force to take all columns
         # del corrupted_model._mapping['object_id']
 
         data = {
@@ -485,18 +474,13 @@ class Test_Tasks(unittest.TestCase):
 
         # df = df.reindex(sorted(df.columns), axis=1)
 
-        # rows = type_header
         dftest.loc[len(dftest)]=type_header
         for values in dest:
             d = {}
             for index,key in enumerate(header):
                 d[key]= values[index]
             print("append row")
-            # rows.append(d)
             dftest.loc[len(dftest)]=d
-
-        # CONCAT ADD COLUMNS NOT ROWS
-        # dftest = pd.concat([dftest, pd.DataFrame(rows)], ignore_index=True)
 
         dftest.to_csv("tests/cytosense/result/" + sample_name + "__test_2__" + ".csv", index=False)
 
@@ -507,8 +491,8 @@ class Test_Tasks(unittest.TestCase):
         
         df: pd.DataFrame = result['tsv_pulse']['dataframe']
         print ("df:" + str(df.values))
+        # to have a human view
         df.to_csv("tests/cytosense/result/" + sample_name + ".csv", index=False)
-
 
         assert_frame_equal( df, dftest )
 
