@@ -157,8 +157,19 @@ class pulse(Template):
         "object_coef_9_Curvature":{ "file" : "Listmode" , "header" :"Curvature_coef_9"  ,"index":55, "fn": None, "type":"[f]", "comment":""},        
     }
 
+
 # head -1 'ATSO_photos_flr16_2uls_10min 2022-06-15 16h31_Listmode.csv' | sed 's/;/\n/g' | sed 's/^/"object_date":{ "file" : "Listmode" , "header" :"/g' | sed 's/$/","index":1, "fn": None, "type":"[t]", "comment":""},/g' | awk '{gsub("index\":1","index\":" NR-1,$0);print}' > listnode.txt
 class UlcoListmode(Template):
+
+    def define_id(self, id, data):
+        return data._data['sample_name'] + "_" + str(id)
+        # return id
+
+    def sample_id(self, id, data):
+        return data._data['sample_name']
+    
+
+
     _mapping = {
         "object_id": {
             "file": "Listmode",
@@ -712,7 +723,7 @@ class UlcoListmode(Template):
             "type": "[f]",
             "comment": "",
         },
-        # "object_date": {
+        # "object_curvature_length": {
         #     "file": "Listmode",
         #     "header": "Curvature Length",
         #     "index": 68,
@@ -720,7 +731,7 @@ class UlcoListmode(Template):
         #     "type": "[f]",
         #     "comment": "",
         # },
-        # "object_date": {
+        # "object_curvature_total": {
         #     "file": "Listmode",
         #     "header": "Curvature Total",
         #     "index": 69,
@@ -728,7 +739,7 @@ class UlcoListmode(Template):
         #     "type": "[f]",
         #     "comment": "",
         # },
-        # "object_date": {
+        # "object_curvature_maximum": {
         #     "file": "Listmode",
         #     "header": "Curvature Maximum",
         #     "index": 70,
@@ -736,7 +747,7 @@ class UlcoListmode(Template):
         #     "type": "[f]",
         #     "comment": "",
         # },
-        # "object_date": {
+        # "object_curvature_average": {
         #     "file": "Listmode",
         #     "header": "Curvature Average",
         #     "index": 71,
@@ -744,7 +755,7 @@ class UlcoListmode(Template):
         #     "type": "[f]",
         #     "comment": "",
         # },
-        # "object_date": {
+        # "object_curvature_inertia": {
         #     "file": "Listmode",
         #     "header": "Curvature Inertia",
         #     "index": 72,
@@ -752,7 +763,7 @@ class UlcoListmode(Template):
         #     "type": "[f]",
         #     "comment": "",
         # },
-        # "object_date": {
+        # "object_curvature_center_of_gravity": {
         #     "file": "Listmode",
         #     "header": "Curvature Center of gravity",
         #     "index": 73,
@@ -760,7 +771,7 @@ class UlcoListmode(Template):
         #     "type": "[f]",
         #     "comment": "",
         # },
-        # "object_date": {
+        # "object_curvature_fill_factor": {
         #     "file": "Listmode",
         #     "header": "Curvature Fill factor",
         #     "index": 74,
@@ -768,7 +779,7 @@ class UlcoListmode(Template):
         #     "type": "[f]",
         #     "comment": "",
         # },
-        # "object_date": {
+        # "object_curvature_asymmetry": {
         #     "file": "Listmode",
         #     "header": "Curvature Asymmetry",
         #     "index": 75,
@@ -776,7 +787,7 @@ class UlcoListmode(Template):
         #     "type": "[f]",
         #     "comment": "",
         # },
-        # "object_date": {
+        # "object_curvature_number_of_cells": {
         #     "file": "Listmode",
         #     "header": "Curvature Number of cells",
         #     "index": 76,
@@ -784,7 +795,7 @@ class UlcoListmode(Template):
         #     "type": "[f]",
         #     "comment": "",
         # },
-        # "object_date": {
+        # "object_curvature_first": {
         #     "file": "Listmode",
         #     "header": "Curvature First",
         #     "index": 77,
@@ -792,7 +803,7 @@ class UlcoListmode(Template):
         #     "type": "[f]",
         #     "comment": "",
         # },
-        # "object_date": {
+        # "object_curvature_last": {
         #     "file": "Listmode",
         #     "header": "Curvature Last",
         #     "index": 78,
@@ -800,7 +811,7 @@ class UlcoListmode(Template):
         #     "type": "[f]",
         #     "comment": "",
         # },
-        # "object_date": {
+        # "object_curvature_minimum": {
         #     "file": "Listmode",
         #     "header": "Curvature Minimum",
         #     "index": 79,
@@ -808,7 +819,7 @@ class UlcoListmode(Template):
         #     "type": "[f]",
         #     "comment": "",
         # },
-        # "object_date": {
+        # "object_curvature_sws_covariance": {
         #     "file": "Listmode",
         #     "header": "Curvature SWS covariance",
         #     "index": 80,
@@ -819,7 +830,7 @@ class UlcoListmode(Template):
     }
 
 
-class CefasListNode(Template):
+class CefasListmode(Template):
     _mapping = {
         "object_id": {
             "file": "Listmode",
