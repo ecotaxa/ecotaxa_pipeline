@@ -414,6 +414,7 @@ class Test_Pipeline(unittest.TestCase):
             summarize_csv_pulse(),
             analyze_csv_pulse(),
             analyse_cvs_listmode(),
+            merge_files()
 
             # analyse_csv( ulco.ulco_pulse_file_pattern, ulco.french_csv_configuration),
             #analyse_csv(ulco_listmode_file_pattern, french_csv_configuration),
