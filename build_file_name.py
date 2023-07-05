@@ -23,7 +23,7 @@ class build_file_name():
                     self.pattern[name_index] = str(kwargs[str(component.value)])
                     updatePattern = True
                 except ValueError:            
-                    print("no + str(component.value) + pattern")
+                    print("no " + str(component.value) + " pattern")
                 except KeyError:
                     raise MissingArgumentException(str(component.value))
 
@@ -31,5 +31,19 @@ class build_file_name():
 
         return path
     
+    # def transfoorm(self, e:NamePatternComponent):
+    #     if e == NamePatternComponent.e 
 
+    # def get_path_pattern(self, **kwargs):
+
+    #     pattern_list = []
+    #     for i in range(self.pattern):
+    #         if type(self.pattern[i]) == type(NamePatternComponent):
+    #             pattern_list.append( self.transfoorm(self.pattern[i]) )
+    #         else:
+    #             pattern_list.append( self.pattern[i])
+
+    #     pattern = "".join(pattern_list)
+    #     return pattern
+    
 

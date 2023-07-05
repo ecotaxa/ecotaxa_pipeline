@@ -49,3 +49,32 @@ class Test_Build_file_name(TestCase):
         r = ut.get_name(eSampleName="mySample", eIndex=42 )
 
         self.assertEqual(r, name)
+
+
+    def test_path(self):
+        pattern = [ NamePatternComponent.eSampleName , "_", NamePatternComponent.eSampleName, "_Pulses" , ".cvs" ]
+        name = "mySample" + "_" + "mySample" + "_Pulses" + ".cvs"
+
+        ut = build_file_name(pattern)
+        r = ut.get_name(eSampleName="mySample", eIndex="*")
+        self.assertEqual(r, name)
+
+    def test_index_path(self):
+        pattern = [ NamePatternComponent.eSampleName , "_", NamePatternComponent.eIndex, "_Pulses" , ".cvs" ]
+        name = "mySample" + "_" + "*" + "_Pulses" + ".cvs"
+
+        ut = build_file_name(pattern)
+        r = ut.get_name(eSampleName="mySample", eIndex="*")
+
+        print(r)
+        self.assertEqual(r, name)
+
+    def test_image_path(self):
+        pattern = [NamePatternComponent.eSampleName,"_Cropped_",NamePatternComponent.eIndex,".jpg"]
+        name = "mySample" + "_Cropped_" + "*" + ".jpg"
+
+        ut = build_file_name(pattern)
+        r = ut.get_name(eSampleName="mySample", eIndex="*")
+
+        print(r)
+        self.assertEqual(r, name)

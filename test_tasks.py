@@ -2,12 +2,14 @@
 
 from pathlib import PurePath
 import unittest
+from Cytosense.define import NamePatternComponent
 from Template import Template
 from analyze_csv_pulse import analyze_csv_pulse
-from cytosense import NamePatternComponent
 from cytosenseModel import UlcoListmode, pulse
+from debug_tools import dump, myDictAssert
 from mock_polynomial_pulses_ulco_small_data import mock_ulco_small_data
-from tasks import add_ulco_listmode_csv_file_to_parse, add_ulco_pulse_csv_file_to_parse, analyse_cvs_listmode, define_sample_pipeline_folder, merge_files, summarize_csv_pulse
+from mock_ulco_small_data_images import mock_ulco_small_data_images
+from tasks import add_ulco_listmode_csv_file_to_parse, add_ulco_pulse_csv_file_to_parse, analyse_cvs_listmode, define_sample_pipeline_folder, list_images, merge_files, summarize_csv_pulse
 
 # from tasks import add_ulco_pulse_csv_file_to_parse, define_sample_pipeline_folder, summarize_csv_pulse
 
@@ -505,6 +507,86 @@ class Test_Tasks(unittest.TestCase):
         csv_path = PurePath(result_path, result_filename)
 
         df_result.to_csv(csv_path, index=False )
+
+        from pandas.testing import assert_frame_equal        
+        assert_frame_equal( df_result, mock.df )
+
+
+    def test_image_list(self):
+
+        local_path = 'tests/cytosense/ULCO/mock_small_data'
+        sample_name = 'R4_photos_flr16_2uls_10min 2022-09-14 12h28'
+
+        image_folder = sample_name + "_Images"
+        image_path = PurePath(local_path , image_folder)
+        data = {
+            'raw_folder': PurePath(local_path),
+            'sample_name': sample_name,
+            'images_folder':image_path,
+        }
+        image_name_pattern = [NamePatternComponent.eSampleName,"_Cropped_",NamePatternComponent.eIndex,".jpg"]
+
+        mock = mock_ulco_small_data_images()
+
+        ut = list_images(pattern_name=image_name_pattern)
+        result = ut._run(data)
+
+        dump(result)
+        dump(mock.image_list)
+
+        from pandas.testing import assert_frame_equal        
+
+        self.assertEqual(ut.image_name_pattern, image_name_pattern, " -- pattern are different")
+        # self.assertDictEqual(result['image_list'], mock.image_list, " -- image_list dict are different")
+        # self.assertEqual(result['image_list'], mock.image_list, " -- image_list dict are different")
+        myDictAssert(result['image_list'], mock.image_list)
+
+
+
+    def test_image_list_fn_not_filtered(self):
+        local_path = 'tests/cytosense/ULCO/mock_small_data'
+        sample_name = 'R4_photos_flr16_2uls_10min 2022-09-14 12h28'
+
+        image_folder = sample_name + "_Images"
+        image_path = PurePath(local_path , image_folder)
+        self.assertEqual(str(image_path),"tests/cytosense/ULCO/mock_small_data/R4_photos_flr16_2uls_10min 2022-09-14 12h28_Images")
+
+        image_name_pattern = [NamePatternComponent.eSampleName,"_Cropped_",NamePatternComponent.eIndex,".jpg"]
+        mock = mock_ulco_small_data_images()
+
+        m = ['tests/cytosense/ULCO/mock_small_data/R4_photos_flr16_2uls_10min 2022-09-14 12h28_Images/R4_photos_flr16_2uls_10min 2022-09-14 12h28_Cropped_10104.jpg', 'tests/cytosense/ULCO/mock_small_data/R4_photos_flr16_2uls_10min 2022-09-14 12h28_Images/R4_photos_flr16_2uls_10min 2022-09-14 12h28_Cropped_29.jpg', 'tests/cytosense/ULCO/mock_small_data/R4_photos_flr16_2uls_10min 2022-09-14 12h28_Images/R4_photos_flr16_2uls_10min 2022-09-14 12h28_Cropped_3543.jpg', 'tests/cytosense/ULCO/mock_small_data/R4_photos_flr16_2uls_10min 2022-09-14 12h28_Images/R4_photos_flr16_2uls_10min 2022-09-14 12h28_Cropped_4206.jpg', 'tests/cytosense/ULCO/mock_small_data/R4_photos_flr16_2uls_10min 2022-09-14 12h28_Images/R4_photos_flr16_2uls_10min 2022-09-14 12h28_Cropped_3269.jpg']
+
+        ut = list_images(pattern_name=image_name_pattern)
+        ut._data['sample_name']=sample_name
+
+        utlambda = lambda _ : ut.list_files(image_path)
+        # result = ut.list_files(image_path)
+
+        # dump(result)
+        self.assertRaises(Exception, utlambda )
+
+
+    def test_image_list_fn(self):
+        local_path = 'tests/cytosense/ULCO/mock_small_data'
+        sample_name = 'R4_photos_flr16_2uls_10min 2022-09-14 12h28'
+
+        image_folder = sample_name + "_Images"
+        image_path = PurePath(local_path , image_folder)
+        self.assertEqual(str(image_path),"tests/cytosense/ULCO/mock_small_data/R4_photos_flr16_2uls_10min 2022-09-14 12h28_Images")
+
+        image_name_pattern = [NamePatternComponent.eSampleName,"_Cropped_",NamePatternComponent.eIndex,".jpg"]
+        mock = mock_ulco_small_data_images()
+
+        m = ['tests/cytosense/ULCO/mock_small_data/R4_photos_flr16_2uls_10min 2022-09-14 12h28_Images/R4_photos_flr16_2uls_10min 2022-09-14 12h28_Cropped_10104.jpg', 'tests/cytosense/ULCO/mock_small_data/R4_photos_flr16_2uls_10min 2022-09-14 12h28_Images/R4_photos_flr16_2uls_10min 2022-09-14 12h28_Cropped_29.jpg', 'tests/cytosense/ULCO/mock_small_data/R4_photos_flr16_2uls_10min 2022-09-14 12h28_Images/R4_photos_flr16_2uls_10min 2022-09-14 12h28_Cropped_3543.jpg', 'tests/cytosense/ULCO/mock_small_data/R4_photos_flr16_2uls_10min 2022-09-14 12h28_Images/R4_photos_flr16_2uls_10min 2022-09-14 12h28_Cropped_4206.jpg', 'tests/cytosense/ULCO/mock_small_data/R4_photos_flr16_2uls_10min 2022-09-14 12h28_Images/R4_photos_flr16_2uls_10min 2022-09-14 12h28_Cropped_3269.jpg']
+
+        ut = list_images(pattern_name=image_name_pattern)
+        ut._data['sample_name']=sample_name
+        result = ut.list_files(image_path, image_name_pattern)
+
+        # dump(result,image_name_pattern)
+
+
+        self.assertListEqual(result,m)
 
 
 if __name__ == '__main__':

@@ -14,8 +14,6 @@ from tools import copy_to_file, expand_zip_in_folder
 from tsv import Tsv
 
 
-NamePatternComponent = Enum('NamePatternComponent', ['eSampleName', 'eIndex', 'eImageType'])
-
 
 class CytoSense(Project2):
 
