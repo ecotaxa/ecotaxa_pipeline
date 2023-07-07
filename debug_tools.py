@@ -7,8 +7,9 @@ def myDictAssert(a:dict,b:dict):
             # assert a[i] == b[i]
             dump(a[i])
             dump(b[i])
-            assert a[i]['key'] == b[i]['key']
-            assert a[i]['filename'] == b[i]['filename']
+            assert a[i]['object_id'] == b[i]['object_id']
+            assert a[i]['img_file_name'] == b[i]['img_file_name']
+            assert a[i]['img_rank'] == b[i]['img_rank']
             assert a[i]['path'] == b[i]['path']
         else:
             variable = "b"
