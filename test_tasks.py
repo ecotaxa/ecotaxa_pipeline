@@ -7,13 +7,13 @@ from Template import Template
 from analyze_csv_pulse import analyze_csv_pulse
 from cytosenseModel import UlcoListmode, pulse
 from debug_tools import dump, myDictAssert
-from mock_polynomial_pulses_ulco_small_data import mock_ulco_small_data
-from mock_ulco_small_data_images import mock_ulco_small_data_images
-from tasks import add_ulco_listmode_csv_file_to_parse, add_ulco_pulse_csv_file_to_parse, analyse_cvs_listmode, define_sample_pipeline_folder, list_images, merge_files, summarize_csv_pulse
+from mock_polynomial_pulses_ulco_small_data import mock_ulco_dataframe, mock_ulco_small_data
+from mock_ulco_small_data_images import mock_trunc, mock_ulco_small_data_images
+from tasks import add_ulco_listmode_csv_file_to_parse, add_ulco_pulse_csv_file_to_parse, analyse_cvs_listmode, define_sample_pipeline_folder, list_images, merge_files, summarize_csv_pulse, trunc_data
 
 # from tasks import add_ulco_pulse_csv_file_to_parse, define_sample_pipeline_folder, summarize_csv_pulse
 
-
+import pandas as pd
 
 
 
@@ -85,6 +85,8 @@ def build_name_ulco_pulse_filename(data):
 
 
 class Test_Tasks(unittest.TestCase):
+
+    result_path = "tests/cytosense/result/"
 
     def test_define_sample_pipeline_folder_missing_keys(self):
         
@@ -176,7 +178,7 @@ class Test_Tasks(unittest.TestCase):
     #     self.assertEqual(filename, ut.build_name())
 
 
-    def test_change_function(self):
+    def test_fail_change_function(self):
 
         myLambda = lambda : True # is_file_exist_mooc_true
 
@@ -185,7 +187,6 @@ class Test_Tasks(unittest.TestCase):
         self.assertEqual(myLambda , ut.is_file_exist)
 
     # test have an issue, cannot mock is_file_exist()
-    def test_add_ulco_pulse_csv_file_to_parse(self):
         data = { 
                 'raw_folder': PurePath('/_raw'),
                 'sample_name': 'mySample'
@@ -280,7 +281,7 @@ class Test_Tasks(unittest.TestCase):
 
         
     # failed : need to mock is_file_exist
-    def test_process_pulse_generic(self):
+    def test_fail_process_pulse_generic(self):
         data = {
                 'raw_folder': PurePath('/_raw'),
                 'sample_name': 'mySample',
@@ -531,15 +532,27 @@ class Test_Tasks(unittest.TestCase):
         ut = list_images(pattern_name=image_name_pattern)
         result = ut._run(data)
 
-        dump(result)
+        dump(result['image_list'])
         dump(mock.image_list)
 
-        from pandas.testing import assert_frame_equal        
+        image_result_filename = image_folder + ".csv"
+        result_path = "tests/cytosense/result/"
+        result_image_path = PurePath(result_path,image_result_filename)
+        dfresult : pd.DataFrame = result['dataframe']['images']
+        # dfresult.sort_values(by = 'object_id' , axis="columns", inplace=True )
+        # dfresult.sort_values(by = 'key' , inplace=True )
+
+        from natsort import index_natsorted
+        import numpy as np
+        # dfresult.sort_values(by = 'key' , inplace=True, key=lambda x: np.argsort(index_natsorted(dfresult["key"])))
+        dfresult.sort_values(by = 'object_id' , inplace=True, key=lambda x: np.argsort(index_natsorted(dfresult["object_id"])))
+        dfresult.to_csv(PurePath(result_image_path), index=False)
+
+        # from pandas.testing import assert_frame_equal        
 
         self.assertEqual(ut.image_name_pattern, image_name_pattern, " -- pattern are different")
-        # self.assertDictEqual(result['image_list'], mock.image_list, " -- image_list dict are different")
-        # self.assertEqual(result['image_list'], mock.image_list, " -- image_list dict are different")
-        myDictAssert(result['image_list'], mock.image_list)
+        # myDictAssert(result['image_list'], mock.image_list) # DON'T REMOVE : easiest to find issue in the dict with this assert than assertDictEqual
+        self.assertDictEqual(result['image_list'], mock.image_list, " -- image_list dict are different")
 
 
 
@@ -585,8 +598,51 @@ class Test_Tasks(unittest.TestCase):
 
         # dump(result,image_name_pattern)
 
-
         self.assertListEqual(result,m)
+
+
+    def test_trunc(self):
+        import pandas as pd
+
+        # mock_merge = mock_ulco_dataframe()
+        # mock_images = mock_ulco_small_data_images()
+
+        # df_merge = pd.read_csv(mock_merge.result_path)
+        # df_images = pd.read_csv(mock_images.result_image_path)
+
+        # # dfmock = pd.merge(df_merge, df_images, how="inner", on=['object_id'])
+        # dfmock = pd.merge(df_merge, df_images, how="inner", left_on=['object_id'], right_on=['key'])
+        # del dfmock["key"]
+        # del dfmock["path"]
+
+        # mock_merge_trunc = "mock_merge_trunc.csv"
+        # result_path = "tests/cytosense/result/"
+        # result_mock_merge_trunc_path = PurePath(result_path, mock_merge_trunc)
+        # dfmock.to_csv(PurePath(result_mock_merge_trunc_path), index=False)
+
+        mock = mock_trunc()
+        data = mock.data
+
+        ut = trunc_data()
+        result = ut._run(data)
+
+        self.assertIn('tsv_list',result, " -- 'tsv_list' don't exist")
+        self.assertIn('df_result',result['tsv_list'], " -- 'df_result' don't exist")
+        self.assertIn('dataframe',result['tsv_list']['df_result'], " -- 'dataframe' don't exist")
+        df_result = result['tsv_list']['df_result']['dataframe']
+
+        result_filename = "__purged__.csv"
+        trunc_result_path = PurePath(self.result_path,result_filename)
+        df_result.to_csv(trunc_result_path)
+
+        from pandas.testing import assert_frame_equal        
+        assert_frame_equal( df_result, mock.df )
+
+
+
+
+        # assert "Need to" == "finish this test"
+
 
 
 if __name__ == '__main__':

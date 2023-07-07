@@ -5,6 +5,7 @@ from pathlib import PurePath
 import pandas as pd
 
 from cytosenseModel import UlcoListmode, pulse
+from debug_tools import dump
 
 
 class mock_ulco_small_data():
@@ -87,20 +88,44 @@ class mock_ulco_small_data():
 
     type_header_listmode = ["[t]","[t]"]+["[f]" for _ in range(len(header_listmode)-2)]
 
+    def test(self):
+        for i in [0,1]:
+            values = self.data_pulse[i]
+            d = {}
+            for index in [0,1,2,3]:
+                key = self.header[index]
+                # for index, key in enumerate(self.header):
+                # if self.type_header[index] == '[t]':
+                if index == 0:
+                    d[key]= str(values[index])
+                else:
+                    d[key]= float(values[index])
+
+            print("append row")
+            self.df.loc[len(self.df)]=d
+    
+        dump(d)
+
     def __init__(self):
         print("header len:" + str(len(self.header)))
         self.df = pd.DataFrame(columns=[key for key in self.header])
         self.df.to_csv("tests/cytosense/result/" + self.sample_name + "__test_1__" + ".csv", index=False)
 
         # df = df.reindex(sorted(df.columns), axis=1)
-
+    
         self.df.loc[len(self.df)]=self.type_header
         for values in self.data_pulse:
             d = {}
             for index, key in enumerate(self.header):
-                d[key]= values[index]
+                if self.type_header[index] == '[t]':
+                    # if index == 0:
+                    d[key]= str(values[index])
+                else:
+                    d[key]= float(values[index])
+
             print("append row")
             self.df.loc[len(self.df)]=d
+            dump(d)
 
         self.df.to_csv("tests/cytosense/result/" + self.sample_name + "__test_2__" + ".csv", index=False)
 
@@ -120,9 +145,19 @@ class mock_ulco_small_data():
                 # if index == 1: 
                 #     d[key]= self.sample_name
                 # else:
-                    d[key]= values[index]
+                    # d[key]= values[index]
+                if self.type_header_listmode[index] == '[t]':
+                    d[key]= str(values[index])
+                else:
+                    d[key]= float(values[index])    
             print("append row")
             self.df_listmode.loc[len(self.df_listmode)]=d
+            dump(d)
+
+        # for key in self.header_listmode:
+        #     self.df_listmode[key] = self.df_listmode[key].astype(float)
+
+        # dump(self.df_listmode['object_coef_0_FWS'])
 
         self.df_listmode.to_csv("tests/cytosense/result/" + self.sample_name + "__listmode__test_2__" + ".csv", index=False)
 
@@ -132,34 +167,102 @@ class mock_ulco_dataframe():
     
     local_path = "tests/cytosense/ULCO/mock_small_data"
     mock_path = "tests/cytosense/ULCO/DataFrame"
-    # result_path = "tests/cytosense/result/"
+    result_folder = "tests/cytosense/result/"
+    
+    sample_name = "R4_photos_flr16_2uls_10min 2022-09-14 12h28"
+
+
+    # pulse_filename = sample_name + "__pulses__" + ".csv"
+    # listmode_filename = sample_name + "__listmode__" + ".csv"
+    csv_result_filename = sample_name + "__mock__merge_p_l__" + ".csv"
+    
+    # csv_pulse_path = PurePath(mock_path, pulse_filename)
+    # csv_listmode_path = PurePath(mock_path, listmode_filename)
+    # csv_result_path = PurePath(mock_path, result_filename)
+
+    def __init__(self):
+        # self.df_pulses = pd.read_csv(self.csv_pulse_path,sep=',',decimal='.',na_values="[f]")
+        # self.df_listmode = pd.read_csv(self.csv_listmode_path,sep=',',decimal='.',na_values="[f]")
+
+        mock = mock_ulco_small_data()
+        self.df_pulses = mock.df
+        self.df_listmode = mock.df_listmode
+
+        self.df = pd.merge(self.df_pulses, self.df_listmode, how="inner", on=["object_id"])
+        # self.df.to_csv(self.csv_result_path, index=False)
+
+        self.csv_path = self.save_csv(self.csv_result_filename, self.df)
+        self.data = self.build_data(self.df_pulses, self.df_listmode)
+
+    def save_csv(self, filename, df) -> PurePath:
+        path = PurePath(self.result_folder, filename)
+        self.df.to_csv(path, index=False)
+        return path
+    
+    def build_data(self, df_pulses, df_listmode) -> dict:
+
+        data = {
+            'raw_folder': PurePath(self.local_path),
+            'sample_name': self.sample_name,
+            'tsv_pulse':{
+                'dataframe': df_pulses
+            },
+            'tsv_listmode':{
+                'dataframe': df_listmode
+            }
+        }
+
+        return data
+
+
+
+# this generate issue cause the header type that force pandas to load columns as text
+class mock_ulco_dataframe_from_csv_file():
+    
+    local_path = "tests/cytosense/ULCO/mock_small_data"
+    mock_path = "tests/cytosense/ULCO/DataFrame"
+    result_folder = "tests/cytosense/result/"
     
     sample_name = "R4_photos_flr16_2uls_10min 2022-09-14 12h28"
     
     pulse_filename = sample_name + "__pulses__" + ".csv"
     listmode_filename = sample_name + "__listmode__" + ".csv"
-    result_filename = sample_name + "__merge_p_l__" + ".csv"
+    csv_result_filename = sample_name + "__mock__merge_p_l__" + ".csv"
     
-    pulse_path = PurePath(mock_path , pulse_filename)
-    listmode_path = PurePath(mock_path , listmode_filename)
-    result_path = PurePath(mock_path, result_filename)
-
-    data = {
-        'raw_folder': PurePath(local_path),
-        'sample_name': sample_name,
-    }
+    csv_pulse_path = PurePath(mock_path, pulse_filename)
+    csv_listmode_path = PurePath(mock_path, listmode_filename)
+    # csv_result_path = PurePath(mock_path, result_filename)
 
     def __init__(self):
-        self.df_pulses = pd.read_csv(self.pulse_path)
-        self.df_listmode = pd.read_csv(self.listmode_path)
+        self.df_pulses = pd.read_csv(self.csv_pulse_path,sep=',',decimal='.',na_values="[f]")
+        self.df_listmode = pd.read_csv(self.csv_listmode_path,sep=',',decimal='.',na_values="[f]")
 
         self.df = pd.merge(self.df_pulses, self.df_listmode, how="inner", on=["object_id"])
-        self.df.to_csv(self.result_path, index=False)
+        # self.df.to_csv(self.csv_result_path, index=False)
 
-        self.data['tsv_pulse']={}
-        self.data['tsv_pulse']['dataframe']=self.df_pulses
-        self.data['tsv_listmode']={}
-        self.data['tsv_listmode']['dataframe']=self.df_listmode
+        self.csv_path = self.save_csv(self.csv_result_filename, self.df)
+        self.data = self.build_data(self.df_pulses, self.df_listmode)
+
+    def save_csv(self, filename, df) -> PurePath:
+        path = PurePath(self.result_folder, filename)
+        self.df.to_csv(path, index=False)
+        return path
+    
+    def build_data(self, df_pulses, df_listmode) -> dict:
+
+        data = {
+            'raw_folder': PurePath(self.local_path),
+            'sample_name': self.sample_name,
+            'tsv_pulse':{
+                'dataframe': df_pulses
+            },
+            'tsv_listmode':{
+                'dataframe': df_listmode
+            }
+        }
+
+        return data
+
 
 
 
@@ -168,7 +271,7 @@ def test():
         local_path = mock.local_path
         sample_name = mock.sample_name
         polynomial_filename = mock.polynomial_filename
-        corrupted_model = mock.model
+        # corrupted_model = mock.model
         dftest = mock.df
 
 def test2():
@@ -178,7 +281,10 @@ def test2():
         print(mock.df_listmode)
         print(mock.df)
 
+def test3():
+    mock = mock_ulco_small_data()
+    mock.test()
 
 if __name__ == '__main__':
-    test2()
+    test()
 

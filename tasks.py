@@ -249,14 +249,16 @@ class list_images(Task):
         key = filename_less_extension.replace('_Cropped','')
         return key
     
+    def img_rank(self):
+        if not 'img_rank' in self._data: self._data['img_rank'] = 0
+        self._data['img_rank'] = self._data['img_rank'] + 1
+
     def run(self):
-    
+        self.img_rank()
+
         image_list = {}
-    
         image_path = self._data['images_folder']
-
         image_file_list = self.list_files(image_path, self.image_name_pattern)
-
 
         for image in image_file_list:
             # image_data={}
@@ -270,8 +272,9 @@ class list_images(Task):
             # image_data["path"]= PurePath(image)
 
             image_data = {
-                'key': key,
-                'filename': str(filename),
+                'object_id': key,
+                'img_file_name': str(filename),
+                'img_rank': self._data['img_rank'],
                 'path': PurePath(image)
             }
 
@@ -279,6 +282,16 @@ class list_images(Task):
 
         # dump(image_file_list)
         self._data['image_list']=image_list
+
+        df = pd.DataFrame.from_dict(image_list, orient='index')
+        # result_path = "tests/cytosense/result/"
+        
+        # self.result_image_path = PurePath(result_path,"_images_.csv")
+        # df.to_csv(PurePath(self.result_image_path), index=False)
+
+        if not 'dataframe' in self._data:
+            self._data['dataframe'] = {}
+        self._data['dataframe']['images'] = df
 
     def list_files(self, from_path:PurePath, pattern=[]) -> list:
         path_pattern = "*"
@@ -292,10 +305,22 @@ class list_images(Task):
 
 
 
-class trunc_data():
+class trunc_data(Task):
     """
     trunc the listmode and pulses data from image list
     if image don't exist we don't need the data. Ecotaxa need an image.
     """
+    _need_keys = ['dataframe','tsv_list'] # ['dataframe|images', 'tsv_list|df_result|dataframe']
+    _update_keys = ['tsv_list|df_result|dataframe']
+
     def run(self):
-        pass
+        df_images = self._data['dataframe']['images']
+        df_result = self._data['tsv_list']['df_result']['dataframe']
+
+        # df = pd.merge(df_result, df_images, how="inner", left_on=['object_id'], right_on=['key'])
+        df = pd.merge(df_result, df_images, how="inner", on=['object_id'])
+        # del df["key"]
+        del df["path"]
+
+        self._data['tsv_list']['df_result']['dataframe'] = df
+
