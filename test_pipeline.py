@@ -489,7 +489,9 @@ class Test_Pipeline(unittest.TestCase):
         self.assertIn('dataframe',result['tsv_list']['df_result'], " -- 'dataframe' don't exist")
         df_result : pd.DataFrame = result['tsv_list']['df_result']['dataframe']
 
-        df_result.to_csv("tests/cytosense/result/__df_result.csv")
+        csv_filename = mock.sample_name + "__df_result" + ".csv"
+        cvs_path = PurePath(mock.result_folder, csv_filename)
+        df_result.to_csv("cvs_path", sep=',', decimal='.') 
 
         from pandas.testing import assert_frame_equal        
         assert_frame_equal( df_result, mock.df )
