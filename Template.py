@@ -133,13 +133,18 @@ class Template:
 
         # if self._model._mapping[key]['type'] == "[f]":
         if self._mapping[key]['type'] == "[f]":
-            # if self._analysing['csv_configuration']['decimal'] == ',':
-            if decimal == ',':
-                value = value.replace(',','.')
-            if '.' in value or 'E' in value:
-                return float(value)
-            else:
-                return int(value)
+            try:
+                # if self._analysing['csv_configuration']['decimal'] == ',':
+                if decimal == ',':
+                    value = value.replace(',','.')
+                if '.' in value or 'E' in value:
+                    return float(value)
+                else:
+                    return int(value)
+            except ValueError as e:
+                # raise Exception("Cannot cast to numeric value: {} for key: {} mapping", self._model._mapping[key]['type'], key)
+                raise Exception(f"Cannot cast to numeric value: for key: '{key}' mapping")
+
         
         raise Exception("Unknow type: {} for key: {} mapping", self._model._mapping[key]['type'], key)
     
