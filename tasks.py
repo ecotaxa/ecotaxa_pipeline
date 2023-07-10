@@ -36,13 +36,12 @@ class summarize_csv_pulse(Task):
         return PurePath( self._data['raw_folder'], self._filename() )
 
     def run(self):
-    #     self.test_need_keys(data)
-    #     self.process()
-    #     self.remove_keys()
-    #     return self._data
+        #     self.test_need_keys(data)
+        #     self.process()
+        #     self.remove_keys()
+        #     return self._data
 
-  
-    # def process(self):
+        # def process(self):
         import summarise_pulses
 
         pulses_filename = self._data['csv_pulse']['path']
