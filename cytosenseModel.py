@@ -1434,7 +1434,12 @@ class CefasListmode(Template):
 
 # sed 's/:.*//g' 'ATSO_photos_flr16_2uls_10min 2022-06-15 16h31_Info.txt' | sed 's/^/"object_date":{ "file" : "Info" , "header" :"/g' | sed 's/$/","index":1, "fn": None, "type":"[t]", "comment":""},/g' | awk '{gsub("index\":1","index\":" NR-1,$0);print}' > info.txt
 
-class Info(Template):
+class Info_(Template):
+    
+    # def changeTimeToNumericValue(self,value):
+    #     import pandas
+    #     pandas.to_timedelta(value, unit='s')
+    
     # Question : is channel order can change?
     _mapping = {
         "acq_trigger_level": {
@@ -1450,7 +1455,7 @@ class Info(Template):
             "header": "CytoUSB Block size",
             "index": 1,
             "fn": None,
-            "type": "[f]",
+            "type": "[t]",
             "comment": "",
         },
         "acq_instrument": {
@@ -1531,6 +1536,228 @@ class Info(Template):
             "index": 14,
             "fn": None,
             "type": "[t]",
+            "comment": "",
+        },
+        "sample_channel_4": {
+            "file": "Info",
+            "header": "Channel 4",
+            "index": 15,
+            "fn": None,
+            "type": "[t]",
+            "comment": "",
+        },
+        "sample_channel_4_pmt_level": {
+            "file": "Info",
+            "header": "  - sensitivity level",
+            "index": 16,
+            "fn": None,
+            "type": "[f]",
+            "comment": "",
+        },
+        "sample_channel_5": {
+            "file": "Info",
+            "header": "Channel 5",
+            "index": 17,
+            "fn": None,
+            "type": "[t]",
+            "comment": "",
+        },
+        "sample_channel_5_pmt_level": {
+            "file": "Info",
+            "header": "  - sensitivity level",
+            "index": 18,
+            "fn": None,
+            "type": "[f]",
+            "comment": "",
+        },
+        "sample_channel_6": {
+            "file": "Info",
+            "header": "Channel 6",
+            "index": 19,
+            "fn": None,
+            "type": "[t]",
+            "comment": "",
+        },
+        "sample_channel_6_pmt_level": {
+            "file": "Info",
+            "header": "  - sensitivity level",
+            "index": 20,
+            "fn": None,
+            "type": "[f]",
+            "comment": "",
+        },
+        "sample_channel_7": {
+            "file": "Info",
+            "header": "Channel 7",
+            "index": 21,
+            "fn": None,
+            "type": "[t]",
+            "comment": "",
+        },
+        "sample_channel_7_pmt_level": {
+            "file": "Info",
+            "header": "  - sensitivity level",
+            "index": 22,
+            "fn": None,
+            "type": "[f]",
+            "comment": "",
+        },
+        "sample_total_number_of_particles": {
+            "file": "Info",
+            "header": "Total number of particles",
+            "index": 24,
+            "fn": None,
+            "type": "[f]",
+            "comment": "",
+        },
+        "sample_smart_triggered_number_of_particles": {
+            "file": "Info",
+            "header": "Smart triggered number of particles",
+            "index": 25,
+            "fn": None,
+            "type": "[f]",
+            "comment": "",
+        },
+        "sample_concentration": {  # We leave the units out of the name
+            "file": "Info",
+            "header": "Concentration (part/μL)",
+            "index": 26,
+            "fn": None,
+            "type": "[f]",
+            "comment": "",
+        },
+        "sample_volume": {
+            "file": "Info",
+            "header": "Volume (μL)",
+            "index": 27,
+            "fn": None,
+            "type": "[f]",
+            "comment": "",
+        },
+    }
+
+
+class Info(Template):
+    # Question : is channel order can change?
+    _mapping = {
+        "acq_trigger_level": {
+            "file": "Info",
+            "header": "Trigger level (mV)",
+            "index": 0,
+            "fn": None,
+            "type": "[f]",
+            "comment": "",
+        },
+        "acq_cytousb_block_size": {
+            "file": "Info",
+            "header": "CytoUSB Block size",
+            "index": 1,
+            "fn": None,
+            "type": "[t]",
+            "comment": "",
+        },
+        "acq_instrument": {
+            "file": "Info",
+            "header": "Instrument",
+            "index": 3,
+            "fn": None,
+            "type": "[t]",
+            "comment": "",
+        },
+        "acq_beam_width": {
+            "file": "Info",
+            "header": "Beam width",
+            "index": 4,
+            "fn": None,
+            "type": "[f]",
+            "comment": "",
+        },
+        "acq_core_speed": {
+            "file": "Info",
+            "header": "Core speed",
+            "index": 5,
+            "fn": None,
+            "type": "[f]",
+            "comment": "",
+        },
+        "acq_user_comments": {
+            "file": "Info",
+            "header": "User Comments",
+            "index": 6,
+            "fn": None,
+            "type": "[t]",
+            "comment": "",
+        },
+        "sample_measurement_date": {
+            "file": "Info",
+            "header": "Measurement date",
+            "index": 8,
+            "fn": None,
+            "type": "[t]",
+            "comment": "",
+        },
+        "sample_measurement_duration": {
+            "file": "Info",
+            "header": "Measurement duration",
+            "index": 9,
+            "fn": None,
+            "type": "[f]",
+            "comment": "",
+        },
+        "sample_flow_rate": {
+            "file": "Info",
+            "header": "Flow rate (μL/sec)",
+            "index": 10,
+            "fn": None,
+            "type": "[f]",
+            "comment": "",
+        },
+        "sample_channel_1": {
+            "file": "Info",
+            "header": "Channel 1",
+            "index": 12,
+            "fn": None,
+            "type": "[t]",
+            "comment": "",
+        },
+        "sample_channel_1_pmt_level": {
+            "file": "Info",
+            "header": "  - sensitivity level",
+            "index": 16,
+            "fn": None,
+            "type": "[f]",
+            "comment": "",
+        },
+        "sample_channel_2": {
+            "file": "Info",
+            "header": "Channel 2",
+            "index": 13,
+            "fn": None,
+            "type": "[t]",
+            "comment": "",
+        },
+        "sample_channel_2_pmt_level": {
+            "file": "Info",
+            "header": "  - sensitivity level",
+            "index": 16,
+            "fn": None,
+            "type": "[f]",
+            "comment": "",
+        },        
+        "sample_channel_3": {
+            "file": "Info",
+            "header": "Channel 3",
+            "index": 14,
+            "fn": None,
+            "type": "[t]",
+            "comment": "",
+        },
+        "sample_channel_3_pmt_level": {
+            "file": "Info",
+            "header": "  - sensitivity level",
+            "index": 16,
+            "fn": None,
+            "type": "[f]",
             "comment": "",
         },
         "sample_channel_4": {
