@@ -1,5 +1,7 @@
 
 import pandas as pd
+from ExecuteException import ExecuteException
+from MappingException import MappingException
 
 from Template import Template
 from task import Task
@@ -9,9 +11,9 @@ class analyse_csv(Task):
     
     def _init_df(self) -> pd.DataFrame:
         df = pd.DataFrame(columns=[key for key in self._model._mapping])
-        for key in self._model._mapping :
-            # if key:
-            df[key] =  self._model._mapping[key]['type']
+        # for key in self._model._mapping :
+        #     # if key:
+        #     df[key] =  self._model._mapping[key]['type']
         return df
 
     def _add_type(self):
@@ -25,28 +27,33 @@ class analyse_csv(Task):
             row[key] = self._model._mapping[key]['type']
         self._df.loc[0]=row
 
-    def map_row(self,line_as_array: list[str]) -> dict:
+    def map_row(self, model: Template, line_as_array: list[str]) -> dict:
         row = {}
         # raised = False
-        for key, value in self._model._mapping.items():
+        for key, value in model._mapping.items():
             if 'index' in value:
                 index = value['index']
                 if 'fn' in value:
                     try:
                         result = self.apply_fn(value['fn'], line_as_array[index])
-                        row[key] = self.cast_value(key,result)
+                        # row[key] = model.cast_value(key, result)
+                        row[key] = model.cast_value( model, key=key, value=result, decimal=self._analysing['csv_configuration']['decimal'])
                     except ExecuteException as e:
                         # tools.eprint("Mapping issue: Function `{}` called in mapping `{}` is not implemented".format(e.functionNamefn, self._mapping))
                         row[key] = line_as_array[index]
                         # raise MappingException(excuteException=e, mapping = self._model, line=(key,value))
-                        raise MappingException(executeException=e, model=self._model, line=(key,value), result=row)
+                        raise MappingException(executeException=e, model=model, line=(key,value), result=row)
                         # raised = True
-                    except IndexError:
+                    except IndexError as e:
+                        tools.eprint("caught exception: index '"+ str(index) +"' issue on key: " + key , str(e))
                         print(index)
-                    except Exception:
+                    except Exception as e:
+                        tools.eprint("caught exception: " , str(e))
                         print(index)
                 else:
-                    row[key] = self.cast_value(key, line_as_array[index])
+                    # row[key] = model.cast_value(key, line_as_array[index])
+                    row[key] = model.cast_value( model, key=key, value=line_as_array[index], decimal=self._analysing['csv_configuration']['decimal'])
+
         # if raised:
         #     raise MappingException(executeException=e, model=self._model, line=(key,value), result=row)
         return row
@@ -104,7 +111,7 @@ class analyse_csv(Task):
 
                     new_row={}
                     try:
-                        new_row = self.map_row(line_as_array)
+                        new_row = self.map_row(self._model, line_as_array)
                     except MappingException as e:
                         tools.eprint("Mapping issue: line number {} - Function `{}` called in mapping is not implemented\n{}".format(line_number, e.functionName, e.line))
                         # if e.result:
@@ -144,19 +151,19 @@ class analyse_csv(Task):
             raise ExecuteException(cls.__class__.__name__, fn)
             # return data
 
-    def cast_value(self,key,value:str):
-        if self._model._mapping[key]['type'] == "[t]":
-            return str(value)
+    # def cast_value(self,key,value:str):
+    #     if self._model._mapping[key]['type'] == "[t]":
+    #         return str(value)
 
-        if self._model._mapping[key]['type'] == "[f]":
-            if self._analysing['csv_configuration']['decimal'] == ',':
-                value = value.replace(',','.')
-            if '.' in value or 'E' in value:
-                return float(value)
-            else:
-                return int(value)
+    #     if self._model._mapping[key]['type'] == "[f]":
+    #         if self._analysing['csv_configuration']['decimal'] == ',':
+    #             value = value.replace(',','.')
+    #         if '.' in value or 'E' in value:
+    #             return float(value)
+    #         else:
+    #             return int(value)
         
-        raise Exception("Unknow type: {} for key: {} mapping", self._model._mapping[key]['type'], key)
+    #     raise Exception("Unknow type: {} for key: {} mapping", self._model._mapping[key]['type'], key)
 
 
 
@@ -169,6 +176,7 @@ class analyse_csv_cytosense_file(analyse_csv):
             self.council_headers(line)
             return False
         return True
+
 
 class analyze_csv_pulse(analyse_csv_cytosense_file):
 
@@ -251,39 +259,4 @@ class analyze_csv_pulse(analyse_csv_cytosense_file):
 
 
 
-
-
-
-class ExecuteException(Exception):
-    def __init__(self, className, functionName):
-        self.className = className
-        self.functionName = functionName
-        
-    def message(self) -> str:
-        return "Class `{}` does not implement `{}`".format(self.className, self.functionName)
-
-
-class MappingException(Exception):
-    executeException: ExecuteException = None
-    className = ""
-    functionName = ""
-    # line : tuple(str, list[str]) = (None, [])
-    line = None
-    model : Template = None
-    result : dict = None
-
-    def __init__(self, **kwargs: object) -> None:
-        if 'executeException' in kwargs:
-            self.executeException = kwargs['executeException']
-            self.className = self.executeException.className
-            self.functionName = self.executeException.functionName
-        # if 'line' in kwargs:
-        #     self.line = kwargs['line']
-        if 'model' in kwargs:
-            self.model = kwargs['model']   
-        if 'result' in kwargs:
-            self.result = kwargs['result'] 
-    
-    def message(self) -> str:
-        return "Mapping issue in model {}: Function `{}` called in mapping of `{}` is not implemented".format(self.model.name, self.functionNamefn, self.line[0])
 
