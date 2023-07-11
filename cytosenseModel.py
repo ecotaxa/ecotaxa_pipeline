@@ -1434,7 +1434,7 @@ class CefasListmode(Template):
 
 # sed 's/:.*//g' 'ATSO_photos_flr16_2uls_10min 2022-06-15 16h31_Info.txt' | sed 's/^/"object_date":{ "file" : "Info" , "header" :"/g' | sed 's/$/","index":1, "fn": None, "type":"[t]", "comment":""},/g' | awk '{gsub("index\":1","index\":" NR-1,$0);print}' > info.txt
 
-class Info_(Template):
+class Info(Template):
     
     # def changeTimeToNumericValue(self,value):
     #     import pandas
@@ -1444,8 +1444,8 @@ class Info_(Template):
     _mapping = {
         "acq_trigger_level": {
             "file": "Info",
-            "header": "﻿Trigger level (mV)",
-            "index": 0,
+            "header": "Trigger level (mV)",
+            "index": 1,
             "fn": None,
             "type": "[f]",
             "comment": "",
@@ -1453,7 +1453,7 @@ class Info_(Template):
         "acq_cytousb_block_size": {
             "file": "Info",
             "header": "CytoUSB Block size",
-            "index": 1,
+            "index": 2,
             "fn": None,
             "type": "[t]",
             "comment": "",
@@ -1461,7 +1461,7 @@ class Info_(Template):
         "acq_instrument": {
             "file": "Info",
             "header": "Instrument",
-            "index": 3,
+            "index": 4,
             "fn": None,
             "type": "[t]",
             "comment": "",
@@ -1469,7 +1469,7 @@ class Info_(Template):
         "acq_beam_width": {
             "file": "Info",
             "header": "Beam width",
-            "index": 4,
+            "index": 5,
             "fn": None,
             "type": "[f]",
             "comment": "",
@@ -1477,7 +1477,7 @@ class Info_(Template):
         "acq_core_speed": {
             "file": "Info",
             "header": "Core speed",
-            "index": 5,
+            "index": 6,
             "fn": None,
             "type": "[f]",
             "comment": "",
@@ -1485,7 +1485,7 @@ class Info_(Template):
         "acq_user_comments": {
             "file": "Info",
             "header": "User Comments",
-            "index": 6,
+            "index": 7,
             "fn": None,
             "type": "[t]",
             "comment": "",
@@ -1493,7 +1493,7 @@ class Info_(Template):
         "sample_measurement_date": {
             "file": "Info",
             "header": "Measurement date",
-            "index": 8,
+            "index": 9,
             "fn": None,
             "type": "[t]",
             "comment": "",
@@ -1501,7 +1501,7 @@ class Info_(Template):
         "sample_measurement_duration": {
             "file": "Info",
             "header": "Measurement duration",
-            "index": 9,
+            "index": 10,
             "fn": None,
             "type": "[f]",
             "comment": "",
@@ -1509,7 +1509,7 @@ class Info_(Template):
         "sample_flow_rate": {
             "file": "Info",
             "header": "Flow rate (μL/sec)",
-            "index": 10,
+            "index": 11,
             "fn": None,
             "type": "[f]",
             "comment": "",
@@ -1517,7 +1517,7 @@ class Info_(Template):
         "sample_channel_1": {
             "file": "Info",
             "header": "Channel 1",
-            "index": 12,
+            "index": 13,
             "fn": None,
             "type": "[t]",
             "comment": "",
@@ -1525,7 +1525,7 @@ class Info_(Template):
         "sample_channel_2": {
             "file": "Info",
             "header": "Channel 2",
-            "index": 13,
+            "index": 14,
             "fn": None,
             "type": "[t]",
             "comment": "",
@@ -1533,7 +1533,7 @@ class Info_(Template):
         "sample_channel_3": {
             "file": "Info",
             "header": "Channel 3",
-            "index": 14,
+            "index": 15,
             "fn": None,
             "type": "[t]",
             "comment": "",
@@ -1541,7 +1541,7 @@ class Info_(Template):
         "sample_channel_4": {
             "file": "Info",
             "header": "Channel 4",
-            "index": 15,
+            "index": 16,
             "fn": None,
             "type": "[t]",
             "comment": "",
@@ -1549,7 +1549,7 @@ class Info_(Template):
         "sample_channel_4_pmt_level": {
             "file": "Info",
             "header": "  - sensitivity level",
-            "index": 16,
+            "index": 17,
             "fn": None,
             "type": "[f]",
             "comment": "",
@@ -1557,7 +1557,7 @@ class Info_(Template):
         "sample_channel_5": {
             "file": "Info",
             "header": "Channel 5",
-            "index": 17,
+            "index": 18,
             "fn": None,
             "type": "[t]",
             "comment": "",
@@ -1565,7 +1565,7 @@ class Info_(Template):
         "sample_channel_5_pmt_level": {
             "file": "Info",
             "header": "  - sensitivity level",
-            "index": 18,
+            "index": 19,
             "fn": None,
             "type": "[f]",
             "comment": "",
@@ -1573,7 +1573,7 @@ class Info_(Template):
         "sample_channel_6": {
             "file": "Info",
             "header": "Channel 6",
-            "index": 19,
+            "index": 20,
             "fn": None,
             "type": "[t]",
             "comment": "",
@@ -1581,7 +1581,7 @@ class Info_(Template):
         "sample_channel_6_pmt_level": {
             "file": "Info",
             "header": "  - sensitivity level",
-            "index": 20,
+            "index": 21,
             "fn": None,
             "type": "[f]",
             "comment": "",
@@ -1589,7 +1589,7 @@ class Info_(Template):
         "sample_channel_7": {
             "file": "Info",
             "header": "Channel 7",
-            "index": 21,
+            "index": 22,
             "fn": None,
             "type": "[t]",
             "comment": "",
@@ -1597,7 +1597,7 @@ class Info_(Template):
         "sample_channel_7_pmt_level": {
             "file": "Info",
             "header": "  - sensitivity level",
-            "index": 22,
+            "index": 23,
             "fn": None,
             "type": "[f]",
             "comment": "",
@@ -1605,7 +1605,7 @@ class Info_(Template):
         "sample_total_number_of_particles": {
             "file": "Info",
             "header": "Total number of particles",
-            "index": 24,
+            "index": 25,
             "fn": None,
             "type": "[f]",
             "comment": "",
@@ -1613,7 +1613,7 @@ class Info_(Template):
         "sample_smart_triggered_number_of_particles": {
             "file": "Info",
             "header": "Smart triggered number of particles",
-            "index": 25,
+            "index": 26,
             "fn": None,
             "type": "[f]",
             "comment": "",
@@ -1621,7 +1621,7 @@ class Info_(Template):
         "sample_concentration": {  # We leave the units out of the name
             "file": "Info",
             "header": "Concentration (part/μL)",
-            "index": 26,
+            "index": 27,
             "fn": None,
             "type": "[f]",
             "comment": "",
@@ -1629,7 +1629,7 @@ class Info_(Template):
         "sample_volume": {
             "file": "Info",
             "header": "Volume (μL)",
-            "index": 27,
+            "index": 28,
             "fn": None,
             "type": "[f]",
             "comment": "",
@@ -1637,7 +1637,7 @@ class Info_(Template):
     }
 
 
-class Info(Template):
+class Info_RecursiveModel(Template):
     # Question : is channel order can change?
     _mapping = {
         "acq_trigger_level": {
@@ -1719,14 +1719,16 @@ class Info(Template):
             "fn": None,
             "type": "[t]",
             "comment": "",
-        },
-        "sample_channel_1_pmt_level": {
-            "file": "Info",
-            "header": "  - sensitivity level",
-            "index": 16,
-            "fn": None,
-            "type": "[f]",
-            "comment": "",
+            "paragraph":{
+                    "sample_channel_1_pmt_level": {
+                    "file": "Info",
+                    "header": "  - sensitivity level",
+                    "index": 16,
+                    "fn": None,
+                    "type": "[f]",
+                    "comment": "",
+                },
+            }
         },
         "sample_channel_2": {
             "file": "Info",
@@ -1735,15 +1737,17 @@ class Info(Template):
             "fn": None,
             "type": "[t]",
             "comment": "",
-        },
-        "sample_channel_2_pmt_level": {
-            "file": "Info",
-            "header": "  - sensitivity level",
-            "index": 16,
-            "fn": None,
-            "type": "[f]",
-            "comment": "",
-        },        
+            "paragraph":{
+                    "sample_channel_2_pmt_level": {
+                    "file": "Info",
+                    "header": "  - sensitivity level",
+                    "index": 16,
+                    "fn": None,
+                    "type": "[f]",
+                    "comment": "",
+                }, 
+            }
+        },       
         "sample_channel_3": {
             "file": "Info",
             "header": "Channel 3",
@@ -1751,15 +1755,18 @@ class Info(Template):
             "fn": None,
             "type": "[t]",
             "comment": "",
+            "paragraph":{
+                    "sample_channel_3_pmt_level": {
+                    "file": "Info",
+                    "header": "  - sensitivity level",
+                    "index": 16,
+                    "fn": None,
+                    "type": "[f]",
+                    "comment": "",
+                },
+            }
         },
-        "sample_channel_3_pmt_level": {
-            "file": "Info",
-            "header": "  - sensitivity level",
-            "index": 16,
-            "fn": None,
-            "type": "[f]",
-            "comment": "",
-        },
+
         "sample_channel_4": {
             "file": "Info",
             "header": "Channel 4",
@@ -1767,14 +1774,16 @@ class Info(Template):
             "fn": None,
             "type": "[t]",
             "comment": "",
-        },
-        "sample_channel_4_pmt_level": {
-            "file": "Info",
-            "header": "  - sensitivity level",
-            "index": 16,
-            "fn": None,
-            "type": "[f]",
-            "comment": "",
+            "paragraph":{
+                    "sample_channel_4_pmt_level": {
+                    "file": "Info",
+                    "header": "  - sensitivity level",
+                    "index": 16,
+                    "fn": None,
+                    "type": "[f]",
+                    "comment": "",
+                },
+}
         },
         "sample_channel_5": {
             "file": "Info",
@@ -1783,15 +1792,18 @@ class Info(Template):
             "fn": None,
             "type": "[t]",
             "comment": "",
+            "paragraph":{
+                    "sample_channel_5_pmt_level": {
+                    "file": "Info",
+                    "header": "  - sensitivity level",
+                    "index": 18,
+                    "fn": None,
+                    "type": "[f]",
+                    "comment": "",
+                },
+            }
         },
-        "sample_channel_5_pmt_level": {
-            "file": "Info",
-            "header": "  - sensitivity level",
-            "index": 18,
-            "fn": None,
-            "type": "[f]",
-            "comment": "",
-        },
+
         "sample_channel_6": {
             "file": "Info",
             "header": "Channel 6",
@@ -1799,15 +1811,18 @@ class Info(Template):
             "fn": None,
             "type": "[t]",
             "comment": "",
+            "paragraph":{
+                    "sample_channel_6_pmt_level": {
+                    "file": "Info",
+                    "header": "  - sensitivity level",
+                    "index": 20,
+                    "fn": None,
+                    "type": "[f]",
+                    "comment": "",
+                },
+            }
         },
-        "sample_channel_6_pmt_level": {
-            "file": "Info",
-            "header": "  - sensitivity level",
-            "index": 20,
-            "fn": None,
-            "type": "[f]",
-            "comment": "",
-        },
+
         "sample_channel_7": {
             "file": "Info",
             "header": "Channel 7",
@@ -1815,14 +1830,16 @@ class Info(Template):
             "fn": None,
             "type": "[t]",
             "comment": "",
-        },
-        "sample_channel_7_pmt_level": {
-            "file": "Info",
-            "header": "  - sensitivity level",
-            "index": 22,
-            "fn": None,
-            "type": "[f]",
-            "comment": "",
+            "paragraph":{
+                    "sample_channel_7_pmt_level": {
+                    "file": "Info",
+                    "header": "  - sensitivity level",
+                    "index": 22,
+                    "fn": None,
+                    "type": "[f]",
+                    "comment": "",
+                },
+            }
         },
         "sample_total_number_of_particles": {
             "file": "Info",
