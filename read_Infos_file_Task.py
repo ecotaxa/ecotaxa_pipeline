@@ -18,8 +18,8 @@ class parse_Infos(Task):
 
     regex = ""
 
-    labels = {'Channel 2', 'Smart triggered number of particles', 'Channel 4', 'Trigger level (mV)', 'Flow rate (μL/sec)', 'Measurement date', 'Channel 1', 'Instrument', 'Beam width', 'Core speed', 'Concentration (part/μL)', 'Volume (μL)', 'CytoUSB Block size', 'Channel 7', 'Channel 3', 'Channel 5', 'User Comments', 'Channel 6', 'Measurement duration', 'Total number of particles'}
-    sublabels = {'sensitivity level'}
+    # labels = {'Channel 2', 'Smart triggered number of particles', 'Channel 4', 'Trigger level (mV)', 'Flow rate (μL/sec)', 'Measurement date', 'Channel 1', 'Instrument', 'Beam width', 'Core speed', 'Concentration (part/μL)', 'Volume (μL)', 'CytoUSB Block size', 'Channel 7', 'Channel 3', 'Channel 5', 'User Comments', 'Channel 6', 'Measurement duration', 'Total number of particles'}
+    # sublabels = {'sensitivity level'}
 
     def _init_df(self) -> pd.DataFrame:
         df = pd.DataFrame(columns=[key for key in self._model._mapping])
@@ -71,12 +71,17 @@ class parse_Infos(Task):
             splittedline = line.split(':',1)
             if len(splittedline)<=1: continue
 
-            header = splittedline[0]
+            # header = splittedline[0]
+            header,fileValue = splittedline
 
             if header == "  - sensitivity level":
                 print("  - sensitivity level")
 
-            fileValue = splittedline[1]
+            # fileValue = splittedline[1]
+
+            fileValue = fileValue.strip()
+            # if len(fileValue)==0: continue
+
             # if ( csv_configuration['decimal'] == ','):
             #     fileValue = fileValue.replace(',','.')    
 
@@ -89,12 +94,13 @@ class parse_Infos(Task):
                 continue
             for tuple in tuples:
                 key, value = tuple
-                row[key] = value
+                if 'index' in self._model._mapping[key] and self._model._mapping[key]['index'] == linenumber+1:
+                    row[key] = value
         
         return row
 
 
-    def map_row(self, model: Template, data: Tuple[str,str]) -> list[Tuple]:
+    def map_row(self, model: Template, data: Tuple[str,str], paragraph = False) -> list[Tuple]:
             '''
             a key in the file can map several ecotaxa keys
             '''
@@ -103,28 +109,35 @@ class parse_Infos(Task):
             ecotaxaKeys = model.searchKeyFromFileHeader(header)
 
             if len(ecotaxaKeys) == 0:
-                raise Exception(f"key mapping not found: {header}")
+                if paragraph == True:
+                    paragraph = False
+                else:
+                    raise Exception(f"key mapping not found: {header}")
 
             # row = {}
             rows = []
             for key in ecotaxaKeys:
+
+                # paragraph = False
+                if 'paragraph' in self._model._mapping[key] : paragraph = True
+                
                 fn = model.fn(key)
                 if fn:
                     try:
                         fn = model.fn(key)
-                        value = self.apply_fn(fn,fileValue)
+                        value = self.apply_fn(fn, fileValue)
                         # row[key] = model.cast_value(model,key,value,decimal=self._analysing['csv_configuration']['decimal'])
                         # row[key] = model.cast_value(key,value,decimal=self._analysing['csv_configuration']['decimal'])
-                        value = model.cast_value(key,value,decimal=self._analysing['csv_configuration']['decimal'])
-                        rows.append( (key,value) )
+                        value = model.cast_value(key, value, decimal=self._analysing['csv_configuration']['decimal'])
+                        rows.append( (key, value) )
                     except ExecuteException as e:
                         # tools.eprint("Mapping issue: Function `{}` called in mapping `{}` is not implemented".format(e.functionNamefn, self._mapping))
-                        raise MappingException(executeException=e, model=self._model, line=(key,value), result=row)
+                        raise MappingException(executeException=e, model=self._model, line=(key,value), result=rows)
                 else:
                     # row[key] = model.cast_value(model,key,fileValue,decimal=self._analysing['csv_configuration']['decimal'])
                     # row[key] = model.cast_value(key,fileValue,decimal=self._analysing['csv_configuration']['decimal'])
-                    value = model.cast_value(key,fileValue,decimal=self._analysing['csv_configuration']['decimal'])
-                    rows.append( (key,value) )
+                    value = model.cast_value(key, fileValue, decimal=self._analysing['csv_configuration']['decimal'])
+                    rows.append( (key, value) )
             
             return rows
 

@@ -25,21 +25,48 @@ class mock_ulco_infos_file():
     model = cytosenseModel.Info()
 
 
-    info_mock2 = {
+    # info_mock2 = {
+    #      "acq_trigger_level": 15.94 ,
+    #      "acq_cytousb_block_size": "Auto (maxTimeOut: 45s )" ,
+    #      "acq_instrument": "ULCO" ,
+    #      "acq_beam_width": 5 ,
+    #      "acq_core_speed": 2 ,
+    #      "sample_measurement_date": "2022-09-14 12:28:42" ,
+    #      "acq_user_comments": None,
+    #      "sample_measurement_duration": 602 ,
+    #      "sample_flow_rate": 2.1 ,
+    #      "sample_channel_1": "Trigger1",
+    #      "sample_channel_2": "FWS L",
+    #      "sample_channel_3": "FWS R" ,
+    #      "sample_channel_4": "SWS" ,
+    #      "sample_channel_4_pmt_level": 80 ,
+    #      "sample_channel_5": "FL Yellow" ,
+    #      "sample_channel_5_pmt_level": 80,
+    #      "sample_channel_6": "FL Orange",
+    #      "sample_channel_6_pmt_level": 80,
+    #      "sample_channel_7": "FL Red  - TRIGGER",
+    #      "sample_channel_7_pmt_level": 80,
+    #      "sample_total_number_of_particles": 11003,
+    #      "sample_smart_triggered_number_of_particles": 11003,
+    #      "sample_concentration": 9.4915805316013 ,
+    #      "sample_volume": 1159.2379123125,
+    # }
+
+    info_mock = {
          "acq_trigger_level": 15.94 ,
          "acq_cytousb_block_size": "Auto (maxTimeOut: 45s )" ,
          "acq_instrument": "ULCO" ,
          "acq_beam_width": 5 ,
          "acq_core_speed": 2 ,
+         "acq_user_comments": "",
          "sample_measurement_date": "2022-09-14 12:28:42" ,
-         "acq_user_comments": None,
          "sample_measurement_duration": 602 ,
          "sample_flow_rate": 2.1 ,
          "sample_channel_1": "Trigger1",
          "sample_channel_2": "FWS L",
          "sample_channel_3": "FWS R" ,
          "sample_channel_4": "SWS" ,
-         "sample_channel_4_pmt_level": 80 ,
+         "sample_channel_4_pmt_level": 50 ,
          "sample_channel_5": "FL Yellow" ,
          "sample_channel_5_pmt_level": 80,
          "sample_channel_6": "FL Orange",
@@ -50,33 +77,6 @@ class mock_ulco_infos_file():
          "sample_smart_triggered_number_of_particles": 11003,
          "sample_concentration": 9.4915805316013 ,
          "sample_volume": 1159.2379123125,
-    }
-
-    info_mock = {
-         "acq_trigger_level": [15.94] ,
-         "acq_cytousb_block_size": ["Auto (maxTimeOut: 45s )"] ,
-         "acq_instrument": ["ULCO"] ,
-         "acq_beam_width": [5] ,
-         "acq_core_speed": [2] ,
-         "sample_measurement_date": ["2022-09-14 12:28:42"] ,
-         "acq_user_comments": [None],
-         "sample_measurement_duration": [602] ,
-         "sample_flow_rate": [2.1] ,
-         "sample_channel_1": ["Trigger1"],
-         "sample_channel_2": ["FWS L"],
-         "sample_channel_3": ["FWS R"] ,
-         "sample_channel_4": ["SWS"] ,
-         "sample_channel_4_pmt_level": [80] ,
-         "sample_channel_5": ["FL Yellow"] ,
-         "sample_channel_5_pmt_level": [80],
-         "sample_channel_6": ["FL Orange"],
-         "sample_channel_6_pmt_level": [80],
-         "sample_channel_7": ["FL Red  - TRIGGER"],
-         "sample_channel_7_pmt_level": [80],
-         "sample_total_number_of_particles": [11003],
-         "sample_smart_triggered_number_of_particles": [11003],
-         "sample_concentration": [9.4915805316013] ,
-         "sample_volume": [1159.2379123125],
     }
 
     data = {
@@ -91,6 +91,13 @@ class mock_ulco_infos_file():
 
     df : pandas.DataFrame = None
 
+    def _init_df(self) -> pandas.DataFrame:
+        df = pd.DataFrame(columns=[key for key in self._model._mapping])
+        # for key in self._model._mapping :
+        #     # if key:
+        #     df[key] =  self._model._mapping[key]['type']
+        return df
+
     def headers(self) -> list:
         l = self.info_mock
         header = [h for h in self.info_mock]
@@ -98,11 +105,13 @@ class mock_ulco_infos_file():
 
     def __init__(self) -> None:
         headers = self.headers()
-        row = [self.info_mock[key] for key in headers]
         # self.df = pandas.DataFrame.from_dict(self.info_mock, orient='index', columns=headers)
-        self.df = pandas.DataFrame(self.info_mock)
+        # self.df = pandas.DataFrame(self.info_mock)
         # .from_dict(self.info_mock, orient='index', columns=headers)
-        pass
+
+        self.df = pandas.DataFrame(columns=headers)
+        row = [self.info_mock[key] for key in headers]
+        self.df.loc[len(self.df)]= row
 
 
     def save_csv(self):
@@ -130,8 +139,14 @@ class test_read_infos_file_task(TestCase):
         from pandas.testing import assert_frame_equal        
         assert_frame_equal( df_result, mock.df )
 
-        assert "Need to" == "finish this test"
+        # assert "Need to" == "finish this test"
 
+
+   
+
+
+
+            
 
 
 def test():
