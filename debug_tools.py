@@ -1,3 +1,4 @@
+import pandas as pd
 
 
 # my Dict assert
@@ -70,6 +71,33 @@ def dump(obj, nested_level=0, output=sys.stdout , name=True):
     else:
         print ( '%s%s' % (nested_level * spacing, obj), file=sys.stderr)
 
+
+# change namecr to '\n' permit to show some issue
+def dump_structure(obj, nested_level=0, output=sys.stdout, name=True, namecr=""):
+    if name: 
+        variable_names = mod_retrieve_name(obj)
+        if len(variable_names):
+            print(variable_names[0] + ":")
+    spacing = '   '
+    if isinstance(obj, dict):
+        for k, v in obj.items():
+            if hasattr(v, '__iter__'):
+                print ('%s%s:' % ((nested_level + 1) * spacing, k), file=sys.stderr)
+                dump_structure(v, nested_level + 1, output, name=False)
+            else:
+                print ( '%s%s: %s' % ((nested_level + 1) * spacing, k, v), file=sys.stderr)
+    elif isinstance(obj, list):
+        print ( '%s[' % ((nested_level) * spacing), file=sys.stderr)
+        for v in obj:
+            if hasattr(v, '__iter__'):
+                dump_structure(v, nested_level + 1, output, name=False)
+            else:
+                print ('%s%s' % ((nested_level + 1) * spacing, v) , file=sys.stderr)
+        print ( '%s]' % ((nested_level) * spacing), file=sys.stderr)
+    elif isinstance(obj, pd.DataFrame):
+            print ( 'Dataframe', file=sys.stderr)
+    else:
+        print ( '%s%s' % (nested_level * spacing, obj), file=sys.stderr)
 
 # pip install PyYAML
 def to_yaml(obj):
