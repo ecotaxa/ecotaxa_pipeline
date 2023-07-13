@@ -2,12 +2,12 @@
 
 from enum import Enum
 from pathlib import Path
-from task import Task
+from Pipeline.task import Task
 from tasks import define_sample_pipeline_folder
 
 # from pipeline import Task
-from test_pipeline import add_ulco_pulse_csv_file_to_parse
-from tools import create_folder
+from Test.test_pipeline import add_ulco_pulse_csv_file_to_parse
+from Tools.tools import create_folder
 
 
 
@@ -94,7 +94,7 @@ class move_file_to_raw_folder(Task):
 
 
 import Cytosense.define as cytosense
-from csv_configuration import french_csv_configuration, english_csv_configuration
+from Localization.csv_configuration import french_csv_configuration, english_csv_configuration
 
 cefas_cytosense_pipeline = [
         # move_file_to_raw_folder(cytosense.cefas_pulse_file_pattern_extra_info, cytosense.cefas_pulse_file_pattern),

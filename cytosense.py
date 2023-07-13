@@ -5,12 +5,12 @@ from enum import Enum
 import os
 from ParserToTsv import ParserToTsv
 from project import Project2
-from enums import Instrument
+from Ecotaxa.enums import Instrument
 from pathlib import Path
-from filter import dynamic_filter, file_filter_composition, filter_extension, filter_folder, filter_hiddenFile
+from Tools.filter import dynamic_filter, file_filter_composition, filter_extension, filter_folder, filter_hiddenFile
 # from summarise_pulses import save_dataframe_to_csv, summarise_pulses
 
-from tools import copy_to_file, expand_zip_in_folder
+from Tools.tools import copy_to_file, expand_zip_in_folder
 from tsv import Tsv
 
 
@@ -147,7 +147,7 @@ class CytoSense(Project2):
             pulses_filename = self.pulse_fits_path() 
             parser.read_csv_filecyto( pulses_filename, self.project_path,{"delimiter":"," , "fn":"pulseRowFn2"})
         else:
-            from summarise_pulses import save_dataframe_to_csv, summarise_pulses
+            from Cytosense.summarise_pulses import save_dataframe_to_csv, summarise_pulses
             pulses_filename = self.raw_data_path +"/"+filename + "_" + self.data_filename + ".csv"
             poly = summarise_pulses(pulses_filename)
             poly_filename = self.raw_data_path +"/poly/"+filename + "_" + self.data_filename + ".csv"

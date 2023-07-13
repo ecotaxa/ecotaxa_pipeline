@@ -2,14 +2,10 @@
 
 from enum import Enum
 
+from Tools.NamePatternComponent import NamePatternComponent
+
 
 # NamePatternComponent = Enum('NamePatternComponent', ['eSampleName' , 'eIndex', 'eImageType'])
-
-
-class NamePatternComponent(str, Enum):
-    eSampleName='eSampleName' 
-    eIndex='eIndex'
-    eImageType='eImageType'
 
 
 

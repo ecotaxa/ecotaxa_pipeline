@@ -1,7 +1,7 @@
 # Sebastien Galvagno 06/2023
 import os
-from Template import Template
-from tools import create_folder
+from Parser.Template import Template
+from Tools.tools import create_folder
 from tsv import Tsv 
 
 
