@@ -1,4 +1,5 @@
 
+from debug_tools import dump, dump_structure
 from task import Task
 
 
@@ -13,6 +14,7 @@ class Pipeline():
     def __init__(self, tasks):
         self._tasks = tasks
     
+
 
     # run the tasks
     def run(self, data):
@@ -32,7 +34,7 @@ class Pipeline():
                 # self._data = self._run(task, self._data)
                 self._run(task)
             
-        # to use in pipeline 
+    # to use in pipeline 
     # we cannot be use in a single task, but in that case not need to test input keys
     # TODO need to use decorator or descriptor
     def _run(self, task):
@@ -60,3 +62,56 @@ class Pipeline():
         for key in task._delete_keys:
             self._data[key] = None
 
+
+    # functions to debug pipeline
+
+    def verify(self):
+        self._verify_tasks(self._tasks)
+
+    def _verify_tasks(self, tasks):
+        for task in tasks:
+            if type(task) == list:
+                self._verify_tasks(task)
+            else:
+                print("running task: " + task.__class__.__name__)
+                # self._data = task._run(self._data)
+                # self._data = self._run(task, self._data)
+                self._verify(task)
+
+    def _verify(self, task:Task):
+        # dump(task._need_keys)
+        # dump(task._update_keys)
+        # dump(task._create_keys)
+        # dump(task._delete_keys)
+
+        print("\t_need_keys: [" + ", ".join(task._need_keys) + "]")
+        print("\t_create_keys: [" + ", ".join(task._create_keys) + "]")
+        print("\t_update_keys: [" + ", ".join(task._update_keys) + "]")
+        print("\t_delete_keys: [" + ", ".join(task._delete_keys) + "]")
+
+        # self.test_need_keys(task)
+        # self.remove_keys(task)
+        return self._data
+
+# run the tasks
+    def show_data(self, data):
+        self._data = data
+        self.print_data(data)
+        self._show_data_tasks(self._tasks)
+        return self._data
+
+    # recursive function to execute the task pipeline
+    def _show_data_tasks(self, tasks):
+        for task in tasks:
+
+            if type(task) == list:
+                self._show_data_tasks(task)
+            else:
+                print("running task: " + task.__class__.__name__)
+                # self._data = task._run(self._data)
+                # self._data = self._run(task, self._data)
+                self._run(task)
+                self.print_data(self._data)
+    
+    def print_data(self, data):
+        dump_structure(data)
