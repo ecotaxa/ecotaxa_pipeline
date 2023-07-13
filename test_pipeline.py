@@ -21,9 +21,6 @@ from summarise_pulses import CSVException
 import pandas as pd
 from summarize_csv_pulse import summarize_csv_pulse
 
-#from pipeline import Pipeline__
-# from pipeline import define_sample_pipeline_folder
-
 from task import Task
 
 

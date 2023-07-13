@@ -1,5 +1,5 @@
 
-from debug_tools import dump_structure
+from debug_tools import dump, dump_structure
 from task import Task
 
 
@@ -35,13 +35,10 @@ class Pipeline():
                 self._run(task)
             
     # to use in pipeline 
-    # we cannot be use in a single task, but in that case not need to test input keys
     # TODO need to use decorator or descriptor
     def _run(self, task):
-        # self.test_need_keys(self._data)
         self.test_need_keys(task)
         task._data = self._data
-        # self._data = 
         task.run()
         self._data = task._data
         self.remove_keys(task)
