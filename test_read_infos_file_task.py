@@ -5,7 +5,8 @@ from unittest import TestCase
 
 import cytosenseModel
 from debug_tools import dump
-from read_Infos_file_Task import parse_Infos
+from mock_ulco_small_data_images import mock_trunc
+from read_Infos_file_Task import add_info_file_task, cross_merge_task, parse_Infos
 
 import pandas
 
@@ -142,11 +143,103 @@ class test_read_infos_file_task(TestCase):
         # assert "Need to" == "finish this test"
 
 
+
+
+class mock_add_info_file():
+
+
+    local_path = 'tests/cytosense/ULCO/mock_small_data'
+    result_folder = "tests/cytosense/result/"
+
+    sample_name = 'R4_photos_flr16_2uls_10min 2022-09-14 12h28'
+
+    filename = sample_name +  "_Info" + ".txt"
+
+    path = PurePath( local_path , filename )
+
+    data = {
+        'raw_folder': PurePath(local_path),
+        'sample_name': sample_name,
+    }
    
+from csv_configuration import french_csv_configuration
+
+class test_add_info_file(TestCase):
+
+    def test_arguments(self):
+        mock = mock_add_info_file()
+
+        # args = {model= cytosenseModel.Info()  , localisation= french_csv_configuration }
+        ut = add_info_file_task(model= cytosenseModel.Info()  , localisation=french_csv_configuration)            
+        # self.assertIn("__model",ut)
+        ut._run(mock.data)
+
+        self.assertIn( 'txt_infos', ut._data, " -- 'txt_infos' don't exist" )
+        self.assertIn( 'path', ut._data['txt_infos'] , " -- 'path' don't exist" )
+        self.assertIn( 'csv_configuration', ut._data['txt_infos'] , " -- 'csv_configuration' don't exist" )
+
+        self.assertEqual( ut._data['txt_infos']['path'] , mock.path , " path are different")
 
 
 
-            
+class mock_cross_merge():
+
+    local_path = 'tests/cytosense/ULCO/mock_small_data'
+    result_folder = "tests/cytosense/result/"
+
+    sample_name = 'R4_photos_flr16_2uls_10min 2022-09-14 12h28'
+
+    csv_filename = sample_name +  "_Cross_merge" + ".csv"
+    mock_filename = "mock_" + csv_filename
+
+    path = PurePath(result_folder, mock_filename)
+
+    data = {}
+
+    def __init__(self) -> None:
+        mock_info = mock_ulco_infos_file()
+        mock_result = mock_trunc()
+    
+        self.df = pandas.merge(mock_result.df, mock_info.df, how="cross")
+
+        self.data = {
+            'tsv_list':{
+                'df_result':{
+                    'dataframe':mock_result.df
+                    }
+                },
+            'df_list':{
+                'txt_infos':mock_info.df
+            }
+        }
+
+    def to_csv(self):
+        self.df.to_csv(self.path, index=False)
+
+
+class test_cross_merge(TestCase):
+
+    def test_cross_merge(self):
+
+        mock = mock_cross_merge()
+        mock.to_csv()
+
+        ut = cross_merge_task()
+        result = ut._run(mock.data)
+        df_result: pandas.DataFrame = result['tsv_list']['df_result']['dataframe']
+
+        path = PurePath(mock.result_folder, mock.csv_filename )
+        df_result.to_csv(path, index=False)
+
+        from pandas.testing import assert_frame_equal        
+        assert_frame_equal( df_result, mock.df )
+
+
+class test_generate_tsv():
+
+    def test_generate_tsv(self):
+        
+        pass
 
 
 def test():

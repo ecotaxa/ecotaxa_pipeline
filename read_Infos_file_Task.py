@@ -13,8 +13,45 @@ import re
 import pandas as pd
 import cytosenseModel
 
+
+
+class add_info_file_task(Task):
+
+    _need_keys = ['raw_folder', 'sample_name']
+    _update_keys = ['txt_infos']
+
+    _init_params = ['model','localisation']
+
+    def __init__(self, **kwargs):
+
+        for argument in self._init_params:
+            if argument in kwargs:
+                self.__setattr__(argument, kwargs[argument])
+            else:
+                raise Exception(f"Missing argument: '{argument}' - when you called {self.__class__.__name__}")
+        
+        # if 'model' in kwargs:
+        #     self.model = kwargs['model']
+        #     self.__setattr__('model', kwargs['model'])
+        # else:
+        #     raise Exception("Argument missing 'model'")
+        
+    def run(self):
+
+        filename = self._data['sample_name'] + "_Info.txt"
+
+        path = PurePath(self._data['raw_folder'] , filename )
+
+        self._data['txt_infos'] = {} 
+        self._data['txt_infos']['mapping'] = self.model
+        self._data['txt_infos']['csv_configuration'] = self.localisation
+        self._data['txt_infos']['path'] = path
+
+
 class parse_Infos(Task):
-    pass
+    
+    _need_keys = ['txt_infos'] # ['txt_infos|path','txt_infos|csv_configuration']
+    _update_keys = ['df_list'] # ['df_list|txt_infos']
 
     regex = ""
 
@@ -190,6 +227,31 @@ class parse_Infos(Task):
         dump(labels)        
         dump(sublabels)    
         return (list(labels),list(sublabels))
+
+
+
+
+
+
+
+class cross_merge_task(Task):
+
+    _need_keys = ['tsv_list','df_list'] # ['tsv_list|df_result|dataframe','df_list|txt_infos']
+    _update_keys = ['tsv_list|df_result|dataframe']
+
+
+    def run(self):
+        
+        df = self._data['tsv_list']['df_result']['dataframe']
+        df_info = self._data['df_list']['txt_infos']
+
+        df = pd.merge(df, df_info, how="cross")
+
+        self._data['tsv_list']['df_result']['dataframe'] = df
+
+    
+
+
 
 # keysText = System.Text.RegularExpressions.Regex.Match(textData,"(?<=serial open request)(.*\n)*(?=DCU E72)",RegexOptions.IgnoreCase).Value.ToString.Trim
 
