@@ -323,3 +323,45 @@ class trunc_data(Task):
 
         self._data['tsv_list']['df_result']['dataframe'] = df
 
+
+
+class generate_tsv(Task):
+
+    _need_keys = ['tsv_list','work_folder','sample_name'] # ['tsv_list|df_result|dataframe']
+
+    def run(self):
+        
+        df_result: pd.DataFrame = self._data['tsv_list']['df_result']['dataframe']
+        work_path = PurePath(self._data['work_folder'])
+        filename = self._data['sample_name'] + ".tsv"
+        
+        tools.create_folder(work_path)
+        
+        path = PurePath(work_path, filename )
+        df_result.to_csv(path, index=False,sep="\t")
+
+
+
+class copy_images_task(Task):
+
+    _need_keys = ['raw_folder', 'sample_name', 'work_folder', 'images_folder', 'image_list']
+    
+    def run(self):
+
+        images: pd.DataFrame = self._data['image_list']
+        destination_folder = self._data['work_folder']
+        image_folder = self._data['images_folder']
+
+        # df = images.pivot_table(columns='img_file_name')
+        # df = images.pivot(columns='img_file_name')
+        
+        # here extract columns='img_file_name'
+
+        for image in images:
+            # path = PurePath(image_folder , images)
+            print(f"copy image {image}")
+            # print(f"copy image {image['path']}")
+        
+    
+
+    

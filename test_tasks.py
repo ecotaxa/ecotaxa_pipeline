@@ -9,7 +9,7 @@ from cytosenseModel import UlcoListmode, pulse
 from debug_tools import dump, myDictAssert
 from mock_polynomial_pulses_ulco_small_data import mock_ulco_dataframe, mock_ulco_small_data
 from mock_ulco_small_data_images import mock_trunc, mock_ulco_small_data_images
-from tasks import add_ulco_listmode_csv_file_to_parse, add_ulco_pulse_csv_file_to_parse, analyse_cvs_listmode, define_sample_pipeline_folder, list_images, merge_files, summarize_csv_pulse, trunc_data
+from tasks import add_ulco_listmode_csv_file_to_parse, add_ulco_pulse_csv_file_to_parse, analyse_cvs_listmode, copy_images_task, define_sample_pipeline_folder, list_images, merge_files, summarize_csv_pulse, trunc_data
 
 # from tasks import add_ulco_pulse_csv_file_to_parse, define_sample_pipeline_folder, summarize_csv_pulse
 
@@ -643,6 +643,25 @@ class Test_Tasks(unittest.TestCase):
 
         # assert "Need to" == "finish this test"
 
+    def test_copy_images(self):
+
+        m = mock_ulco_small_data_images()
+        work_folder = PurePath(m.mock_path, "_work" ,m.sample_name)
+        images_folder = PurePath(m.mock_path, str(m.sample_name + "_Images"))
+
+        data = {
+            'raw_folder': m.mock_path,
+            'sample_name': m.sample_name,
+            'work_folder': work_folder,
+            'images_folder': images_folder,
+            'image_list': m.df,
+        }
+
+        ut = copy_images_task()
+        ut._run(data)
+
+        assert "need to " "finish"
+        # how to extract column from dataframe ? 
 
 
 if __name__ == '__main__':

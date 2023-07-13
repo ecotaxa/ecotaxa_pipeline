@@ -2,11 +2,13 @@
 from pathlib import Path, PurePath
 from Cytosense.define import NamePatternComponent
 from analyze_csv_pulse import analyze_csv_pulse
+import cytosenseModel
 from cytosenseModel import pulse
 from debug_tools import dump
 from mock_polynomial_pulses_ulco_small_data import mock_ulco_dataframe, mock_ulco_small_data
 from mock_ulco_small_data_images import mock_trunc
 import pipeline
+from read_Infos_file_Task import add_info_file_task, parse_Infos
 from summarise_pulses import CSVException
 
 import pandas as pd
@@ -20,7 +22,9 @@ from task import Task
 
 from pathlib import PurePath
 from task import Task
-from tasks import add_ulco_listmode_csv_file_to_parse, add_ulco_pulse_csv_file_to_parse, analyse_cvs_listmode, define_sample_pipeline_folder, list_images, merge_files, summarize_csv_pulse, trunc_data
+from tasks import add_ulco_listmode_csv_file_to_parse, add_ulco_pulse_csv_file_to_parse, analyse_cvs_listmode, define_sample_pipeline_folder, generate_tsv, list_images, merge_files, summarize_csv_pulse, trunc_data
+from test_read_infos_file_task import mock_add_info_file, mock_ulco_infos_file
+from tools import is_file_exist
 
 
 # class analyse_csv(Task):
@@ -495,6 +499,216 @@ class Test_Pipeline(unittest.TestCase):
 
         from pandas.testing import assert_frame_equal        
         assert_frame_equal( df_result, mock.df )
+
+        # assert "Need to" == "finish this test"
+
+
+
+
+    def test_ulco_pipeline_ulco_small_add_info(self):
+
+        # import ULCO_samples_sort as ulco    
+        from csv_configuration import french_csv_configuration
+
+        mock = mock_add_info_file()
+        data = {
+            'pipeline_folder': PurePath(mock.local_path),
+            'sample_name': mock.sample_name,
+        }
+
+        ulco_cytosense_pipeline = [
+            add_ulco_pulse_csv_file_to_parse(french_csv_configuration),
+            add_ulco_listmode_csv_file_to_parse(french_csv_configuration),
+            summarize_csv_pulse(),
+            analyze_csv_pulse(),
+            analyse_cvs_listmode(),
+            merge_files(),
+            list_images(pattern_name=[NamePatternComponent.eSampleName,"_Cropped_",NamePatternComponent.eIndex,".jpg"]),
+            trunc_data(),
+            add_info_file_task(model=cytosenseModel.Info(), localisation=french_csv_configuration)
+        ]
+
+        # grammar: pipeline = [ Task | [ Task ] ]
+        ulco_sample_pipeline_tasks = [ define_sample_pipeline_folder(), 
+                                       ulco_cytosense_pipeline 
+                                    ]
+
+        ut = pipeline.Pipeline(ulco_sample_pipeline_tasks)
+        result = ut.run(data)
+
+        self.assertIn( 'txt_infos', ut._data, " -- 'txt_infos' don't exist" )
+        self.assertIn( 'path', ut._data['txt_infos'] , " -- 'path' don't exist" )
+        self.assertIn( 'csv_configuration', ut._data['txt_infos'] , " -- 'csv_configuration' don't exist" )
+
+        self.assertEqual( ut._data['txt_infos']['path'] , mock.path , " path are different")
+
+
+    def test_ulco_pipeline_ulco_small_parse_info(self):
+
+        # import ULCO_samples_sort as ulco    
+        from csv_configuration import french_csv_configuration
+
+        mock = mock_ulco_infos_file()
+        data = {
+            'pipeline_folder': PurePath(mock.local_path),
+            'sample_name': mock.sample_name,
+        }
+
+        ulco_cytosense_pipeline = [
+            add_ulco_pulse_csv_file_to_parse(french_csv_configuration),
+            add_ulco_listmode_csv_file_to_parse(french_csv_configuration),
+            summarize_csv_pulse(),
+            analyze_csv_pulse(),
+            analyse_cvs_listmode(),
+            merge_files(),
+            list_images(pattern_name=[NamePatternComponent.eSampleName,"_Cropped_",NamePatternComponent.eIndex,".jpg"]),
+            trunc_data(),
+            add_info_file_task(model=cytosenseModel.Info(), localisation=french_csv_configuration),
+            parse_Infos(),
+        ]
+
+        # grammar: pipeline = [ Task | [ Task ] ]
+        ulco_sample_pipeline_tasks = [ define_sample_pipeline_folder(), 
+                                       ulco_cytosense_pipeline 
+                                    ]
+
+        ut = pipeline.Pipeline(ulco_sample_pipeline_tasks)
+        result = ut.run(data)
+
+
+        self.assertIn('df_list', result, " -- 'df_list' don't exist")
+        self.assertIn('txt_infos', result['df_list'], " -- 'txt_infos' don't exist")
+
+        df_result = result['df_list']['txt_infos']
+        df_result.to_csv("tests/cytosense/result/" + mock.csv_filename, index=False)
+
+        from pandas.testing import assert_frame_equal        
+        assert_frame_equal(df_result, mock.df )
+
+
+
+    def test_ulco_pipeline_ulco_small_generate_tsv(self):
+
+        # import ULCO_samples_sort as ulco    
+        from csv_configuration import french_csv_configuration
+
+        mock = mock_ulco_infos_file()
+        data = {
+            'pipeline_folder': PurePath(mock.local_path),
+            'sample_name': mock.sample_name,
+        }
+
+        ulco_cytosense_pipeline = [
+            add_ulco_pulse_csv_file_to_parse(french_csv_configuration),
+            add_ulco_listmode_csv_file_to_parse(french_csv_configuration),
+            summarize_csv_pulse(),
+            analyze_csv_pulse(),
+            analyse_cvs_listmode(),
+            merge_files(),
+            list_images(pattern_name=[NamePatternComponent.eSampleName,"_Cropped_",NamePatternComponent.eIndex,".jpg"]),
+            trunc_data(),
+            add_info_file_task(model=cytosenseModel.Info(), localisation=french_csv_configuration),
+            parse_Infos(),
+            generate_tsv()
+        ]
+
+        # grammar: pipeline = [ Task | [ Task ] ]
+        ulco_sample_pipeline_tasks = [ define_sample_pipeline_folder(), 
+                                       ulco_cytosense_pipeline 
+                                    ]
+
+        ut = pipeline.Pipeline(ulco_sample_pipeline_tasks)
+        result = ut.run(data)
+
+
+        self.assertIn('df_list', result, " -- 'df_list' don't exist")
+        self.assertIn('txt_infos', result['df_list'], " -- 'txt_infos' don't exist")
+
+        df_result = result['df_list']['txt_infos']
+        df_result.to_csv("tests/cytosense/result/" + mock.csv_filename, index=False)
+
+        from pandas.testing import assert_frame_equal        
+        assert_frame_equal(df_result, mock.df )
+
+        work_path = result['work_folder']
+        filename = result['sample_name'] + ".tsv"
+        path = PurePath(work_path, filename )
+
+        self.assertTrue(is_file_exist(path))
+
+
+    def test_verify_ulco_pipeline_ulco_small_generate_tsv(self):
+        """
+        Not really a test, but a sample to show how to print the data need by the tasks used in the pipeline
+        
+        """
+        # import ULCO_samples_sort as ulco    
+        from csv_configuration import french_csv_configuration
+
+        mock = mock_ulco_infos_file()
+        data = {
+            'pipeline_folder': PurePath(mock.local_path),
+            'sample_name': mock.sample_name,
+        }
+
+        ulco_cytosense_pipeline = [
+            add_ulco_pulse_csv_file_to_parse(french_csv_configuration),
+            add_ulco_listmode_csv_file_to_parse(french_csv_configuration),
+            summarize_csv_pulse(),
+            analyze_csv_pulse(),
+            analyse_cvs_listmode(),
+            merge_files(),
+            list_images(pattern_name=[NamePatternComponent.eSampleName,"_Cropped_",NamePatternComponent.eIndex,".jpg"]),
+            trunc_data(),
+            add_info_file_task(model=cytosenseModel.Info(), localisation=french_csv_configuration),
+            parse_Infos(),
+            generate_tsv()
+        ]
+
+        # grammar: pipeline = [ Task | [ Task ] ]
+        ulco_sample_pipeline_tasks = [ define_sample_pipeline_folder(), 
+                                       ulco_cytosense_pipeline 
+                                    ]
+
+        ut = pipeline.Pipeline(ulco_sample_pipeline_tasks)
+        result = ut.verify()
+
+
+    def test_show_data_ulco_pipeline_ulco_small_generate_tsv(self):
+        """
+        Not really a test, but a sample to show how to print the pipeline data structure
+        """
+        # import ULCO_samples_sort as ulco    
+        from csv_configuration import french_csv_configuration
+
+        mock = mock_ulco_infos_file()
+        data = {
+            'pipeline_folder': PurePath(mock.local_path),
+            'sample_name': mock.sample_name,
+        }
+
+        ulco_cytosense_pipeline = [
+            add_ulco_pulse_csv_file_to_parse(french_csv_configuration),
+            add_ulco_listmode_csv_file_to_parse(french_csv_configuration),
+            summarize_csv_pulse(),
+            analyze_csv_pulse(),
+            analyse_cvs_listmode(),
+            merge_files(),
+            list_images(pattern_name=[NamePatternComponent.eSampleName,"_Cropped_",NamePatternComponent.eIndex,".jpg"]),
+            trunc_data(),
+            add_info_file_task(model=cytosenseModel.Info(), localisation=french_csv_configuration),
+            parse_Infos(),
+            generate_tsv()
+        ]
+
+        # grammar: pipeline = [ Task | [ Task ] ]
+        ulco_sample_pipeline_tasks = [ define_sample_pipeline_folder(), 
+                                       ulco_cytosense_pipeline 
+                                    ]
+
+        ut = pipeline.Pipeline(ulco_sample_pipeline_tasks)
+        result = ut.show_data(data)
+
 
         # assert "Need to" == "finish this test"
 
