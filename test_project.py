@@ -13,6 +13,9 @@ paths for sebastien
 "/home/sgalvagno/Test/cpicsEcotaxa"
 '''
 
+raw_data_path="/Users/jcoustenoble/Desktop/CPICS_RAW/WORKSHOP_SMALL_CPICS_PROJECT"
+dest_data_path="/Users/jcoustenoble/Desktop/CPICS_EXPORT"
+
 ctdModel=CTD_sbe37()
 # ctdModel.printmapping()
 roisModel = cpicsModel(ctdModel)
@@ -23,8 +26,8 @@ roisModel = cpicsModel(ctdModel)
 # POST /project/
 message_project_creation = {
   "title" : "WORKSHOP_SMALL_CPICS_PROJECT",
-  "raw_data_path" : "/Users/jcoustenoble/Desktop/CPICS_RAW/WORKSHOP_SMALL_CPICS_PROJECT",
-  "dest_data_path" : "/Users/jcoustenoble/Desktop/CPICS_EXPORT",
+  "raw_data_path" : raw_data_path,
+  "dest_data_path" : dest_data_path,
   "model" : roisModel,
   "sample_level" : {    
                         "Type" : "CAST", #cast or time
