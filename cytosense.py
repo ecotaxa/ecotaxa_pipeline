@@ -139,7 +139,7 @@ class CytoSense(Project2):
         return  os.path.join(self.raw_data_path, "/")
 
 
-    def analyse_Pulse(self,filename,parser:ParserToTsv):
+    def analyse_Pulse(self,filename, parser:ParserToTsv):
         self.filename = filename
 
         self.data_filename = "Pulses"
@@ -441,3 +441,11 @@ class CytoSense(Project2):
 
     def sample_id(self, data):
         return self.filename
+    
+    def json_define_id(self, data):
+        filename = ""
+        return filename + "_" + data
+
+    def json_sample_id(self, data):
+        return self.filename
+    
