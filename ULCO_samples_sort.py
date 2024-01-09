@@ -2,10 +2,12 @@
 
 from enum import Enum
 from pathlib import Path
+from Pipeline.task import Task
+from tasks import define_sample_pipeline_folder
 
-from pipeline import Task
-from test_pipeline import add_ulco_pulse_csv_file_to_parse
-from tools import create_folder
+# from pipeline import Task
+from Test.test_pipeline import add_ulco_pulse_csv_file_to_parse
+from Tools.tools import create_folder
 
 
 
@@ -25,7 +27,7 @@ class ulco_samples_sort(Task):
             self._source_folder = data['source_folder']
             self._destination_folder = data['destination_folder']
         except:
-            raise("Missing arguments")
+            raise Exception("Missing arguments")
 
         self._copy_files()
         return self._data
@@ -36,13 +38,17 @@ class ulco_samples_sort(Task):
 
 class process_ulco_samples(Task):
 
+    def __init__(self, tasks):
+        #TODO
+        pass
+
     def run(self, data : dict):
         try:
             self._source_folder = data['source_folder']
             self._destination_folder = data['destination_folder']
             self._tasks = data['tasks']
         except:
-            raise("Missing arguments")
+            raise Exception("Missing arguments")
 
         self._list_samples()
         return self._data
@@ -59,26 +65,42 @@ class generate_ecotaxa_import(Task):
     pass
 
 
-class analyse_cvs(Task):
-    pass
+class analyse_csv(Task):
+    def __init__(self, *args):
+        pass
+
+class analyse_pulses_csv(Task):
+    _need_keys = [ 'csv_pulses']
+    _update_keys = ['tsv_list']
+    # _create_keys = [ 'CVSname_folder']
+
+    def __init__(self, *args):
+        pass
+
+    def run (self):
+        self.test_need_keys(data)
+        self.analysecsv()
+        self.remove_keys()
+        return self._data
+
+    def analysecsv():
+        pass        
+
 
 class move_file_to_raw_folder(Task):
-    pass
-
-french_csv_configuration = { 'delimiter' : ';' , 'decimal' : ',' }
-english_csv_configuration = { 'delimiter' : ',' , 'decimal' : '.' }
-
+    def __init__(self, *args):
+        pass
 
 
 
 import Cytosense.define as cytosense
-
+from Localization.csv_configuration import french_csv_configuration, english_csv_configuration
 
 cefas_cytosense_pipeline = [
-        move_file_to_raw_folder(cytosense.cefas_pulse_file_pattern_extra_info, cytosense.cefas_pulse_file_pattern),
-        move_file_to_raw_folder(cytosense.cefas_listmode_file_pattern_extra_info, cytosense.cefas_listmode_file_pattern),
-        analyse_cvs(cytosense.cefas_pulse_file_pattern, english_csv_configuration),
-        analyse_cvs(cytosense.cefas_listmode_file_pattern, english_csv_configuration),
+        # move_file_to_raw_folder(cytosense.cefas_pulse_file_pattern_extra_info, cytosense.cefas_pulse_file_pattern),
+        # move_file_to_raw_folder(cytosense.cefas_listmode_file_pattern_extra_info, cytosense.cefas_listmode_file_pattern),
+        # analyse_csv(cytosense.cefas_pulse_file_pattern, english_csv_configuration),
+        # analyse_csv(cytosense.cefas_listmode_file_pattern, english_csv_configuration),
     ]
 
 class cvs_file_to_parse(Task): pass
@@ -87,8 +109,8 @@ ulco_cytosense_pipeline = [
 
         # cvs_file_to_parse(filetype="PULSE", mapping={}, filename_pattern=ulco_pulse_file_pattern),
         add_ulco_pulse_csv_file_to_parse(),
-        analyse_cvs(cytosense.ulco_pulse_file_pattern, french_csv_configuration),
-        analyse_cvs(cytosense.ulco_listmode_file_pattern, french_csv_configuration),
+        analyse_csv(cytosense.ulco_pulse_file_pattern, french_csv_configuration),
+        analyse_csv(cytosense.ulco_listmode_file_pattern, french_csv_configuration),
 
     ]
 
@@ -99,7 +121,7 @@ ulco_samples_in_the_same_folder_pipeline = [
     generate_ecotaxa_import()
 ]
 
-class define_sample_pipeline_folder(Task): pass
+# class define_sample_pipeline_folder(Task): pass
 
 class define_sample_folder(Task):
     def __init__():
@@ -111,7 +133,7 @@ class define_sample_folder(Task):
             self._data['sample_folder'] = data['sample_folder']
             self._data['sample_name'] = data['sample_name']
         except:
-            raise("Missing key")
+            raise Exception("Missing key")
         self.build_project_structure()
         return self._data
 
@@ -130,7 +152,7 @@ class copy_sample_in_pipeline_folder(Task):
             _ = data['sample_folder']
             _ = data['raw_folder']
         except:
-            raise("Missing key")
+            raise Exception("Missing key")
         self._copy_files()
         return self._data
 

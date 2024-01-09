@@ -1,7 +1,7 @@
 # Sebastien Galvagno 06/2023
 import os
-from Template import Template
-from tools import create_folder
+from Parser.Template import Template
+from Tools.tools import create_folder
 from tsv import Tsv 
 
 
@@ -19,7 +19,7 @@ class Project:
             self.pipeline = project['pipeline']
             self.metadata = project['metadata']
         except:
-            raise("missing key in project argument")
+            raise Exception("missing key in project argument")
 
     def generate_project_architecture(self) :
         create_folder(self.project_path) 

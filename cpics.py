@@ -8,7 +8,7 @@ from Project import Project
 #from cpicsModel import cpicsModel
 # from tools import create_folder
 from ParserToTsv import ParserToTsv
-from enums import Instrument
+from Ecotaxa.enums import Instrument
 
 
 # ../../aux2/20191125.aux.dat  

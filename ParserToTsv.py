@@ -2,9 +2,9 @@
 
 import csv
 from pathlib import Path
-from tools import eprint, print_dict
+from Tools.tools import eprint, print_dict
 
-from tools import copy_to_file, create_folder
+from Tools.tools import copy_to_file, create_folder
 
 import re
 

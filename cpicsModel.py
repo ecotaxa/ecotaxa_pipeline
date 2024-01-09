@@ -2,7 +2,7 @@
 
 
 # from tools import print_dict
-from Template import Template
+from Parser.Template import Template
 
 
 class CTD_sbe37(Template):
