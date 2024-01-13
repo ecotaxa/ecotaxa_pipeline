@@ -120,7 +120,7 @@ class Template:
             raise ExecuteException(self.__class__.__name__, fn)
             # return data
         except Exception as e:
-            raise Exception("feature "+e.xx+" use in function "+ fn +" don't exist in "+ caller.__class__.__name__)
+            raise Exception("feature "+ e.xx +" use in function "+ fn +" don't exist in "+ caller.__class__.__name__)
 
     # def cast_value(self,key,value):
     #     if self._mapping[key]['type'] == "[f]":
@@ -148,4 +148,13 @@ class Template:
         
         raise Exception("Unknow type: {} for key: {} mapping", self._model._mapping[key]['type'], key)
     
+
+class JsonTemplate(Template):
+
+    def csv_row_to_ecotaxa_format(self, data):
+        """
+        here data are json not csv
+        """
+        tsvrow = []
+        mapping = self.model.mapping
 

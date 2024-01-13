@@ -12,8 +12,8 @@ from Tasks.define_sample_pipeline_folder import define_sample_pipeline_folder
 from Tasks.generate_tsv import generate_tsv
 from Tasks.list_images import list_images
 from Tasks.merge_files import merge_files
-from Test.Mock.mock_polynomial_pulses_ulco_small_data import mock_ulco_dataframe, mock_ulco_small_data
-from Test.Mock.mock_ulco_small_data_images import mock_trunc
+from Mock.mock_polynomial_pulses_ulco_small_data import mock_ulco_dataframe, mock_ulco_small_data
+from Mock.mock_ulco_small_data_images import mock_trunc
 import Pipeline.pipeline as pipeline
 from Tasks.read_Infos_file_Task import add_info_file_task, parse_Infos
 from Cytosense.summarise_pulses import CSVException
@@ -26,7 +26,7 @@ from Pipeline.task import Task
 
 from pathlib import PurePath
 from Pipeline.task import Task
-from Test.test_read_infos_file_task import mock_add_info_file, mock_ulco_infos_file
+from test_read_infos_file_task import mock_add_info_file, mock_ulco_infos_file
 from Tools.tools import is_file_exist
 from Tasks.trunc_data import trunc_data
 
